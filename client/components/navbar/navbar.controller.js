@@ -4,8 +4,10 @@ class NavbarController {
   //start-non-standard
   menu = [{
     'title': 'Home',
-    'link': '/'
-  }];
+    'link': '/'},
+    
+    {'title':'Back to SBA Main Site','link':'http://www.smokeybayair.com'}
+  ];
 
   isCollapsed = true;
   //end-non-standard
