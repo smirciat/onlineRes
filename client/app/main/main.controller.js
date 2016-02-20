@@ -32,8 +32,9 @@ class MainController {
       {name:"Seldovia to Homer",ref:12}  
     ];
     
-    this.refresh();
     this.quickModal=Modal.confirm.quickMessage();
+    if (this.isLoggedIn) this.refresh();
+    
     
   }
 
