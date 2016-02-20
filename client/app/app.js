@@ -10,7 +10,9 @@ angular.module('tempApp', [
   'ngRoute',
   'btford.socket-io',
   'ui.bootstrap',
-  'validation.match'
+  'validation.match',
+  'ui.select',
+  '720kb.datepicker'
 ])
   .config(function($routeProvider, $locationProvider) {
     $routeProvider

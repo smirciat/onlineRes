@@ -61,7 +61,20 @@ function removeEntity(res) {
 
 // Gets a list of Reservations
 export function index(req, res) {
+  var dt=Date.now();
+  var de=Date.now()+1;
+  //Reservation.findAll({where: {smfltnum:'09A',"DATE TO FLY":{$gte:dt,$lte:de} }})
   Reservation.findAll()
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+
+//get all reservations belonging to current user
+export function batch(req, res) {
+  var dt=Date.now();
+  var de=Date.now()+1;
+  //Reservation.findAll({where: {smfltnum:'09A',"DATE TO FLY":{$gte:dt,$lte:de} }})
+  Reservation.findAll({where: {uid:req.params.id}})
     .then(responseWithResult(res))
     .catch(handleError(res));
 }

@@ -4,6 +4,8 @@
   <div class="row">
     <div class="col-sm-12">
       <h1>Sign up</h1>
+      <p>Please enter the information below to signup to use this reservations tool.  You can either enter your email address and a password, or connect with Facebook, Google, or Twitter 
+      so you don't have to remember another password!</p>
     </div>
     <div class="col-sm-12">
       <form class="form" name="form" ng-submit="vm.register(form)" novalidate>
@@ -76,11 +78,8 @@
         </div>
 
         <hr/>
-        <div class="row">
-          <div class="col-sm-4 col-md-3">
-            <oauth-buttons classes="btn-block"></oauth-buttons>
-          </div>
-        </div>
+        <oauth-buttons classes="btn-block"></oauth-buttons>
+        
       </form>
     </div>
   </div>

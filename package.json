@@ -1,5 +1,5 @@
 {
-  "name": "temp",
+  "name": "OnlineRes",
   "version": "0.0.0",
   "main": "server/app.js",
   "dependencies": {
