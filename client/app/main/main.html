@@ -20,7 +20,7 @@
           
           <th>Depart/Arrive*</th>
           <th>Date*</th>
-          <th>SmFltNum*</th>
+          <th>DepartureTime*</th>
           <th>&nbsp;</th>
         </tr>
       </thead>
@@ -31,7 +31,7 @@
           <td><input class="form-control" ng-model="main.newRes.WEIGHT"></td>
           <td><input class="form-control" ng-model="main.newRes.FWeight"></td>
           <td>
-            <ui-select ng-model="main.code.selected" theme="selectize" ng-disabled="disabled" >
+            <ui-select ng-model="main.code.selected" theme="selectize" ng-disabled="disabled" ng-change="main.makeList()">
               <ui-select-match placeholder="Choose...">{{$select.selected.name}}</ui-select-match>
               <ui-select-choices repeat="tc in main.travelCodes" >
                 <div ng-bind-html="tc.name | highlight: $select.search"></div>
@@ -40,12 +40,19 @@
           </td>
           <td>
             <div class="datepicker" date-format="MMM d, yyyy" date-min-limit="{{main.currDate}}" date-disabled-dates="{{main.disabledDates}}">
-              <input ng-model="main.newRes['DATE TO FLY']" type="text"/>
+              <input ng-model="main.newRes['DATE TO FLY']" ng-change="main.makeList()" type="text"/>
             </div>
           </td>
-          <td><input class="form-control" ng-model="main.newRes.smfltnum"></td>
+          <td>
+            <ui-select ng-model="main.smfltnum.selected" theme="selectize" ng-disabled="disabled" >
+              <ui-select-match placeholder="Choose...">{{$select.selected.time}}</ui-select-match>
+              <ui-select-choices repeat="tm in main.timeList" >
+                <div ng-bind-html="tm.time | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </td>
           <td><button class="btn btn-primary" ng-click="main.addRes()">Add/Update</button></td>
-          <td><button class="btn btn-danger" ng-click="main.cancelRes()">Cancel Update</button></td>
+          <td><button class="btn btn-danger" ng-click="main.cancelRes()">Undo</button></td>
         </tr>
         <tr><td>Previous</td><td>Reservations</td><td>Below:</td></tr>
         <tr ng-repeat="res in main.resList">
@@ -54,7 +61,7 @@
           <td>{{res.WEIGHT}}</td>
           <td>{{res.FWeight}}</td>
           <td>{{main.convert(res['Ref#'])}}</td>
-          <td>{{res['DATE TO FLY']| date:'MMM dd, yyyy'}}</td>
+          <td>{{res['DATE TO FLY']| date:'MMM d, yyyy'}}</td>
           <td>{{res.smfltnum}}</td>
           <td><button class="btn btn-danger" ng-click="main.remRes(res)">Remove</button></td>
           <td><button class="btn btn-success" ng-click="main.editRes(res)">Edit</button></td>

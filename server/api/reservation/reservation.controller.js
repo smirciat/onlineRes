@@ -61,20 +61,32 @@ function removeEntity(res) {
 
 // Gets a list of Reservations
 export function index(req, res) {
-  var dt=Date.now();
-  var de=Date.now()+1;
-  //Reservation.findAll({where: {smfltnum:'09A',"DATE TO FLY":{$gte:dt,$lte:de} }})
-  Reservation.findAll()
+  console.log(req.query.date);
+  var date = new Date(req.query.date); 
+  var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate()+1); 
+  console.log(date);
+  console.log(endDate);
+  Reservation.findAll({where: {"DATE TO FLY":{$gte:date,$lt:endDate}}})
+  //Reservation.findAll({where: {"DATE TO FLY":{$gte:date}}})
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
 
 //get all reservations belonging to current user
 export function batch(req, res) {
-  var dt=Date.now();
-  var de=Date.now()+1;
   //Reservation.findAll({where: {smfltnum:'09A',"DATE TO FLY":{$gte:dt,$lte:de} }})
   Reservation.findAll({where: {uid:req.params.id}})
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+
+//get all reservations for the specified day
+export function daily(req, res) {
+  console.log(req.query.date);
+  var date = new Date(req.query.date); 
+  var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59); 
+  console.log(date);
+  Reservation.findAll({where: {"DATE TO FLY":{$gte:date,$lte:endDate} }})
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
