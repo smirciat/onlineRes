@@ -46,7 +46,7 @@ angular.module('tempApp')
               modal: {
                 dismissable: true,
                 title: 'Confirm Delete',
-                html: '<p>Are you sure you want to delete <strong>' + name + '</strong> ?</p>',
+                html: '<p>Are you sure you want to <strong>' + name + '</strong> your reservation?</p>',
                 buttons: [{
                   classes: 'btn-danger',
                   text: 'Delete',
@@ -117,7 +117,7 @@ angular.module('tempApp')
                 html: '<p> <strong>' + name + '</strong> </p>',
                 buttons: [ {//this is where you define you buttons and their appearances
                   classes: 'btn-success',
-                  text: 'Confirm',
+                  text: 'OK',
                   click: function(event) {
                     quickModal.dismiss(event);
                   }

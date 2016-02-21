@@ -10,6 +10,7 @@ class LoginController {
   constructor(Auth, $location) {
     this.Auth = Auth;
     this.$location = $location;
+    console.log("???");
   }
 
   login(form) {

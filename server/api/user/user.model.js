@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
     email: {
       type: DataTypes.STRING,
       unique: {
-        msg: 'The specified email address is already in use.'
+        msg: 'That email address is already in use.'
       },
       validate: {
         isEmail: true
