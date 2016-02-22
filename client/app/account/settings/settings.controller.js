@@ -6,9 +6,10 @@ class SettingsController {
   submitted = false;
   //end-non-standard
 
-  constructor(Auth, $http) {
+  constructor(Auth, $http, $location) {
     this.Auth = Auth;
     this.$http = $http;
+    this.$location = $location;
     this.user = Auth.getCurrentUser();
     $http.get('/api/userAttributes/user/' + this.user._id).then(response => {
       if (response.data.length===0) {
@@ -34,7 +35,7 @@ class SettingsController {
   changePhone() {
     console.log(this.userAtt);
     this.$http.put('/api/userAttributes/' + this.userAtt._id, this.userAtt).then(response => {
-      //this.userAtt = {};
+      this.$location.path( "/" );
     });
   }
   

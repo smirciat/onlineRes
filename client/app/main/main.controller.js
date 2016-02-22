@@ -4,7 +4,7 @@
 
 class MainController {
 
-  constructor($http, $scope, socket,Auth, Modal) {
+  constructor($http, $scope, Auth, Modal) {
     this.$http = $http;
     this.awesomeThings = [];
     this.isloggedIn=false;
@@ -43,8 +43,26 @@ class MainController {
         this.refresh();
       });
     });
-    if (this.isLoggedIn) this.refresh();
     
+    
+    
+    if (this.isLoggedIn) {
+      this.refresh();
+      this.$http.get('/api/userAttributes/user/' + this.user._id).then(response => {
+        if (!response.data[0]||!response.data[0].phone) {
+          this.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
+        }
+      });
+      this.$http.get('/api/userAttributes/user/' + this.user._id).then(response => {
+        if (!response.data[0]||!response.data[0].phone) {
+          this.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
+        }
+      });
+    }
+    else {
+      //run asynch version to try again?
+      
+    }
     
   }
 
@@ -55,28 +73,39 @@ class MainController {
     //if there are any entries here, go ahead and post it
     //if (Object.keys(this.newRes).length>0) {
     if (this.newRes.FIRST&&this.newRes.LAST&&this.newRes.WEIGHT&&this.newRes.smfltnum&&this.newRes['Ref#']&&this.newRes['DATE TO FLY']) {
-      //prepare for post
-      this.newRes.email = this.user.email;
-      if (this.newRes._id){
-        // has an _id field, its an edited reservation
-        this.newRes.UPDATED = Date.now();
-        this.newRes['FLIGHT#']="1" + this.newRes.smfltnum;
-        this.$http.put('/api/reservations/' + this.newRes._id, this.newRes).then(response => {
-          this.cancelRes();
-        });
-      }
-      else {
-        //no _id field, its a new reservation
-        this.newRes.FWeight= this.newRes.FWeight||0;
-        this.newRes['FLIGHT#']="1" + this.newRes.smfltnum;
-        this.newRes.uid=this.user._id;
-        this.newRes['DATE RESERVED']=Date.now();
-        //post
-        this.$http.post('/api/reservations', this.newRes).then(response => {
-          this.cancelRes();
-        });
+      this.$http.get('/api/userAttributes/user/' + this.user._id).then(response => {
+        if (!response.data[0]||!response.data[0].phone) {
+          this.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
+          return;
+        }
+        this.newRes.Phone = response.data[0].phone;
+        //prepare for post
+        this.newRes.email = this.user.email;
+        if (this.newRes._id){
+          // has an _id field, its an edited reservation
+          this.newRes.UPDATED = Date.now();
+          this.newRes['FLIGHT#']="1" + this.newRes.smfltnum;
+          this.$http.put('/api/reservations/' + this.newRes._id, this.newRes).then(response => {
+            this.cancelRes();
+          });
+        }
+        else {
+          //no _id field, its a new reservation
+          this.newRes.FWeight= this.newRes.FWeight||0;
+          this.newRes['FLIGHT#']="1" + this.newRes.smfltnum;
+          this.newRes.uid=this.user._id;
+          this.newRes['DATE RESERVED']=Date.now();
+          //post
+          this.$http.post('/api/reservations', this.newRes).then(response => {
+            this.cancelRes();
+          });
         
-      }
+        }
+        
+      },response => {
+        this.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
+      });
+      
       
     }
     else this.quickModal("Please enter the required fields marked with *");
