@@ -14,6 +14,7 @@ var db = {
 };
 
 // Insert models below
+db.Mail = db.sequelize.import('../api/mail/mail.model');
 db.UserAttribute = db.sequelize.import('../api/userAttribute/userAttribute.model');
 db.Reservation = db.sequelize.import('../api/reservation/reservation.model');
 db.Thing = db.sequelize.import('../api/thing/thing.model');

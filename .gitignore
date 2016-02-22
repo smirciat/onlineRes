@@ -8,3 +8,4 @@ dist
 npm-debug.log
 .c9
 /server/config/environment/development.js
+/server/api/mail/mail.controller.js

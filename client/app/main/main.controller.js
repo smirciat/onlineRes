@@ -67,6 +67,10 @@ class MainController {
   }
 
   addRes() {
+    var date = new Date(this.newRes['DATE TO FLY']);
+    this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
+    var resEntry = this.newRes.FIRST + ' ' + this.newRes.LAST + ' has a reservation at ' +  this.smfltnum.selected.time + ' on ' + this.newRes["DATE TO FLY"] + ' from ' + this.code.selected.name + '.';
+    
     //move pulldown list selection to newRes object
     if (this.code.selected) this.newRes['Ref#']=this.code.selected.ref;
     if (this.smfltnum.selected) this.newRes.smfltnum=this.smfltnum.selected.smfltnum;
@@ -83,9 +87,11 @@ class MainController {
         this.newRes.email = this.user.email;
         if (this.newRes._id){
           // has an _id field, its an edited reservation
+          resEntry = 'UPDATED RESERVATION: ' + resEntry;
           this.newRes.UPDATED = Date.now();
           this.newRes['FLIGHT#']="1" + this.newRes.smfltnum;
           this.$http.put('/api/reservations/' + this.newRes._id, this.newRes).then(response => {
+            this.sendEmail(resEntry);
             this.cancelRes();
           });
         }
@@ -97,6 +103,7 @@ class MainController {
           this.newRes['DATE RESERVED']=Date.now();
           //post
           this.$http.post('/api/reservations', this.newRes).then(response => {
+            this.sendEmail(resEntry);
             this.cancelRes();
           });
         
@@ -190,6 +197,26 @@ class MainController {
     return obj.name;
   }
   
+  sendEmail(res){
+    var mailOptions = {
+      to: this.user.email, // list of receivers
+      subject: 'Reservation with Smokey Bay Air', // Subject line
+      text: res, // plaintext body
+      html: this.template(res) // html body
+    };
+    this.$http.post('/api/mails', mailOptions).then(response => {
+      //res.status = 500 for fail, 200 for success
+      console.log(response);
+      
+    },response => {
+      //this is a failure
+      this.$http.put('/api/mails/' + this.user._id, {res:res}).then(response => {
+        //log an email failure
+      });
+      console.log(response);
+    });
+  }
+  
   showHelp(){
     this.quickModal("The first line contains input boxes for the details of your new reservation.  Below that are all the reservations associated with your account.  Click Add/Update to finalize your reservation, then you will see it below.  If you wish to make a change, the Remove and Edit buttons are available.  Click Edit to bring an existing reservation to the top row where you can edit it.  Click Undo if you change your mind and do not wish to make an edit. If your desired departure time does not appear in the pull-down list, please call us to make your reservation or choose another time.");
   }
@@ -242,6 +269,91 @@ class MainController {
         })[0];
       }
     });
+  }
+  
+  template(res) {
+    return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' +
+'<html xmlns="http://www.w3.org/1999/xhtml" style="font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">' +
+'<head>'+
+'<meta name="viewport" content="width=device-width" />' +
+'<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' +
+'<title>Alerts e.g. approaching your limit</title>' +
+'<style type="text/css">' +
+'img {'+
+'max-width: 100%;' +
+'}' +
+'body {' +
+'-webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em;' +
+'}' +
+'body {' +
+'background-color: #f6f6f6;' +
+'}' +
+'@media only screen and (max-width: 640px) {' +
+  'body {' +
+    'padding: 0 !important;'+
+  '}'+
+  'h1 {' +
+    'font-weight: 800 !important; margin: 20px 0 5px !important;' +
+  '}' +
+  'h2 {' +
+    'font-weight: 800 !important; margin: 20px 0 5px !important;' +
+  '}'+
+  'h3 {' +
+    'font-weight: 800 !important; margin: 20px 0 5px !important;' +
+  '}' +
+  'h4 {' +
+    'font-weight: 800 !important; margin: 20px 0 5px !important;' +
+  '}' +
+  'h1 {' +
+    'font-size: 22px !important;' +
+  '}' +
+  'h2 {' +
+    'font-size: 18px !important;' +
+  '}' +
+  'h3 {' +
+    'font-size: 16px !important;'+
+  '}'+
+  '.container {'+
+    'padding: 0 !important; width: 100% !important;'+
+  '}'+
+  '.content {'+
+    'padding: 0 !important;'+
+  '}'+
+  '.content-wrap {'+
+    'padding: 10px !important;'+
+  '}'+
+  '.invoice {'+
+    'width: 100% !important;'+
+  '}'+
+'}'+
+'</style>'+
+'</head>'+
+'<body itemscope itemtype="http://schema.org/EmailMessage" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6">'+
+'<table class="body-wrap" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6"><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>'+
+		'<td class="container" width="600" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; display: block !important; max-width: 600px !important; clear: both !important; margin: 0 auto;" valign="top">'+
+			'<div class="content" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; max-width: 600px; display: block; margin: 0 auto; padding: 20px;">'+
+				  '<table class="main" width="100%" cellpadding="0" cellspacing="0" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; border: 1px solid #e9e9e9;" bgcolor="#fff"><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="alert alert-success" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 16px; vertical-align: top; color: #fff; font-weight: 500; text-align: center; border-radius: 3px 3px 0 0; background-color: #006bff; margin: 0; padding: 20px;" align="center" bgcolor="#006bff" valign="top">'+
+							'Smokey Bay Air'+
+						'</td>'+
+					'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-wrap" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 20px;" valign="top">'+
+							'<table width="100%" cellpadding="0" cellspacing="0" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
+										'This email is a confirmation of the reservation you just made with us.  Please double check the reservations details below and edit your reservation if anything is not correct.  Please call us if you have any problems.'+
+									'</td>'+
+								'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: \Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
+										res +
+									'</td>'+
+								'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
+								  '</td>'+
+								'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
+										'Thanks for choosing Smokey Bay Air!</br>  2100 Kachemak Dr Ste 1, Homer, AK 99603</br>  (907) 235-1511 or (888) 482-1511'+
+									'</td>'+
+								'</tr></table></td>'+
+					'</tr></table><div class="footer" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; clear: both; color: #999; margin: 0; padding: 20px;">'+
+					'<table width="100%" style="font-family: \'Helvetica Neue\,Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="aligncenter content-block" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; vertical-align: top; color: #999; text-align: center; margin: 0; padding: 0 0 20px;" align="center" valign="top"><a href="http://www.mailgun.com" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; color: #999; text-decoration: underline; margin: 0;"></td>'+
+						'</tr></table></div></div>'+
+		'</td><td style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>'+
+	'</tr></table></body>'+
+'</html>';
   }
 }
 
