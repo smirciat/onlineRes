@@ -8,11 +8,13 @@ export function setup(User, config) {
     callbackURL: config.google.callbackURL
   },
   function(accessToken, refreshToken, profile, done) {
-    User.find({
-      'google.id': profile.id
+    
+    User.find({where:{
+      'google.id': profile.id}
     })
       .then(user => {
         if (user) {
+          console.log(user.email);
           return done(null, user);
         }
 

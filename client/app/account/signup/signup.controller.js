@@ -16,6 +16,7 @@ class SignupController {
     this.submitted = true;
 
     if (form.$valid) {
+      console.log("signup controller reached");
       this.Auth.createUser({
         name: this.user.name,
         email: this.user.email,

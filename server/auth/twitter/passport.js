@@ -8,8 +8,8 @@ export function setup(User, config) {
     callbackURL: config.twitter.callbackURL
   },
   function(token, tokenSecret, profile, done) {
-    User.find({
-      'twitter.id_str': profile.id
+    User.find({where: {
+      'twitter.id_str': profile.id }
     })
       .then(user => {
         if (user) {

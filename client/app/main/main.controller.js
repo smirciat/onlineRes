@@ -67,9 +67,7 @@ class MainController {
   }
 
   addRes() {
-    var date = new Date(this.newRes['DATE TO FLY']);
-    this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
-    var resEntry = this.newRes.FIRST + ' ' + this.newRes.LAST + ' has a reservation at ' +  this.smfltnum.selected.time + ' on ' + this.newRes["DATE TO FLY"] + ' from ' + this.code.selected.name + '.';
+    
     
     //move pulldown list selection to newRes object
     if (this.code.selected) this.newRes['Ref#']=this.code.selected.ref;
@@ -77,7 +75,10 @@ class MainController {
     //if there are any entries here, go ahead and post it
     //if (Object.keys(this.newRes).length>0) {
     if (this.newRes.FIRST&&this.newRes.LAST&&this.newRes.WEIGHT&&this.newRes.smfltnum&&this.newRes['Ref#']&&this.newRes['DATE TO FLY']) {
-      this.$http.get('/api/userAttributes/user/' + this.user._id).then(response => {
+      
+        var date = new Date(this.newRes['DATE TO FLY']);
+        this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
+        var resEntry = this.newRes.FIRST + ' ' + this.newRes.LAST + ' has a reservation at ' +  this.smfltnum.selected.time + ' on ' + this.newRes["DATE TO FLY"] + ' from ' + this.code.selected.name + '.';this.$http.get('/api/userAttributes/user/' + this.user._id).then(response => {
         if (!response.data[0]||!response.data[0].phone) {
           this.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
           return;

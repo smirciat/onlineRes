@@ -38,10 +38,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     provider: DataTypes.STRING,
     salt: DataTypes.STRING,
-    facebook: DataTypes.TEXT,
-    twitter: DataTypes.TEXT,
-    google: DataTypes.TEXT,
-    github: DataTypes.TEXT
+    facebook: DataTypes.JSON,
+    twitter: DataTypes.JSON,
+    google: DataTypes.JSON,
+    github: DataTypes.JSON
 
   }, {
 

@@ -50,6 +50,7 @@ export function index(req, res) {
  * Creates a new user
  */
 export function create(req, res, next) {
+  console.log('user controller reached');
   var newUser = User.build(req.body);
   newUser.setDataValue('provider', 'local');
   newUser.setDataValue('role', 'user');
