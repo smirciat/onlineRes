@@ -90,6 +90,7 @@ class MainController {
     if (this.smfltnum.selected) this.newRes.smfltnum=this.smfltnum.selected.smfltnum;
     //if there are any entries here, go ahead and post it
     //if (Object.keys(this.newRes).length>0) {
+    if (!this.isInt(this.newRes.WEIGHT)||!this.isInt(this.newRes.FWeight)) return this.quickModal("Weight values need to be an integer");
     if (this.newRes.FIRST&&this.newRes.LAST&&this.newRes.WEIGHT&&this.newRes.smfltnum&&this.newRes['Ref#']&&this.newRes['DATE TO FLY']) {
       var date = new Date(this.newRes['DATE TO FLY']);
       this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
@@ -238,6 +239,22 @@ class MainController {
     this.quickModal("The first line contains input boxes for the details of your new reservation.  Below that are all the reservations associated with your account.  Click Add/Update to finalize your reservation, then you will see it below.  If you wish to make a change, the Remove and Edit buttons are available.  Click Edit to bring an existing reservation to the top row where you can edit it.  Click Undo if you change your mind and do not wish to make an edit. If your desired departure time does not appear in the pull-down list, please call us to make your reservation or choose another time.");
   }
   
+  overWeight(){
+    if (this.newRes.FWeight>50)
+      this.quickModal("The first 50 pounds of baggage is included with your ticket.  Additional fees apply for overweight baggage.  Please be aware that we will make every effort to accomodate your baggage on the flight with you, but we may need to bring some of it at a later time.  If you need all of your baggage to stay with you, please consider whether a charter is a good option for you.  Please call us for details.");
+  }
+  
+  isInt(value) {
+    //not tradionally part of this, but workes for this application
+    if (value===undefined) return true;
+    var x;
+    if (isNaN(value)) {
+      return false;
+    }
+    x = parseFloat(value);
+    return (x | 0) === x;
+  }
+
   makeList(sfn){
     //don't do this if one of the fields is blank
     if (!(this.newRes['DATE TO FLY']&&this.code.selected)) return;

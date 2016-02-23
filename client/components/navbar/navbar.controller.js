@@ -3,10 +3,10 @@
 class NavbarController {
   //start-non-standard
   menu = [{
-    'title': 'Home',
+    'title': 'Reservations',
     'link': '/'},
     
-    {'title':'Back to SBA Main Site','link':'http://www.smokeybayair.com'}
+    {'title':'Back to Smokey Bay Main Site','link':'http://www.smokeybayair.com'}
   ];
 
   isCollapsed = true;

@@ -1,9 +1,17 @@
+
 <div class="navbar navbar-default navbar-static-top" ng-controller="NavbarController">
   <div class="container">
-    
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" ng-click="nav.isCollapsed = !nav.isCollapsed">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
     <div collapse="nav.isCollapsed" class="navbar-collapse collapse" id="navbar-main">
      <div class="row">  
-       <div class="col-md-6">  
+       <div class="col-xs-8 col-sm-6 col-md-6">  
          <ul class="nav nav-pills">
            <li ng-repeat="item in nav.menu" ng-class="{active: nav.isActive(item.link)}">
               <a ng-href="{{item.link}}">{{item.title}}</a>
@@ -11,7 +19,7 @@
            <li ng-show="nav.isAdmin()" ng-class="{active: nav.isActive('/admin')}"><a href="/admin">Admin</a></li>
         </ul>
        </div>
-       <div class="col-md-6">
+       <div class="col-xs-4 col-sm-6 col-md-6">
         <ul class="nav nav-pills pull-right">
           <li ng-hide="nav.isLoggedIn()" ng-class="{active: nav.isActive('/signup')}"><a href="/signup">Sign up</a></li>
           <li ng-hide="nav.isLoggedIn()" ng-class="{active: nav.isActive('/login')}"><a href="/login">Login</a></li>

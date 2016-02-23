@@ -3,7 +3,7 @@
  <header class="hero-unit" id="banner">
   <div class="container">
     <h1>Smokey Bay Air Online Reservations for Kachemak Bay</h1>
-    <h2>Please login or signup to use this App</h2>
+    <h1>Please <a href="/login" class="login">login</a> or <a href="/signup" class="login">signup</a> to use this App</h1>
     <img src="assets/images/Bear Paw.jpg" alt="I'm Yeoman">
   </div>
  </header>
@@ -29,8 +29,24 @@
         <tr>
           <td><input class="form-control" ng-model="main.newRes.FIRST"></td>
           <td><input class="form-control" ng-model="main.newRes.LAST"></td>
-          <td><input class="form-control" ng-model="main.newRes.WEIGHT"></td>
-          <td><input class="form-control" ng-model="main.newRes.FWeight"></td>
+          <td>
+            <form name="myForm">
+                <input class="form-control" name="input" ng-model="main.newRes.WEIGHT" type="number" min="0" >
+                <div role="alert">
+                 <span class="error" ng-show="myForm.input.$error.number">
+                    Please enter a valid integer</span>
+                </div>
+            </form>
+          </td>
+          <td>
+            <form name="myForm1">
+              <input class="form-control" name="input1" ng-model="main.newRes.FWeight" ng-blur=main.overWeight() type="number" min="0">
+              <div role="alert">
+                 <span class="error" ng-show="myForm1.input1.$error.number">
+                    Please enter a valid integer</span>
+              </div>
+            </form>
+          </td>
           <td>
             <ui-select ng-model="main.code.selected" theme="selectize" ng-disabled="disabled" ng-change="main.makeList()">
               <ui-select-match placeholder="Choose...">{{$select.selected.name}}</ui-select-match>
