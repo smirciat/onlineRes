@@ -4,12 +4,30 @@
 
 class MainController {
 
-  constructor($http, $scope, Auth, Modal) {
+  constructor($http, $scope, Auth, Modal, $timeout) {
     this.$http = $http;
     this.awesomeThings = [];
     this.isloggedIn=false;
-    this.isLoggedIn=Auth.isLoggedIn();
     this.user=Auth.getCurrentUser();
+    this.isLoggedIn=Auth.isLoggedIn();
+    //cheating, I know.  IsLoggedIn resolves to false instead of a promise while the page is loading.  This tries again in 1 second
+    if (!this.isLoggedIn) {
+      $timeout(function(){
+        $scope.main.isLoggedIn=Auth.isLoggedIn();
+        if ($scope.main.isLoggedIn) {
+          $scope.main.refresh();
+          $scope.main.newRes.FIRST =  $scope.main.user.name.split(" ")[0];
+          $scope.main.newRes.LAST =  $scope.main.user.name.split(" ")[1];
+          if ($scope.main.user.name.split(" ").length > 2) $scope.main.newRes.LAST += " " + $scope.main.user.name.split(" ")[2];
+           $scope.main.$http.get('/api/userAttributes/user/' + $scope.main.user._id).then(response => {
+            if (!response.data[0]||!response.data[0].phone) {
+              $scope.main.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
+            }
+          });
+        }
+      },1000);
+    }
+    
     this.newRes = {};
     this.resList=[];
     this.code={};
@@ -44,15 +62,11 @@ class MainController {
       });
     });
     
-    
-    
     if (this.isLoggedIn) {
       this.refresh();
-      this.$http.get('/api/userAttributes/user/' + this.user._id).then(response => {
-        if (!response.data[0]||!response.data[0].phone) {
-          this.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
-        }
-      });
+      this.newRes.FIRST =  this.user.name.split(" ")[0];
+      this.newRes.LAST =  this.user.name.split(" ")[1];
+      if (this.user.name.split(" ").length > 2) this.newRes.LAST += " " + this.user.name.split(" ")[2];
       this.$http.get('/api/userAttributes/user/' + this.user._id).then(response => {
         if (!response.data[0]||!response.data[0].phone) {
           this.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
@@ -70,15 +84,17 @@ class MainController {
     
     
     //move pulldown list selection to newRes object
+    this.newRes['Ref#']=undefined;
+    this.newRes.smfltnum=undefined;
     if (this.code.selected) this.newRes['Ref#']=this.code.selected.ref;
     if (this.smfltnum.selected) this.newRes.smfltnum=this.smfltnum.selected.smfltnum;
     //if there are any entries here, go ahead and post it
     //if (Object.keys(this.newRes).length>0) {
     if (this.newRes.FIRST&&this.newRes.LAST&&this.newRes.WEIGHT&&this.newRes.smfltnum&&this.newRes['Ref#']&&this.newRes['DATE TO FLY']) {
-      
-        var date = new Date(this.newRes['DATE TO FLY']);
-        this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
-        var resEntry = this.newRes.FIRST + ' ' + this.newRes.LAST + ' has a reservation at ' +  this.smfltnum.selected.time + ' on ' + this.newRes["DATE TO FLY"] + ' from ' + this.code.selected.name + '.';this.$http.get('/api/userAttributes/user/' + this.user._id).then(response => {
+      var date = new Date(this.newRes['DATE TO FLY']);
+      this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
+      var resEntry = this.newRes.FIRST + ' ' + this.newRes.LAST + ' has a reservation at ' +  this.smfltnum.selected.time + ' on ' + this.newRes["DATE TO FLY"] + ' from ' + this.code.selected.name + '.';
+      this.$http.get('/api/userAttributes/user/' + this.user._id).then(response => {
         if (!response.data[0]||!response.data[0].phone) {
           this.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
           return;
