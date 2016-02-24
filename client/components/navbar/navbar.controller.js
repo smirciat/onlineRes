@@ -6,7 +6,8 @@ class NavbarController {
     'title': 'Reservations',
     'link': '/'},
     
-    {'title':'Back to Smokey Bay Main Site','link':'http://www.smokeybayair.com'}
+    {'title':'Smokey Bay Main Site','link':'http://www.smokeybayair.com'},
+    {'title':'Bears!','link':'https://fareharbor.com/smokeybayair/items/'}
   ];
 
   isCollapsed = true;

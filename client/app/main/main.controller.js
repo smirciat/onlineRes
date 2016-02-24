@@ -8,26 +8,8 @@ class MainController {
     this.$http = $http;
     this.awesomeThings = [];
     this.isloggedIn=false;
-    this.user=Auth.getCurrentUser();
-    this.isLoggedIn=Auth.isLoggedIn();
-    //cheating, I know.  IsLoggedIn resolves to false instead of a promise while the page is loading.  This tries again in 1 second
-    if (!this.isLoggedIn) {
-      $timeout(function(){
-        $scope.main.isLoggedIn=Auth.isLoggedIn();
-        if ($scope.main.isLoggedIn) {
-          $scope.main.refresh();
-          $scope.main.newRes.FIRST =  $scope.main.user.name.split(" ")[0];
-          $scope.main.newRes.LAST =  $scope.main.user.name.split(" ")[1];
-          if ($scope.main.user.name.split(" ").length > 2) $scope.main.newRes.LAST += " " + $scope.main.user.name.split(" ")[2];
-           $scope.main.$http.get('/api/userAttributes/user/' + $scope.main.user._id).then(response => {
-            if (!response.data[0]||!response.data[0].phone) {
-              $scope.main.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
-            }
-          });
-        }
-      },1000);
-    }
-    
+    this.user=Auth.getCurrentUser;
+    this.isLoggedIn=Auth.isLoggedIn;
     this.newRes = {};
     this.resList=[];
     this.code={};
@@ -56,27 +38,43 @@ class MainController {
     ];
     
     this.quickModal=Modal.confirm.quickMessage();
-    this.delete = Modal.confirm.delete(reservation => {
+    
+    this.delete = Modal.confirm.check(reservation => {
       this.$http.delete('/api/reservations/' + reservation._id).then(response => {
         this.refresh();
       });
     });
-    
-    if (this.isLoggedIn) {
-      this.refresh();
-      this.newRes.FIRST =  this.user.name.split(" ")[0];
-      this.newRes.LAST =  this.user.name.split(" ")[1];
-      if (this.user.name.split(" ").length > 2) this.newRes.LAST += " " + this.user.name.split(" ")[2];
-      this.$http.get('/api/userAttributes/user/' + this.user._id).then(response => {
-        if (!response.data[0]||!response.data[0].phone) {
-          this.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
-        }
+    this.add = Modal.confirm.check(reservation => {
+      this.$http.post('/api/reservations', reservation).then(response => {
+            this.sendEmail(this.resObj);
+            this.cancelRes();
+          });
+    });
+    this.update = Modal.confirm.check(reservation => {
+      this.$http.put('/api/reservations/' + reservation._id, reservation).then(response => {
+            this.sendEmail(this.resObj);
+            this.cancelRes();
+          });
+    });
+    this.getPhone = Modal.confirm.enterPhone(formData =>{
+      this.$http.post('/api/userAttributes', {uid:this.user()._id, phone: formData.phone}).then(response => {
       });
-    }
-    else {
-      //run asynch version to try again?
-      
-    }
+    });
+    
+    this.isLoggedIn(response => {
+      if (response) {
+        $scope.main.refresh();
+        $scope.main.newRes.FIRST =  $scope.main.user().name.split(" ")[0];
+        $scope.main.newRes.LAST =  $scope.main.user().name.split(" ")[1];
+        if ($scope.main.user().name.split(" ").length > 2) $scope.main.newRes.LAST += " " + $scope.main.user().name.split(" ")[2];
+        $scope.main.$http.get('/api/userAttributes/user/' + $scope.main.user()._id).then(response => {
+          if (!response.data[0]||!response.data[0].phone) {
+            //user needs a phone number
+            $scope.main.getPhone("Please enter a phone number for your account in settings.");
+          }
+        });
+      }
+    });
     
   }
 
@@ -94,41 +92,42 @@ class MainController {
     if (this.newRes.FIRST&&this.newRes.LAST&&this.newRes.WEIGHT&&this.newRes.smfltnum&&this.newRes['Ref#']&&this.newRes['DATE TO FLY']) {
       var date = new Date(this.newRes['DATE TO FLY']);
       this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
-      var resEntry = this.newRes.FIRST + ' ' + this.newRes.LAST + ' has a reservation at ' +  this.smfltnum.selected.time + ' on ' + this.newRes["DATE TO FLY"] + ' from ' + this.code.selected.name + '.';
-      this.$http.get('/api/userAttributes/user/' + this.user._id).then(response => {
+      this.resObj = {
+        FIRST: this.newRes.FIRST,
+        LAST: this.newRes.LAST,
+        TIME: this.smfltnum.selected.time,
+        DATE: this.newRes['DATE TO FLY'],
+        FROM: this.code.selected.name
+      };
+      this.resEntry = this.newRes.FIRST + ' ' + this.newRes.LAST + ' has a reservation at ' +  this.smfltnum.selected.time + ' on ' + this.newRes["DATE TO FLY"] + ' from ' + this.code.selected.name + '.';
+      this.$http.get('/api/userAttributes/user/' + this.user()._id).then(response => {
         if (!response.data[0]||!response.data[0].phone) {
           this.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
           return;
         }
         this.newRes.Phone = response.data[0].phone;
         //prepare for post
-        this.newRes.email = this.user.email;
+        this.newRes.email = this.user().email;
         if (this.newRes._id){
           // has an _id field, its an edited reservation
-          resEntry = 'UPDATED RESERVATION: ' + resEntry;
+          this.resEntry = 'UPDATED RESERVATION: ' + this.resEntry;
           this.newRes.UPDATED = Date.now();
           this.newRes['FLIGHT#']="1" + this.newRes.smfltnum;
-          this.$http.put('/api/reservations/' + this.newRes._id, this.newRes).then(response => {
-            this.sendEmail(resEntry);
-            this.cancelRes();
-          });
+          //put
+          this.update("Update",this.resEntry,this.newRes);
         }
         else {
           //no _id field, its a new reservation
           this.newRes.FWeight= this.newRes.FWeight||0;
           this.newRes['FLIGHT#']="1" + this.newRes.smfltnum;
-          this.newRes.uid=this.user._id;
+          this.newRes.uid=this.user()._id;
           this.newRes['DATE RESERVED']=Date.now();
           //post
-          this.$http.post('/api/reservations', this.newRes).then(response => {
-            this.sendEmail(resEntry);
-            this.cancelRes();
-          });
-        
+          this.add("Add",this.resEntry,this.newRes);
         }
         
       },response => {
-        this.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
+        this.getPhone("Please enter a phone number for your account in settings.");
       });
       
       
@@ -151,7 +150,7 @@ class MainController {
       this.quickModal("Sorry, you cannot edit a reservation this close to flight time. Please call our office at (907) 235-1511 or (888) 482-1511.");
       return;
     }
-    this.delete("delete",res);
+    this.delete("Delete", 'Reservation for ' + res.FIRST + ' ' + res.LAST + ' from ' + this.convert(res['Ref#']),res);
   }
   
   cancelRes(){
@@ -187,7 +186,7 @@ class MainController {
   
   refresh(){
     //response.data is an array of objects representing reservations made by current user
-    this.$http.get('/api/reservations/user/' + this.user._id).then(response => {
+    this.$http.get('/api/reservations/user/' + this.user()._id).then(response => {
       
       this.resList=response.data.filter(function(res){
         var date = new Date(res['DATE TO FLY']);
@@ -217,21 +216,19 @@ class MainController {
   
   sendEmail(res){
     var mailOptions = {
-      to: this.user.email, // list of receivers
+      to: this.user().email, // list of receivers
       subject: 'Reservation with Smokey Bay Air', // Subject line
-      text: res, // plaintext body
+      text: this.resEntry, // plaintext body
       html: this.template(res) // html body
     };
     this.$http.post('/api/mails', mailOptions).then(response => {
       //res.status = 500 for fail, 200 for success
-      console.log(response);
       
     },response => {
       //this is a failure
-      this.$http.put('/api/mails/' + this.user._id, {res:res}).then(response => {
+      this.$http.put('/api/mails/' + this.user()._id, {res:this.resEntry}).then(response => {
         //log an email failure
       });
-      console.log(response);
     });
   }
   
@@ -241,7 +238,7 @@ class MainController {
   
   overWeight(){
     if (this.newRes.FWeight>50)
-      this.quickModal("The first 50 pounds of baggage is included with your ticket.  Additional fees apply for overweight baggage.  Please be aware that we will make every effort to accomodate your baggage on the flight with you, but we may need to bring some of it at a later time.  If you need all of your baggage to stay with you, please consider whether a charter is a good option for you.  Please call us for details.");
+      this.quickModal("The first 50 pounds of baggage is included with your ticket.  Additional fees apply for overweight baggage.  Please be aware that we will make every effort to accomodate your baggage on the flight with you, but we may need to bring some of it at a later time.  If you need all of your baggage to stay with you, please consider whether a charter is a good option for you.  Please call us for details. (907) 235-1511 or (888) 481-1511");
   }
   
   isInt(value) {
@@ -366,20 +363,50 @@ class MainController {
 '<table class="body-wrap" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6"><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>'+
 		'<td class="container" width="600" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; display: block !important; max-width: 600px !important; clear: both !important; margin: 0 auto;" valign="top">'+
 			'<div class="content" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; max-width: 600px; display: block; margin: 0 auto; padding: 20px;">'+
-				  '<table class="main" width="100%" cellpadding="0" cellspacing="0" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; border: 1px solid #e9e9e9;" bgcolor="#fff"><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="alert alert-success" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 16px; vertical-align: top; color: #fff; font-weight: 500; text-align: center; border-radius: 3px 3px 0 0; background-color: #006bff; margin: 0; padding: 20px;" align="center" bgcolor="#006bff" valign="top">'+
+				  '<table class="main" width="100%" cellpadding="0" cellspacing="0" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; border: 1px solid #e9e9e9;" bgcolor="#fff"><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="alert alert-success" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 16px; vertical-align: top; color: #fff; font-weight: 500; text-align: center; border-radius: 3px 3px 0 0; background-color: SteelBlue; margin: 0; padding: 20px;" align="center" bgcolor="SteelBlue" valign="top">'+
 							'Smokey Bay Air'+
 						'</td>'+
-					'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-wrap" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 20px;" valign="top">'+
-							'<table width="100%" cellpadding="0" cellspacing="0" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
-										'This email is a confirmation of the reservation you just made with us.  Please double check the reservations details below and edit your reservation if anything is not correct.  Please call us if you have any problems.'+
+					'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-wrap" style="text-align:center;font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 20px;" valign="top">'+
+							'<table width="100%" cellpadding="0" cellspacing="0" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><tr style="text-align:center;font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="text-align:center;font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
+										'<img src="http://s18.postimg.org/7vaiwz4hl/Bear_Paw.jpg" height=150">'+
+										'<p>This email is a confirmation of the reservation you just made with us.  Please double check the reservations details below and edit your reservation if anything is not correct.  Please call us if you have any problems.</p>'+
 									'</td>'+
-								'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: \Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
-										res +
+								'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
+									
+									'<table border="0" align="center" cellpadding="5" cellspacing="0" style="border-collapse:collapse;background-color:Wheat;color:black;font-family:arial,helvetica,sans-serif;">' +
+									  '<tbody>'+
+									    '<tr>'+
+									      '<td colspan="3" style="padding:5px;background-color:SteelBlue;color:Wheat;font-size:200%;border:5px solid SteelBlue;text-align:center;">Reservation</td>'+
+									    '</tr>'+
+									    '<tr>'+
+									      '<td style="text-align:center;border:5px solid SteelBlue;white-space:nowrap;">First Name</td>'+
+									      '<td style="border:5px solid SteelBlue;white-space:nowrap;text-align:left;font-size:125%;">'+ res.FIRST  +'</td>'+
+									    '</tr>'+
+									    '<tr>'+
+									      '<td style="text-align:center;border:5px solid SteelBlue;white-space:nowrap;">Last Name</td>'+
+									      '<td style="border:5px solid SteelBlue;white-space:nowrap;text-align:left;font-size:125%;">'+ res.LAST  +'</td>'+
+									    '</tr>'+
+									    '<tr>'+
+									      '<td style="text-align:center;border:5px solid SteelBlue;white-space:nowrap;">From</td>'+
+									      '<td style="border:5px solid SteelBlue;white-space:nowrap;text-align:left;font-size:125%;">'+ res.FROM  +'</td>'+
+									    '</tr>'+
+									    '<tr>'+
+									      '<td style="text-align:center;border:5px solid SteelBlue;white-space:nowrap;">Date</td>'+
+									      '<td style="border:5px solid SteelBlue;white-space:nowrap;text-align:left;font-size:125%;">'+ res.DATE  +'</td>'+
+									    '</tr>'+
+									    '<tr>'+
+									      '<td style="text-align:center;border:5px solid SteelBlue;white-space:nowrap;">Time</td>'+
+									      '<td style="border:5px solid SteelBlue;white-space:nowrap;text-align:left;font-size:125%;">'+ res.TIME  +'</td>'+
+									    '</tr>'+
+									  '</tbody>'+
+								  '</table>'+
+									
+										
 									'</td>'+
 								'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
 								  '</td>'+
-								'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
-										'Thanks for choosing Smokey Bay Air!</br>  2100 Kachemak Dr Ste 1, Homer, AK 99603</br>  (907) 235-1511 or (888) 482-1511'+
+								'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="text-align:center;font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
+										'<p>Thanks for choosing Smokey Bay Air!</p><p>2100 Kachemak Dr Ste 1, Homer, AK 99603</p><p>(907) 235-1511 or (888) 482-1511</p>'+
 									'</td>'+
 								'</tr></table></td>'+
 					'</tr></table><div class="footer" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; clear: both; color: #999; margin: 0; padding: 20px;">'+

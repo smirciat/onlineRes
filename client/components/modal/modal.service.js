@@ -31,63 +31,60 @@ angular.module('tempApp')
          * @param  {Function} del - callback, ran when delete is confirmed
          * @return {Function}     - the function to open the modal (ex. myModalFn)
          */
-        delete(del = angular.noop) {
+        check(del = angular.noop) {
           /**
            * Open a delete confirmation modal
            * @param  {String} name   - name or info to show on modal
            * @param  {All}           - any additional args are passed straight to del callback
            */
           return function() {
-            var args = Array.prototype.slice.call(arguments),
-                name = args.shift(),
-                deleteModal;
+            var args = Array.prototype.slice.call(arguments);
+            var name = args.shift();
+            var reservation = args.shift();
+            var theModal;
 
-            deleteModal = openModal({
+            theModal = openModal({
               modal: {
                 dismissable: true,
-                title: 'Confirm Delete',
-                html: '<p>Are you sure you want to <strong>' + name + '</strong> your reservation?</p>',
+                title: 'Confirm ' + name,
+                html: '<p>Are you sure you want to <strong>' + name + '</strong> your reservation?</p><p>' + reservation + '</p>',
                 buttons: [{
                   classes: 'btn-danger',
-                  text: 'Delete',
+                  text: name,
                   click: function(e) {
-                    deleteModal.close(e);
+                    theModal.close(e);
                   }
                 }, {
                   classes: 'btn-default',
                   text: 'Cancel',
                   click: function(e) {
-                    deleteModal.dismiss(e);
+                    theModal.dismiss(e);
                   }
                 }]
               }
             }, 'modal-danger');
 
-            deleteModal.result.then(function(event) {
+            theModal.result.then(function(event) {
               del.apply(event, args);
             });
           };
         },
-        askToLogin: function(cb) { //my new modal
+        enterPhone: function(cb) { //my new modal
           cb = cb || angular.noop;
           return function() {
             var args = Array.prototype.slice.call(arguments),
                 name = args.shift(),
+                formData = {},
                 theModal;
             theModal = openModal({ //openModal is a function the modal service defines.  It is just a wrapper for $Modal
               modal: {
+                formData:formData,
                 dismissable: true,
-                title: 'Login',
-                html: '<p>In order to complete the <strong>' + name + '</strong> action you must login.</p>', //set the modal message here, name is the parameter we passed in
+                title: 'Enter Phone Number',
+                html: '<p>' + name + '</p>', //set the modal message here, name is the parameter we passed in
                 buttons: [ {//this is where you define you buttons and their appearances
-                  classes: 'btn-warning',
-                  text: 'Cancel',
-                  click: function(event) {
-                    theModal.dismiss(event);
-                  }
-                },{
                   classes: 'btn-primary',
-                  text: 'Login',
+                  text: 'Confirm',
                   click: function(event) {
                     theModal.close(event);
                   }
@@ -95,7 +92,7 @@ angular.module('tempApp')
               }
             }, 'modal-primary');
             theModal.result.then(function(event) {
-              cb.apply(event, args); //this is where all callback is actually called
+              cb.apply(event, [formData]); //this is where all callback is actually called
             });
           };
         },

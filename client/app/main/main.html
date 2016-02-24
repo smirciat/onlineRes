@@ -1,14 +1,14 @@
 <navbar></navbar>
-<div class="container" ng-hide="main.isLoggedIn">
+<div class="container" ng-hide="main.isLoggedIn()">
  <header class="hero-unit" id="banner">
   <div class="container">
-    <h1>Smokey Bay Air Online Reservations for Kachemak Bay</h1>
+    <h1>Smokey Bay Air Online Reservations for Seldovia, Port Graham, or Nanwalek</h1>
     <h1>Please <a href="/login" class="login">login</a> or <a href="/signup" class="login">signup</a> to use this App</h1>
     <img src="assets/images/Bear Paw.jpg" alt="I'm Yeoman">
   </div>
  </header>
 </div>
-<div class="container" ng-show="main.isLoggedIn">
+<div class="container" ng-show="main.isLoggedIn()">
     <h1>Enter or Update Reservation Here</h1>
     <a href='#' ng-click="main.showHelp()">Need help?</a>
     <table class="table">
