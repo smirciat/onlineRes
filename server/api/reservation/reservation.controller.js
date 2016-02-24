@@ -112,8 +112,12 @@ export function create(req, res) {
 
 // Updates an existing Reservation in the DB
 export function update(req, res) {
-  if (req.body._id) {
-    delete req.body._id;
+  if (parseInt(req.body.reservation.uid,10)!==req.body.user._id) {
+    res.status(500).end();
+    return null;
+  }
+  if (req.body.reservation._id) {
+    delete req.body.reservation._id;
   }
   Reservation.find({
     where: {
@@ -121,13 +125,17 @@ export function update(req, res) {
     }
   })
     .then(handleEntityNotFound(res))
-    .then(saveUpdates(req.body))
+    .then(saveUpdates(req.body.reservation))
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
 
 // Deletes a Reservation from the DB
 export function destroy(req, res) {
+  if (parseInt(req.body.reservation.uid,10)!==req.body.user._id) {
+    res.status(500).end();
+    return null;
+  }
   Reservation.find({
     where: {
       _id: req.params.id

@@ -40,7 +40,7 @@ class MainController {
     this.quickModal=Modal.confirm.quickMessage();
     
     this.delete = Modal.confirm.check(reservation => {
-      this.$http.delete('/api/reservations/' + reservation._id).then(response => {
+      this.$http.put('/api/reservations/delete/' + reservation._id,{user:this.user(), reservation:reservation}).then(response => {
         this.refresh();
       });
     });
@@ -51,7 +51,7 @@ class MainController {
           });
     });
     this.update = Modal.confirm.check(reservation => {
-      this.$http.put('/api/reservations/' + reservation._id, reservation).then(response => {
+      this.$http.put('/api/reservations/' + reservation._id, {user:this.user(), reservation:reservation}).then(response => {
             this.sendEmail(this.resObj);
             this.cancelRes();
           });
