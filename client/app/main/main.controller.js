@@ -4,8 +4,10 @@
 
 class MainController {
 
-  constructor($http, $scope, Auth, Modal, $timeout) {
+  constructor($http, $scope, Auth, Modal, $timeout, $location) {
     this.$http = $http;
+    this.Auth = Auth;
+    this.$location = $location;
     this.awesomeThings = [];
     this.isloggedIn=false;
     this.user=Auth.getCurrentUser;
@@ -56,8 +58,14 @@ class MainController {
             this.cancelRes();
           });
     });
-    this.getPhone = Modal.confirm.enterPhone(formData =>{
-      this.$http.post('/api/userAttributes', {uid:this.user()._id, phone: formData.phone}).then(response => {
+    this.getPhone = Modal.confirm.enterData(formData =>{
+      this.$http.post('/api/userAttributes', {uid:this.user()._id, phone: formData.data}).then(response => {
+      });
+    });
+    this.getEmail = Modal.confirm.enterData(formData =>{
+      if (formData.data) Auth.changeEmail(formData.data, response => {
+        this.Auth.logout();
+        this.$location.path('/');
       });
     });
     
@@ -102,7 +110,11 @@ class MainController {
       this.resEntry = this.newRes.FIRST + ' ' + this.newRes.LAST + ' has a reservation at ' +  this.smfltnum.selected.time + ' on ' + this.newRes["DATE TO FLY"] + ' from ' + this.code.selected.name + '.';
       this.$http.get('/api/userAttributes/user/' + this.user()._id).then(response => {
         if (!response.data[0]||!response.data[0].phone) {
-          this.quickModal("Please enter a phone number for your account in settings (the little gear at the top right)");
+          this.getPhone("Please enter a phone number for your account.");
+          return;
+        }
+        if (!this.user().email) {
+          this.getEmail("Please enter an email for your account.  You will need to login again after entering this.");
           return;
         }
         this.newRes.Phone = response.data[0].phone;

@@ -17,6 +17,12 @@ function UserResource($resource) {
       params: {
         id:'me'
       }
+    },
+    changeEmail: {
+      method: 'PUT',
+      params: {
+        controller:'email'
+      }
     }
   });
 }

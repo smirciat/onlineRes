@@ -12,6 +12,12 @@ export function setup(User, config) {
     ]
   },
   function(accessToken, refreshToken, profile, done) {
+    console.log(profile);
+    if (!profile.emails) {
+      profile.emails = [{}];
+      if (profile._json.email) profile.emails[0].value=profile._json.email;
+      else profile.emails[0].value="";
+    }
     User.find({where:{
       'facebook.id': profile.id }
     })
@@ -19,7 +25,7 @@ export function setup(User, config) {
         if (user) {
           return done(null, user);
         }
-
+        
         user = User.build({
           name: profile.displayName,
           email: profile.emails[0].value,

@@ -124,6 +124,29 @@ export function changePassword(req, res, next) {
     });
 }
 
+export function changeEmail(req, res, next) {
+  var userId = req.user._id;
+  var email = String(req.body.email);
+
+  User.find({
+    where: {
+      _id: userId
+    }
+  })
+    .then(user => {
+      if (user) {
+        user.email = email;
+        return user.save()
+          .then(() => {
+            res.status(204).end();
+          })
+          .catch(validationError(res));
+      } else {
+        return res.status(403).end();
+      }
+    });
+}
+
 /**
  * Get my info
  */

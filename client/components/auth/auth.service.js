@@ -88,6 +88,15 @@ function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
         return safeCb(callback)(err);
       }).$promise;
     },
+    changeEmail(email, callback) {
+      return User.changeEmail({ id: currentUser._id }, {
+        email:email
+      }, function() {
+        return safeCb(callback)(null);
+      }, function(err) {
+        return safeCb(callback)(err);
+      }).$promise;
+    },
 
     /**
      * Gets all available info on a user

@@ -69,7 +69,7 @@ angular.module('tempApp')
             });
           };
         },
-        enterPhone: function(cb) { //my new modal
+        enterData: function(cb) { //my new modal
           cb = cb || angular.noop;
           return function() {
             var args = Array.prototype.slice.call(arguments),
@@ -80,7 +80,7 @@ angular.module('tempApp')
               modal: {
                 formData:formData,
                 dismissable: true,
-                title: 'Enter Phone Number',
+                title: 'Enter Required Information',
                 html: '<p>' + name + '</p>', //set the modal message here, name is the parameter we passed in
                 buttons: [ {//this is where you define you buttons and their appearances
                   classes: 'btn-primary',
