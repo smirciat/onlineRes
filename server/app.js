@@ -21,12 +21,17 @@ var socketio = require('socket.io')(server, {
 });
 require('./config/socketio')(socketio);
 require('./config/express')(app);
+var cors = require('cors');
+app.use(cors());
+app.options('*', cors());
 require('./routes')(app);
+
 
 // Start server
 function startServer() {
   server.listen(config.port, config.ip, function() {
     console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
+    
   });
 }
 

@@ -112,7 +112,7 @@ export function create(req, res) {
 
 // Updates an existing Reservation in the DB
 export function update(req, res) {
-  if (parseInt(req.body.reservation.uid,10)!==req.body.user._id) {
+  if (!req.body.reservation||!req.body.user||parseInt(req.body.reservation.uid,10)!==req.body.user._id) {
     res.status(500).end();
     return null;
   }
@@ -132,7 +132,7 @@ export function update(req, res) {
 
 // Deletes a Reservation from the DB
 export function destroy(req, res) {
-  if (parseInt(req.body.reservation.uid,10)!==req.body.user._id) {
+  if (!req.body.reservation||!req.body.user||parseInt(req.body.reservation.uid,10)!==req.body.user._id) {
     res.status(500).end();
     return null;
   }

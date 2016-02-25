@@ -6,7 +6,7 @@ import * as auth from '../../auth/auth.service';
 
 var router = express.Router();
 
-router.get('/', auth.isAuthenticated(),controller.index);
+router.get('/', controller.index);
 router.get('/:id', auth.isAuthenticated(),controller.show);
 router.get('/user/:id', auth.isAuthenticated(),controller.batch);
 router.get('/day', auth.isAuthenticated(),controller.daily);
