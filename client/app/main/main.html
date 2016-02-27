@@ -56,7 +56,7 @@
             </ui-select>
           </td>
           <td>
-            <div class="datepicker" date-format="MMM d, yyyy" date-min-limit="{{main.currDate}}" date-disabled-dates="{{main.disabledDates}}">
+            <div class="datepicker" date-format="MMM d, yyyy" date-min-limit="{{main.currDate}}" date-max-limit="{{main.endDate}}"date-disabled-dates="{{main.disabledDates}}">
               <input ng-model="main.newRes['DATE TO FLY']" ng-change="main.makeList()" type="text"/>
             </div>
           </td>
