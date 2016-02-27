@@ -21,6 +21,7 @@ function handleError(res, statusCode) {
 }
 
 function responseWithResult(res, statusCode) {
+  
   statusCode = statusCode || 200;
   return function(entity) {
     if (entity) {
@@ -61,12 +62,9 @@ function removeEntity(res) {
 
 // Gets a list of Reservations
 export function index(req, res) {
-  console.log(req.query.date);
   var date = new Date(req.query.date); 
   var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate()+1); 
-  console.log(date);
-  console.log(endDate);
-  Reservation.findAll({where: {"DATE TO FLY":{$gte:date,$lt:endDate}}})
+  Reservation.findAll({attributes:  ["_id","DATE TO FLY", "smfltnum"],where: {"DATE TO FLY":{$gte:date,$lte:endDate} } } )
   //Reservation.findAll({where: {"DATE TO FLY":{$gte:date}}})
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -82,11 +80,9 @@ export function batch(req, res) {
 
 //get all reservations for the specified day
 export function daily(req, res) {
-  console.log(req.query.date);
   var date = new Date(req.query.date); 
   var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59); 
-  console.log(date);
-  Reservation.findAll({where: {"DATE TO FLY":{$gte:date,$lte:endDate} }})
+  Reservation.findAll({attributes:  ["_id","DATE TO FLY", "smfltnum"],where: {"DATE TO FLY":{$gte:date,$lte:endDate} } } )
     .then(responseWithResult(res))
     .catch(handleError(res));
 }

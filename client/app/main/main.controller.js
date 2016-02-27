@@ -23,7 +23,12 @@ class MainController {
     ];
     this.timeList = [];
     this.firstFlight = 9;
-    this.lastFlight = 17;
+    this.lastFlight = 16;
+    this.flightMatrix = [{flight:17, start:"2/3/2016", end:"11/4/2016"},
+    {flight:18, start:"5/1/2016", end:"10/1/2016"},
+    {flight:8, start:"5/1/2016", end:"9/15/2016"}
+    ];
+    
     this.travelCodes = [
       {name:"Homer to Seldovia",ref:1,time:":00"},
       {name:"Homer to Port Graham",ref:2,time:":00"},
@@ -86,6 +91,24 @@ class MainController {
     
   }
 
+  setFlights() {
+    var d = new Date(Date.now());
+    var today = new Date(d.getFullYear(),d.getMonth(),d.getDate());
+    this.flightMatrix.forEach(number =>{
+      if (number.flight>this.lastFlight) {
+        if (new Date(number.start)<=new Date(this.newRes['DATE TO FLY'])&&new Date(number.end)>=new Date(this.newRes['DATE TO FLY'])){
+          this.lastFlight = number.flight;
+        }
+      }
+      if (number.flight<this.firstFlight) {
+        if (new Date(number.start)<=new Date(this.newRes['DATE TO FLY'])&&new Date(number.end)>=new Date(this.newRes['DATE TO FLY'])){
+          this.firstFlight = number.flight;
+        }
+      }
+    });
+    
+  }
+  
   addRes() {
     
     
@@ -267,6 +290,7 @@ class MainController {
   makeList(sfn){
     //don't do this if one of the fields is blank
     if (!(this.newRes['DATE TO FLY']&&this.code.selected)) return;
+    this.setFlights();
     this.smfltnum.selected=undefined;
     this.timeList=[];
     //month starts with 0 for Jan var tempDate="2/18/16";
@@ -311,6 +335,8 @@ class MainController {
           return tm.smfltnum === sfn;
         })[0];
       }
+      this.firstFlight = 9;
+      this.lastFlight = 16;
     });
   }
   
