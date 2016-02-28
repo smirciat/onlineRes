@@ -26,7 +26,7 @@ class SettingsController {
       }
       else {
         
-        this.userAtt = response.data[0];
+        this.userAtt = response.data[response.data.length-1];
         console.log(this.userAtt);
       }
     });

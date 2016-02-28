@@ -20,7 +20,8 @@
     "ui-select": "angular-ui-select#~0.14.9",
     "select2": "~4.0.1",
     "selectize": "~0.12.1",
-    "angularjs-datepicker": "~0.2.16"
+    "angularjs-datepicker": "~0.2.16",
+    "bootswatch-dist": "spacelab"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"

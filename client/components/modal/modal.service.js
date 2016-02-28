@@ -90,7 +90,7 @@ angular.module('tempApp')
                   }
                 },]
               }
-            }, 'modal-primary');
+            }, 'modal-success');
             theModal.result.then(function(event) {
               cb.apply(event, [formData]); //this is where all callback is actually called
             });
@@ -120,7 +120,7 @@ angular.module('tempApp')
                   }
                 }]
               }
-            }, 'modal-warning');
+            }, 'modal-success');
 
             quickModal.result.then(function(event) {
               del.apply(event, args);
