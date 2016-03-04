@@ -223,7 +223,6 @@ class MainController {
   refresh(){
     //response.data is an array of objects representing reservations made by current user
     this.$http.get('/api/reservations/user/' + this.user()._id).then(response => {
-      
       this.resList=response.data.filter(function(res){
         var date = new Date(res['DATE TO FLY']);
         var d = new Date(Date.now());
@@ -236,6 +235,7 @@ class MainController {
             month=11;
             year--;
           }
+          else month--;
         }
         var today = new Date(year,month,day-5);
         return today<=date;
