@@ -13,11 +13,11 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
       <!-- bower:css -->
-      <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
       <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
       <link rel="stylesheet" href="bower_components/ui-select/dist/select.css" />
       <link rel="stylesheet" href="bower_components/selectize/dist/css/selectize.css" />
       <link rel="stylesheet" href="bower_components/angularjs-datepicker/dist/angular-datepicker.min.css" />
+      <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
       <!-- endbower -->
     <!-- endbuild -->
     <link rel="stylesheet" href="bower_components/bootswatch-dist/css/bootstrap.css" />
@@ -28,9 +28,13 @@
       <link rel="stylesheet" href="app/admin/admin.css">
       <link rel="stylesheet" href="app/app.css">
       <link rel="stylesheet" href="app/main/main.css">
+      <link rel="stylesheet" href="app/oneFlight/oneFlight.css">
+      <link rel="stylesheet" href="app/todaysFlights/todaysFlights.css">
       <link rel="stylesheet" href="components/footer/footer.css">
       <link rel="stylesheet" href="components/modal/modal.css">
+      <link rel="stylesheet" href="components/myGrid/myGrid.css">
       <link rel="stylesheet" href="components/oauth-buttons/oauth-buttons.css">
+      <link rel="stylesheet" href="components/uiSelectWrap/uiSelectWrap.css">
       <!-- endinjector -->
     <!-- endbuild -->
   </head>
@@ -75,6 +79,8 @@
       <script src="bower_components/microplugin/src/microplugin.js"></script>
       <script src="bower_components/selectize/dist/js/selectize.js"></script>
       <script src="bower_components/angularjs-datepicker/dist/angular-datepicker.min.js"></script>
+      <script src="bower_components/angular-touch/angular-touch.js"></script>
+      <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
       <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
@@ -91,19 +97,27 @@
       <script src="app/app.constant.js"></script>
       <script src="app/main/main.controller.js"></script>
       <script src="app/main/main.js"></script>
+      <script src="app/oneFlight/oneFlight.controller.js"></script>
+      <script src="app/oneFlight/oneFlight.js"></script>
+      <script src="app/todaysFlights/todaysFlights.controller.js"></script>
+      <script src="app/todaysFlights/todaysFlights.js"></script>
       <script src="app/account/settings/settings.controller.js"></script>
       <script src="components/auth/auth.service.js"></script>
       <script src="app/account/login/login.controller.js"></script>
       <script src="components/auth/router.decorator.js"></script>
       <script src="components/auth/user.service.js"></script>
       <script src="components/footer/footer.directive.js"></script>
+      <script src="components/gridSettings/gridSettings.service.js"></script>
       <script src="components/modal/modal.service.js"></script>
       <script src="components/mongoose-error/mongoose-error.directive.js"></script>
+      <script src="components/myGrid/myGrid.directive.js"></script>
       <script src="components/navbar/navbar.controller.js"></script>
       <script src="components/navbar/navbar.directive.js"></script>
       <script src="components/oauth-buttons/oauth-buttons.controller.js"></script>
       <script src="components/oauth-buttons/oauth-buttons.directive.js"></script>
       <script src="components/socket/socket.service.js"></script>
+      <script src="components/tcFactory/tcFactory.service.js"></script>
+      <script src="components/uiSelectWrap/uiSelectWrap.directive.js"></script>
       <script src="app/account/signup/signup.controller.js"></script>
       <script src="components/util/util.service.js"></script>
       <!-- endinjector -->

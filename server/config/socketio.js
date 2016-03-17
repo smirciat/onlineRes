@@ -17,6 +17,10 @@ function onConnect(socket) {
   });
 
   // Insert sockets below
+  require('../api/aircraftSch/aircraftSch.socket').register(socket);
+  require('../api/pilotSch/pilotSch.socket').register(socket);
+  require('../api/travelCode/travelCode.socket').register(socket);
+  require('../api/flight/flight.socket').register(socket);
   require('../api/mail/mail.socket').register(socket);
   require('../api/userAttribute/userAttribute.socket').register(socket);
   require('../api/reservation/reservation.socket').register(socket);

@@ -12,7 +12,13 @@ angular.module('tempApp', [
   'ui.bootstrap',
   'validation.match',
   'ui.select',
-  '720kb.datepicker'
+  'ngTouch',
+  '720kb.datepicker',
+  'ui.grid',
+  'ui.grid.cellNav',
+  'ui.grid.edit', 
+  'ui.grid.rowEdit',
+  'ui.grid.selection', 
 ])
   .config(function($routeProvider, $locationProvider) {
     $routeProvider

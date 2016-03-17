@@ -5,7 +5,7 @@
     "angular": "~1.4.0",
     "json3": "~3.3.1",
     "es5-shim": "~3.0.1",
-    "bootstrap": "~3.1.1",
+    "bootswatch-dist": "spacelab",
     "bootstrap-social": "~4.9.1",
     "angular-resource": "~1.4.0",
     "angular-cookies": "~1.4.0",
@@ -21,7 +21,11 @@
     "select2": "~4.0.1",
     "selectize": "~0.12.1",
     "angularjs-datepicker": "~0.2.16",
-    "bootswatch-dist": "spacelab"
+    "angular-touch": "~1.4.9",
+    "angular-ui-grid": "~3.1.0",
+    "microplugin": "~0.0.3",
+    "sifter": "~0.4.5"
+    
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"

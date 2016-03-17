@@ -15,20 +15,20 @@ export function register(socket) {
     var event = events[i];
     var listener = createListener('thing:' + event, socket);
 
-    ThingEvents.on(event, listener);
-    socket.on('disconnect', removeListener(event, listener));
+   // ThingEvents.on(event, listener);
+    //socket.on('disconnect', removeListener(event, listener));
   }
 }
 
 
 function createListener(event, socket) {
   return function(doc) {
-    socket.emit(event, doc);
+   // socket.emit(event, doc);
   };
 }
 
 function removeListener(event, listener) {
   return function() {
-    ThingEvents.removeListener(event, listener);
+    //ThingEvents.removeListener(event, listener);
   };
 }

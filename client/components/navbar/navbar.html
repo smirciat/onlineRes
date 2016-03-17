@@ -11,19 +11,21 @@
     </div>
     <div collapse="nav.isCollapsed" class="navbar-collapse collapse" id="navbar-main">
      <div class="row">  
-       <div class="col-xs-8 col-sm-6 col-md-6">  
+       <div class="col-xs-8 col-sm-8 col-md-8">  
          <ul class="nav nav-pills">
-           <li ng-repeat="item in nav.menu" ng-class="{active: nav.isActive(item.link)}">
+           <li ng-hide="nav.isAdmin()" ng-repeat="item in nav.menu" ng-class="{active: nav.isActive(item.link)}">
               <a ng-href="{{item.link}}">{{item.title}}</a>
            </li>
            <li ng-show="nav.isAdmin()" ng-class="{active: nav.isActive('/admin')}"><a href="/admin">Admin</a></li>
+           <li ng-show="nav.isAdmin()" ng-class="{active: nav.isActive('/admin')}"><a href="/oneFlight">One Flight</a></li>
+           <li ng-show="nav.isAdmin()" ng-class="{active: nav.isActive('/admin')}"><a href="/todaysFlights">Today's Flights</a></li>
         </ul>
        </div>
-       <div class="col-xs-4 col-sm-6 col-md-6">
+       <div class="col-xs-4 col-sm-4 col-md-4">
         <ul class="nav nav-pills pull-right">
           <li ng-hide="nav.isLoggedIn()" ng-class="{active: nav.isActive('/signup')}"><a href="/signup">Sign up</a></li>
           <li ng-hide="nav.isLoggedIn()" ng-class="{active: nav.isActive('/login')}"><a href="/login">Login</a></li>
-          <li ng-show="nav.isLoggedIn()"><p class="navbar-text">Hello {{ nav.getCurrentUser().name }}</p> </li>
+          <li ng-show="nav.isLoggedIn()"><a href='#'>Hello {{ nav.getCurrentUser().name }}</a> </li>
           <li ng-show="nav.isLoggedIn()" ng-class="{active: nav.isActive('/settings')}"><a href="/settings"><span class="glyphicon glyphicon-cog"></span></a></li>
           <li ng-show="nav.isLoggedIn()"><a href="/logout">Logout</a></li>
         </ul>

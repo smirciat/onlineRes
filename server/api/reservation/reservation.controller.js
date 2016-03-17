@@ -87,6 +87,35 @@ export function daily(req, res) {
     .catch(handleError(res));
 }
 
+//get all reservations for the specified day and flight time
+export function oneF(req, res) {
+  var options = {};
+  if (req.body.date) {
+    
+    var date = new Date(req.body.date); 
+    var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59); 
+    options['DATE TO FLY'] = {
+      $lte: endDate,
+      $gte: date 
+    };
+  }
+  else {
+    res.status(500).end();
+    return null;
+  }
+  if (req.body.hourOfDay){
+    options.smfltnum = req.body.hourOfDay + "A";
+  }
+  else {
+    res.status(500).end();
+    return null;
+  }
+  Reservation.findAll({where: options } )
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+
+
 // Gets a single Reservation from the DB
 export function show(req, res) {
   Reservation.find({
@@ -126,12 +155,40 @@ export function update(req, res) {
     .catch(handleError(res));
 }
 
+// Updates an existing Reservation in the DB (superuser)
+export function superUpdate(req, res) {
+  if (req.body._id) {
+    delete req.body._id;
+  }
+  Reservation.find({
+    where: {
+      _id: req.params.id
+    }
+  })
+    .then(handleEntityNotFound(res))
+    .then(saveUpdates(req.body))
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+
 // Deletes a Reservation from the DB
 export function destroy(req, res) {
   if (!req.body.reservation||!req.body.user||parseInt(req.body.reservation.uid,10)!==req.body.user._id) {
     res.status(500).end();
     return null;
   }
+  Reservation.find({
+    where: {
+      _id: req.params.id
+    }
+  })
+    .then(handleEntityNotFound(res))
+    .then(removeEntity(res))
+    .catch(handleError(res));
+}
+
+export function superDestroy(req, res) {
+
   Reservation.find({
     where: {
       _id: req.params.id
