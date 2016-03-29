@@ -18,9 +18,10 @@
       <link rel="stylesheet" href="bower_components/selectize/dist/css/selectize.css" />
       <link rel="stylesheet" href="bower_components/angularjs-datepicker/dist/angular-datepicker.min.css" />
       <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
+      <link rel="stylesheet" href="bower_components/angularPrint/angularPrint.css" />
       <!-- endbower -->
     <!-- endbuild -->
-    <link rel="stylesheet" href="bower_components/bootswatch-dist/css/bootstrap.css" />
+    <link rel="stylesheet" media="all" href="bower_components/bootswatch-dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/bootstrap-social/bootstrap-social.css" />
     <!-- build:css({.tmp,client}) app/app.css -->
       <link rel="stylesheet" href="app/app.css">
@@ -28,6 +29,7 @@
       <link rel="stylesheet" href="app/admin/admin.css">
       <link rel="stylesheet" href="app/app.css">
       <link rel="stylesheet" href="app/main/main.css">
+      <link rel="stylesheet" href="app/manifest/manifest.css">
       <link rel="stylesheet" href="app/oneFlight/oneFlight.css">
       <link rel="stylesheet" href="app/todaysFlights/todaysFlights.css">
       <link rel="stylesheet" href="components/footer/footer.css">
@@ -81,6 +83,7 @@
       <script src="bower_components/angularjs-datepicker/dist/angular-datepicker.min.js"></script>
       <script src="bower_components/angular-touch/angular-touch.js"></script>
       <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+      <script src="bower_components/angularPrint/angularPrint.js"></script>
       <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
@@ -90,20 +93,22 @@
       <script src="app/admin/admin.module.js"></script>
       <script src="components/auth/auth.module.js"></script>
       <script src="components/util/util.module.js"></script>
-      <script src="components/auth/interceptor.service.js"></script>
+      <script src="components/auth/auth.service.js"></script>
       <script src="app/admin/admin.controller.js"></script>
       <script src="app/account/account.js"></script>
       <script src="app/admin/admin.router.js"></script>
       <script src="app/app.constant.js"></script>
       <script src="app/main/main.controller.js"></script>
       <script src="app/main/main.js"></script>
+      <script src="app/manifest/manifest.controller.js"></script>
+      <script src="app/manifest/manifest.js"></script>
       <script src="app/oneFlight/oneFlight.controller.js"></script>
       <script src="app/oneFlight/oneFlight.js"></script>
       <script src="app/todaysFlights/todaysFlights.controller.js"></script>
       <script src="app/todaysFlights/todaysFlights.js"></script>
       <script src="app/account/settings/settings.controller.js"></script>
-      <script src="components/auth/auth.service.js"></script>
       <script src="app/account/login/login.controller.js"></script>
+      <script src="components/auth/interceptor.service.js"></script>
       <script src="components/auth/router.decorator.js"></script>
       <script src="components/auth/user.service.js"></script>
       <script src="components/footer/footer.directive.js"></script>

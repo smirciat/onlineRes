@@ -19,6 +19,7 @@ angular.module('tempApp', [
   'ui.grid.edit', 
   'ui.grid.rowEdit',
   'ui.grid.selection', 
+  'AngularPrint'
 ])
   .config(function($routeProvider, $locationProvider) {
     $routeProvider

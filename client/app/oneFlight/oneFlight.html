@@ -1,0 +1,31 @@
+<navbar></navbar>
+<p></p>
+<div class="container">
+    <div class="row">
+      <div class="col-sm-2 col-md-2"><label class="form-control">Enter Date:</label></div>
+      <div class="col-sm-3 col-md-4">
+          <div class="datepicker" date-format="MMM d, yyyy" >
+              <input class="form-control" ng-model="one.date" ng-change="one.getRes()" type="text"/>
+          </div>
+      </div>
+      <div class="col-md-1"></div>
+      <div class="col-sm-2 col-md-2"><label class="form-control">Enter time of day:</label></div>
+      <div class="col-sm-2 col-md-2">
+          <ui-select ng-model="one.time.selected" theme="selectize" ng-disabled="disabled" ng-change="one.makeSm()">
+              <ui-select-match placeholder="Choose...">{{$select.selected.time}}</ui-select-match>
+              <ui-select-choices repeat="tm in one.times" >
+                <div ng-bind-html="tm.time | highlight: $select.search"></div>
+              </ui-select-choices>
+          </ui-select>
+      </div>
+      
+      
+      
+    </div>
+</div>
+<div class="whole">
+  
+  <div class="outer">
+    <my-grid my-api="reservations" date="one.date" smfltnum={{one.smfltnum}}></my-grid>
+  </div>
+</div>

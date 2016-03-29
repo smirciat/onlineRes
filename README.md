@@ -10,7 +10,6 @@ This project was generated with the [Angular Full-Stack Generator](https://githu
 - [Node.js and npm](nodejs.org) Node ^4.2.3, npm ^2.14.7
 - [Bower](bower.io) (`npm install --global bower`)
 - [Grunt](http://gruntjs.com/) (`npm install --global grunt-cli`)
-- [pg](https://github.com/brianc/node-postgres) (`npm install --global pg`)
 
 ### Developing
 

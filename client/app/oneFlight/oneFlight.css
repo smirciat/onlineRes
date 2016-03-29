@@ -1,0 +1,30 @@
+.grid {
+  height: 87vh;
+  width:auto;
+}
+.outer{
+  position:absolute;
+  width:100vw;
+}
+.whole{
+  height:100vh;
+  position:absolute; 
+}
+.navbar{
+    padding:0 !important;
+    margin:0; 
+    min-height: 30px;
+    height: 30px; 
+}
+.navbar .nav > li > a {
+  height: 30px !important;
+}
+.blue {
+  background-color: #1fe0f0;
+  color: #153ff0;
+}
+label.form-control{
+  border:none;
+  box-shadow:none;
+  text-align:right;
+}
