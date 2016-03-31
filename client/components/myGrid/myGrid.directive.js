@@ -9,11 +9,13 @@ angular.module('tempApp')
     scope: {
       myApi:'@',
       date:'=',
-      smfltnum:'@'
+      smfltnum:'@',
+      print:'&'
     },
     link: function (scope, element, attrs ) {
     scope.gridOptions = gridSettings.get(scope.myApi).gridOptions;
     scope.tempData = [];
+    
     scope.addData = function(){
       var object = angular.copy(gridSettings.get(scope.myApi).newRecord);
       object.smfltnum = scope.smfltnum + "A";
@@ -22,14 +24,33 @@ angular.module('tempApp')
     };
     
     scope.removeRow = function(row) {
-         if (row.entity._id) $http.put('/api/' + scope.myApi + '/superdelete/' + row.entity._id);
-         //for (var i=0;i<scope.gridOptions.data.length;i++){
-           //if (scope.gridOptions.data[i]._id===row.entity._id) {
-             //scope.gridOptions.data.splice(i,1);
-             //break;
-           //}
-         //} 
+        //put a modal in here?
+        if (row.entity._id) $http.put('/api/' + scope.myApi + '/superdelete/' + row.entity._id);
+         
     };
+    
+    scope.return = function(row){
+      //make a copy of row in the opposite direction
+      var newRow = jQuery.extend(true,{},row);
+      newRow.entity['$$hashKey'] = undefined;
+      newRow.entity._id=undefined;
+      newRow.entity['Ref#'] = 13-newRow.entity['Ref#'];
+      newRow.entity['FLIGHT#'] = undefined;
+      if (newRow.entity.smfltnum.substring(2)==='A') newRow.entity.smfltnum = newRow.entity.smfltnum.substring(0,2) + 'B';
+      else newRow.entity.smfltnum = newRow.entity.smfltnum.substring(0,2) + 'A';
+      newRow.entity['DATE RESERVED'] = new Date(Date.now());
+      var index = scope.gridOptions.data.indexOf(row);
+      tcFactory.getData(function(tcs) {
+        newRow.entity.travelCode.value = tcs.filter(function(element){
+              return element['Ref#']===newRow.entity['Ref#'];
+            })[0]['Route'];
+        //scope.gridOptions.data.splice(index,0,newRow.entity);    
+        scope.gridOptions.data.push(newRow.entity);
+        console.log(newRow);
+      });
+      
+    };
+    
     scope.index=0;
     scope.saveRow = function( rowEntity ) {
       var promise;
@@ -50,7 +71,7 @@ angular.module('tempApp')
         else {
           scope.gridOptions.data.splice(scope.index,1);
           promise = $http.patch('/api/' + scope.myApi + '/', rowEntity).success(function(res){
-            scope.addData();
+            if (!rowEntity.hasOwnProperty('uid')) scope.addData();
           });
         }
       //actually save the change
@@ -71,9 +92,9 @@ angular.module('tempApp')
         //$http.get('/api/travelCodes').success(function(data){
         tcFactory.getData(function(data) {
           data.forEach(function(d){
-            d.value=d['Travel Code'];
+            d.value=d['Route'];
           });
-          scope.gridOptions.columnDefs[3].editDropdownOptionsArray= data;
+          scope.gridOptions.columnDefs[4].editDropdownOptionsArray= data;
         });
         
         
@@ -92,6 +113,8 @@ angular.module('tempApp')
     scope.query = gridSettings.getQuery();
     if (scope.myApi!=="reservations") scope.query="";
     
+        
+      
     scope.getData = function(query){
       
       $http.post('/api/' + scope.myApi +'/o', query).success(function(data){
@@ -99,9 +122,10 @@ angular.module('tempApp')
         scope.gridOptions.data=data;
         scope.addData();
         scope.shortApi = scope.myApi.substr(0,scope.myApi.length-1);
-        
+        socket.unsyncUpdates(scope.shortApi);
         socket.syncUpdates(scope.shortApi, scope.gridOptions.data, function(event, item, array){
           scope.gridOptions.data = gridSettings.getFun(scope.myApi,array);
+          scope.print();
         });
       });  
     };

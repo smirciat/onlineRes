@@ -32,15 +32,15 @@ angular.module('tempApp')
           }
         }
         for (var i=0;i<sections[sectionIndex].flights.length;i++){
-          if (sections[sectionIndex].flights[i].flight===flight) flightIndex = i;
+          if (sections[sectionIndex].flights[i].flight.toUpperCase()===flight.toUpperCase()) flightIndex = i;
         }
         if (flightIndex===-1) {
           sections[sectionIndex].flights.push({flight:flight,tcs:[]});
           sections[sectionIndex].flights.sort(function(a,b){
-            return a.flight.localeCompare(b.flight);
+            return a.flight.toUpperCase().localeCompare(b.flight.toUpperCase());
           });
           for (var i=0;i<sections[sectionIndex].flights.length;i++){
-            if (sections[sectionIndex].flights[i].flight===flight) flightIndex = i;
+            if (sections[sectionIndex].flights[i].flight.toUpperCase()===flight.toUpperCase()) flightIndex = i;
           }
           
         }

@@ -6,11 +6,10 @@ class LoginController {
   errors = {};
   submitted = false;
   //end-non-standard
-
+  
   constructor(Auth, $location) {
     this.Auth = Auth;
     this.$location = $location;
-    console.log("???");
   }
 
   login(form) {

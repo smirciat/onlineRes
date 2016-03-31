@@ -13,12 +13,12 @@ var flightDate;
         columnDefs: [
           { name: ' ', cellTemplate: '<div><button type="button" id="removeRow"  ng-click="grid.appScope.removeRow(row)">X</button></div>', width:27 },
           { name: 'SmFltNum', sort: {
+                direction: uiGridConstants.ASC, priority: 0}},
+          { name: 'FLIGHT#', displayName:'Flight Number', sort: {
                 direction: uiGridConstants.ASC, priority: 1}},
-          { name: 'FLIGHT#', displayName:'Flight Number'},
           { name: 'DATE', displayName:'Flight Date', type:'date', 
                 cellFilter: 'date:"MM/dd/yyyy"' },
-          { name: 'PILOT', sort: {
-                direction: uiGridConstants.ASC, priority: 0}},
+          { name: 'PILOT'},
           { name: 'AIRCRAFT'} 
         ],
         data : [] 
@@ -39,10 +39,11 @@ var flightDate;
       enableCellEditOnFocus: true,
       columnDefs: [
           { name: ' ', cellTemplate: '<div><button type="button" id="removeRow"  ng-click="grid.appScope.removeRow(row)">X</button></div>', width:27 },
+          { name: '.', cellTemplate: '<div><button type="button" id="return"  ng-click="grid.appScope.return(row)"><i class="fa fa-refresh"></i></button></div>', width:27 },
           { name: 'First Name', field:'FIRST' },
           { name: 'Last Name', field:'LAST'}, 
           //{ name: 'Ref#'},
-          { name: 'Travel Code', field: 'travelCode.value', editModelField: 'travelCode', 
+          { name: 'Travel Code', field: 'travelCode.value',  editModelField: 'travelCode', 
              editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
           
           { name: 'Body Weight', field: 'WEIGHT'},
@@ -51,11 +52,12 @@ var flightDate;
           //   editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
           { name: 'Date', field:'DATE TO FLY' , type: 'date', cellFilter: 'date:"MM/dd/yyyy"'},
           { name: 'smfltnum'},
-          { name: 'FLIGHT#'},
+          { name: 'FLIGHT#', sort: {
+                direction: uiGridConstants.ASC, priority: 0}},
           { name: 'INVOICE#'},
           //{ name: 'Travel Code', field: 'Ref#', editModelField: 'Ref#', 
           //   editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
-          { name: 'DATE RESERVED', type: 'date', cellFilter: 'date:"MM/dd/yyyy"'}
+          { name: 'RESERVED', field:'DATE RESERVED', type: 'date', cellFilter: 'date:"MM/dd/yyyy"'}
       ],
       data : [] },
       

@@ -15,5 +15,5 @@ router.post('/o', auth.hasRole('admin'), controller.oneD);
 router.put('/:id', auth.hasRole('admin'), controller.update);
 router.patch('/', auth.hasRole('admin'), auth.isAuthenticated(),controller.create);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
-
+router.put('/superdelete/:id', auth.hasRole('admin'), controller.destroy);
 module.exports = router;

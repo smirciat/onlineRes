@@ -13,12 +13,12 @@ angular.module('tempApp')
                 callback(travelCodes);
             } else {
                 $http.get('/api/travelCodes').success(function(d) {
-                    callback(travelCodes = d);
+                    travelCodes = d;
+                    callback(d);
                 });
             }
         },
         getFlights: function (body,callback) {
-            console.log(body);
             $http.post('/api/flights/o',body).success(function(d) {
                 callback(d);
             });

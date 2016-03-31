@@ -107,13 +107,15 @@ export function oneF(req, res) {
     return null;
   }
   if (req.body.hourOfDay){
-    options.smfltnum = req.body.hourOfDay + "A";
+    //var smfltnum2 = req.body.hourOfDay.substring(0,2) + 'B';
+    //if (req.body.hourOfDay.toUpperCase().substring(2)==='B') smfltnum2 = req.body.hourOfDay.substring(0,2) + 'A';
+    options['$or'] = [{smfltnum:req.body.hourOfDay+'A'},{smfltnum:req.body.hourOfDay+'B'}];
   }
   else {
     res.status(500).end();
     return null;
   }
-  Reservation.findAll({where: options } )
+  Reservation.findAll({where: options, order:[['FLIGHT#','ASC'],['Ref#','ASC']] } )
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
