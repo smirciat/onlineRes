@@ -305,6 +305,7 @@ class MainController {
       var today = new Date(d.getFullYear(),d.getMonth(),d.getDate());
       var tomorrow = new Date(d.getFullYear(),d.getMonth(),d.getDate()+1);
       var hour = (d.getTime()-today.getTime())/3600000;
+      var maxPax;
       for (var i=this.firstFlight;i<=this.lastFlight;i++){
           //initiate the current smfltnum as sm
           sm=i+letter;
@@ -313,8 +314,11 @@ class MainController {
             return res.smfltnum.toUpperCase()===sm.toUpperCase();
           });
           //no more than 8 passengers on any smfltnum to avoid overbooking
-          if (resList.length<8){
-            
+          maxPax=8;
+          if (i===9&&date.getDay()>0&&date.getDay()<6) {
+            maxPax=12;
+          }
+          if (resList.length<maxPax){  
             var enough = (i-hour);
             if (date<today) {}
             else {

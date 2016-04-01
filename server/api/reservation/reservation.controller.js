@@ -64,7 +64,7 @@ function removeEntity(res) {
 export function index(req, res) {
   var date = new Date(req.query.date); 
   var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate()+1); 
-  Reservation.findAll({attributes:  ["_id","DATE TO FLY", "smfltnum"],where: {"DATE TO FLY":{$gte:date,$lte:endDate} } } )
+  Reservation.findAll({attributes:  ["_id","DATE TO FLY", "smfltnum"],where: {"DATE TO FLY":{$gte:date,$lt:endDate} } } )
   //Reservation.findAll({where: {"DATE TO FLY":{$gte:date}}})
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -73,6 +73,10 @@ export function index(req, res) {
 //get all reservations belonging to current user
 export function batch(req, res) {
   //Reservation.findAll({where: {smfltnum:'09A',"DATE TO FLY":{$gte:dt,$lte:de} }})
+  if (!req.params.id) {
+    res.status(500).end();
+    return null;
+  }
   Reservation.findAll({where: {uid:req.params.id}})
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -82,7 +86,7 @@ export function batch(req, res) {
 export function daily(req, res) {
   var date = new Date(req.query.date); 
   var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59); 
-  Reservation.findAll({attributes:  ["_id","DATE TO FLY", "smfltnum"],where: {"DATE TO FLY":{$gte:date,$lte:endDate} } } )
+  Reservation.findAll({attributes:  ["_id","DATE TO FLY", "smfltnum"],where: {"DATE TO FLY":{$gte:date,$lt:endDate} } } )
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
