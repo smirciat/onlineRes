@@ -50,7 +50,6 @@ export function index(req, res) {
  * Creates a new user
  */
 export function create(req, res, next) {
-  console.log('user controller reached');
   var newUser = User.build(req.body);
   newUser.setDataValue('provider', 'local');
   newUser.setDataValue('role', 'user');
@@ -63,6 +62,23 @@ export function create(req, res, next) {
     })
     .catch(validationError(res));
 }
+
+export function email(req, res, next) {
+ 
+   User.findAll({
+     attributes: [
+       
+       'email'
+     ]
+   })
+     .then(user => { // don't ever give out the password or salt
+       if (!user) {
+         return res.status(401).end();
+       }
+       res.json(user);
+     })
+     .catch(err => next(err));
+ }
 
 /**
  * Get a single user

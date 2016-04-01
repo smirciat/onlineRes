@@ -30,6 +30,7 @@
       <link rel="stylesheet" href="app/app.css">
       <link rel="stylesheet" href="app/main/main.css">
       <link rel="stylesheet" href="app/manifest/manifest.css">
+      <link rel="stylesheet" href="app/oFail/oFail.css">
       <link rel="stylesheet" href="app/oneFlight/oneFlight.css">
       <link rel="stylesheet" href="app/todaysFlights/todaysFlights.css">
       <link rel="stylesheet" href="components/footer/footer.css">
@@ -90,10 +91,10 @@
     <!-- build:js(.tmp) app/app.js -->
       <script src="app/app.js"></script>
       <!-- injector:js -->
-      <script src="app/admin/admin.module.js"></script>
       <script src="components/auth/auth.module.js"></script>
+      <script src="app/admin/admin.module.js"></script>
       <script src="components/util/util.module.js"></script>
-      <script src="components/auth/auth.service.js"></script>
+      <script src="app/account/signup/signup.controller.js"></script>
       <script src="app/admin/admin.controller.js"></script>
       <script src="app/account/account.js"></script>
       <script src="app/admin/admin.router.js"></script>
@@ -102,12 +103,14 @@
       <script src="app/main/main.js"></script>
       <script src="app/manifest/manifest.controller.js"></script>
       <script src="app/manifest/manifest.js"></script>
+      <script src="app/oFail/oFail.controller.js"></script>
+      <script src="app/oFail/oFail.js"></script>
       <script src="app/oneFlight/oneFlight.controller.js"></script>
       <script src="app/oneFlight/oneFlight.js"></script>
       <script src="app/todaysFlights/todaysFlights.controller.js"></script>
       <script src="app/todaysFlights/todaysFlights.js"></script>
-      <script src="app/account/settings/settings.controller.js"></script>
       <script src="app/account/login/login.controller.js"></script>
+      <script src="components/auth/auth.service.js"></script>
       <script src="components/auth/interceptor.service.js"></script>
       <script src="components/auth/router.decorator.js"></script>
       <script src="components/auth/user.service.js"></script>
@@ -123,7 +126,7 @@
       <script src="components/socket/socket.service.js"></script>
       <script src="components/tcFactory/tcFactory.service.js"></script>
       <script src="components/uiSelectWrap/uiSelectWrap.directive.js"></script>
-      <script src="app/account/signup/signup.controller.js"></script>
+      <script src="app/account/settings/settings.controller.js"></script>
       <script src="components/util/util.service.js"></script>
       <!-- endinjector -->
     <!-- endbuild -->
