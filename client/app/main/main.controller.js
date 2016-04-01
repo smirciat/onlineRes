@@ -318,8 +318,12 @@ class MainController {
           if (i===9&&date.getDay()>0&&date.getDay()<6) {
             maxPax=12;
           }
+<<<<<<< HEAD
           if (resList.length<maxPax){
             
+=======
+          if (resList.length<maxPax){  
+>>>>>>> f33091f... gracefully fail with duplicate email
             var enough = (i-hour);
             if (date<today) {}
             else {
