@@ -89,7 +89,41 @@ export function daily(req, res) {
   if (smfltnum.substring(2).toUpperCase()==='A') smfltnum2 = smfltnum.substring(0,2) + 'B';
   var date = new Date(req.body.date); 
   var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59); 
+<<<<<<< HEAD
+  Reservation.findAll({where: {"DATE TO FLY":{$gte:date,$lt:endDate},'$or':[{smfltnum:smfltnum},{smfltnum:smfltnum2}] } } )
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+
+//get all reservations for the specified day and flight time
+export function oneF(req, res) {
+  var options = {};
+  if (req.body.date) {
+    
+    var date = new Date(req.body.date); 
+    var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59); 
+    options['DATE TO FLY'] = {
+      $lte: endDate,
+      $gte: date 
+    };
+  }
+  else {
+    res.status(500).end();
+    return null;
+  }
+  if (req.body.hourOfDay){
+    //var smfltnum2 = req.body.hourOfDay.substring(0,2) + 'B';
+    //if (req.body.hourOfDay.toUpperCase().substring(2)==='B') smfltnum2 = req.body.hourOfDay.substring(0,2) + 'A';
+    options['$or'] = [{smfltnum:req.body.hourOfDay+'A'},{smfltnum:req.body.hourOfDay+'B'}];
+  }
+  else {
+    res.status(500).end();
+    return null;
+  }
+  Reservation.findAll({where: options, order:[['FLIGHT#','ASC'],['Ref#','ASC']] } )
+=======
   Reservation.findAll({attributes:  ["_id","DATE TO FLY", "smfltnum"],where: {"DATE TO FLY":{$gte:date,$lt:endDate} } } )
+>>>>>>> f33091f... gracefully fail with duplicate email
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
