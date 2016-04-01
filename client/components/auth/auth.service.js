@@ -57,7 +57,7 @@ function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
      * @return {Promise}
      */
     createUser(user, callback) {
-      
+      console.log("create user service reached");
       return User.save(user,
         function(data) {
           $cookies.put('token', data.token);

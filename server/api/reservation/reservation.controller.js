@@ -73,10 +73,6 @@ export function index(req, res) {
 //get all reservations belonging to current user
 export function batch(req, res) {
   //Reservation.findAll({where: {smfltnum:'09A',"DATE TO FLY":{$gte:dt,$lte:de} }})
-  if (!req.params.id) {
-    res.status(500).end();
-    return null;
-  }
   Reservation.findAll({where: {uid:req.params.id}})
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -89,7 +85,6 @@ export function daily(req, res) {
   if (smfltnum.substring(2).toUpperCase()==='A') smfltnum2 = smfltnum.substring(0,2) + 'B';
   var date = new Date(req.body.date); 
   var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59); 
-<<<<<<< HEAD
   Reservation.findAll({where: {"DATE TO FLY":{$gte:date,$lt:endDate},'$or':[{smfltnum:smfltnum},{smfltnum:smfltnum2}] } } )
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -121,9 +116,6 @@ export function oneF(req, res) {
     return null;
   }
   Reservation.findAll({where: options, order:[['FLIGHT#','ASC'],['Ref#','ASC']] } )
-=======
-  Reservation.findAll({attributes:  ["_id","DATE TO FLY", "smfltnum"],where: {"DATE TO FLY":{$gte:date,$lt:endDate} } } )
->>>>>>> f33091f... gracefully fail with duplicate email
     .then(responseWithResult(res))
     .catch(handleError(res));
 }

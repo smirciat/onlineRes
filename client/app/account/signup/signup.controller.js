@@ -7,17 +7,16 @@ class SignupController {
   submitted = false;
   //end-non-standard
 
-  constructor(Auth, $location, Modal) {
+  constructor(Auth, $location) {
     this.Auth = Auth;
     this.$location = $location;
-    this.quickModal=Modal.confirm.quickMessage();
   }
 
   register(form) {
     this.submitted = true;
 
     if (form.$valid) {
-      
+      console.log("signup controller reached");
       this.Auth.createUser({
         name: this.user.name,
         email: this.user.email,
@@ -29,8 +28,8 @@ class SignupController {
       })
       .catch(err => {
         err = err.data;
-        this.quickModal(err.errors[0].message);
         this.errors = {};
+
         // Update validity of form fields that match the sequelize errors
         if (err.name) {
           angular.forEach(err.fields, field => {

@@ -35,9 +35,7 @@ export function setup(User, config) {
         });
         user.save()
           .then(user => done(null, user))
-          .catch(err => {
-            done();
-          });
+          .catch(err => done(err));
       })
       .catch(err => done(err));
   }));
