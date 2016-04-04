@@ -80,12 +80,18 @@ export function batch(req, res) {
 
 //get all reservations for the specified day
 export function daily(req, res) {
-  var smfltnum = req.body.smfltnum;
-  var smfltnum2 = smfltnum.substring(0,2) + 'A';
-  if (smfltnum.substring(2).toUpperCase()==='A') smfltnum2 = smfltnum.substring(0,2) + 'B';
+  var options = {};
+  if (req.body.smfltnum) {
+    var smfltnum = req.body.smfltnum;
+    var smfltnum2 = smfltnum.substring(0,2) + 'A';
+    if (smfltnum.substring(2).toUpperCase()==='A') smfltnum2 = smfltnum.substring(0,2) + 'B';
+    options['$or'] =  [{smfltnum:smfltnum},{smfltnum:smfltnum2}];
+  }
   var date = new Date(req.body.date); 
   var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59); 
-  Reservation.findAll({where: {"DATE TO FLY":{$gte:date,$lt:endDate},'$or':[{smfltnum:smfltnum},{smfltnum:smfltnum2}] } } )
+  options['DATE TO FLY'] = {$gte:date,$lt:endDate};
+  //Reservation.findAll({where: {"DATE TO FLY":{$gte:date,$lt:endDate},'$or':[{smfltnum:smfltnum},{smfltnum:smfltnum2}] } } )
+  Reservation.findAll({where: options} )
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
@@ -135,6 +141,7 @@ export function show(req, res) {
 
 // Creates a new Reservation in the DB
 export function create(req, res) {
+  console.log(req.body);
   Reservation.create(req.body)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
@@ -142,6 +149,7 @@ export function create(req, res) {
 
 // Updates an existing Reservation in the DB
 export function update(req, res) {
+  
   if (!req.body.reservation||!req.body.user||parseInt(req.body.reservation.uid,10)!==req.body.user._id) {
     res.status(500).end();
     return null;
@@ -162,6 +170,7 @@ export function update(req, res) {
 
 // Updates an existing Reservation in the DB (superuser)
 export function superUpdate(req, res) {
+  
   if (req.body._id) {
     delete req.body._id;
   }

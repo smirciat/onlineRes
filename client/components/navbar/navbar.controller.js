@@ -27,3 +27,4 @@ class NavbarController {
 
 angular.module('tempApp')
   .controller('NavbarController', NavbarController);
+  

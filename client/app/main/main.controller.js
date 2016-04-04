@@ -465,4 +465,4 @@ class MainController {
 angular.module('tempApp')
   .controller('MainController', MainController);
 
-})();
+});

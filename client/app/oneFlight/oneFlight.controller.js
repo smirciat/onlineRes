@@ -4,11 +4,11 @@ angular.module('tempApp')
   .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, uiGridConstants, tcFactory) {
     var d=new Date(Date.now());
     this.res = [];
-    this.date = (d.getMonth()+1) + "/" + d.getDate() + "/" + d.getFullYear();
-    this.smfltnum="09";
+    this.date = tcFactory.getDate();
+    this.smfltnum=tcFactory.getSmfltnum().substring(0,2);
     this.times = [];
     this.time={};
-    this.time.selected={ref:9,time:"9:00"};
+    this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
     for (var i=7;i<=19;i++){
       this.times.push({ref:i, time: i + ':00'});
     }
@@ -19,9 +19,11 @@ angular.module('tempApp')
     this.makeSm = function(){
       if (this.time.selected.ref<10) this.smfltnum="0" + this.time.selected.ref;
       else this.smfltnum=this.time.selected.ref.toString();
+      tcFactory.setSmfltnum(this.smfltnum+'A');
       this.print();
     };
     this.print = function(){
+      tcFactory.setDate(this.date);
       body = {date:this.date, smfltnum:this.smfltnum+'A'};
       sections=[];
     $http.post('/api/reservations/day', body).then(response => {

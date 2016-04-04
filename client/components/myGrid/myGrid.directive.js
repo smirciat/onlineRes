@@ -15,7 +15,7 @@ angular.module('tempApp')
     link: function (scope, element, attrs ) {
     scope.gridOptions = gridSettings.get(scope.myApi).gridOptions;
     scope.tempData = [];
-    
+    var flight;
     scope.addData = function(){
       var object = angular.copy(gridSettings.get(scope.myApi).newRecord);
       object.smfltnum = scope.smfltnum + "A";
@@ -25,6 +25,7 @@ angular.module('tempApp')
     
     scope.removeRow = function(row) {
         //put a modal in here?
+        row.entity.travelCode=undefined;
         if (row.entity._id) $http.put('/api/' + scope.myApi + '/superdelete/' + row.entity._id);
          
     };
@@ -46,37 +47,81 @@ angular.module('tempApp')
             })[0]['Route'];
         //scope.gridOptions.data.splice(index,0,newRow.entity);    
         scope.gridOptions.data.push(newRow.entity);
-        console.log(newRow);
       });
       
     };
     
     scope.index=0;
     scope.saveRow = function( rowEntity ) {
-      var promise;
       scope.index = scope.gridOptions.data.indexOf(rowEntity);
       //rowEntity.dateModified = new Date();
       var preSave = gridSettings.get(scope.myApi).preSave;
       preSave.forEach(function(element){
         rowEntity[element] = new Date(rowEntity[element]);
       });
-      tcFactory.getData(function(tcs) {
-        if (scope.myApi==='reservations'){
+      if (scope.myApi==='reservations'){
+        var body = {date:rowEntity['DATE TO FLY'], smfltnum:rowEntity.smfltnum};
+        var tcs,flights, res, temp;
+        var promise = tcFactory.getData(function(data){
+          tcs=data;
           rowEntity['Ref#'] = tcs.filter(function(element){
               return element['Route']===rowEntity.travelCode.value;
-            })[0]['Ref#'];
+          })[0]['Ref#'];
           rowEntity.travelCode=undefined;
-        }
-        if (rowEntity._id) promise = $http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity);
-        else {
-          scope.gridOptions.data.splice(scope.index,1);
-          promise = $http.patch('/api/' + scope.myApi + '/', rowEntity).success(function(res){
-            if (!rowEntity.hasOwnProperty('uid')) scope.addData();
+          return $http.post('/api/flights/o',body);
+        })
+        
+        .then(function(response){
+          flights=response.data;
+          flight = undefined;
+          flights = flights.filter(function(flight){
+            return flight.SmFltNum===rowEntity.smfltnum;
           });
-        }
-      //actually save the change
-        scope.gridApi.rowEdit.setSavePromise( rowEntity, promise );
-      });
+          flights.sort(function(a,b){
+            return a['FLIGHT#'].localeCompare(b['FLIGHT#']);
+          });
+          return $http.post('/api/reservations/day',body);
+        })
+        
+        .then(function(response){
+            var reservations =response.data.filter(function(reservation){
+              return reservation.smfltnum===rowEntity.smfltnum;
+            });
+            for (var i=0;i<flights.length;i++){
+              res = reservations.filter(function(reservation){
+                return flights[i]['FLIGHT#']===reservation['FLIGHT#'];
+              });
+              if (res.length<4) {
+                flight = flights[i]['FLIGHT#'];
+                i=flights.length;
+              }
+            }
+            if (!rowEntity['FLIGHT#']) {
+              if (flight) rowEntity['FLIGHT#'] = flight;
+              else rowEntity['FLIGHT#'] = '5' + rowEntity.smfltnum;
+            }
+            if (rowEntity._id) return ($http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity));
+            else {
+              scope.gridOptions.data.splice(scope.index,1);
+              if (!rowEntity.hasOwnProperty('uid')) scope.addData();
+              return $http.patch('/api/' + scope.myApi + '/', rowEntity);
+            }
+        })
+        ;
+      }  
+      else {
+        if (rowEntity._id) promise =  ($http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity));
+            else {
+              scope.gridOptions.data.splice(scope.index,1);
+              if (!rowEntity.hasOwnProperty('uid')) scope.addData();
+              promise = $http.patch('/api/' + scope.myApi + '/', rowEntity);
+            }
+      }
+        
+       //actually save the change
+      scope.gridApi.rowEdit.setSavePromise( rowEntity, promise);
+            
+
     };
     
     scope.gridOptions.multiSelect=false;

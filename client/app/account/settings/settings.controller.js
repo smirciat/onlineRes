@@ -58,3 +58,4 @@ class SettingsController {
 
 angular.module('tempApp')
   .controller('SettingsController', SettingsController);
+  
