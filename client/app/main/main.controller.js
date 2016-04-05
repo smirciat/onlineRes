@@ -211,12 +211,33 @@ class MainController {
       this.quickModal("Sorry, you cannot edit a reservation this close to flight time. Please call our office at (907) 235-1511 or (888) 482-1511.");
       return;
     }
-    this.newRes = res;
+    var newRes = Object.assign({},res);
+    this.newRes = newRes;
     this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
     this.code.selected = this.travelCodes.filter(function ( tc ) {
-      return tc.ref === res['Ref#'];
+      return tc.ref === newRes['Ref#'];
     })[0];
-    this.makeList(res.smfltnum);
+    this.makeList(this.newRes.smfltnum);
+    
+  }
+  
+  reverseRes(res){
+    var date = new Date(res['DATE TO FLY']);
+    var d = new Date(Date.now());
+    var today = new Date(d.getFullYear(),d.getMonth(),d.getDate());
+    var tomorrow = new Date(d.getFullYear(),d.getMonth(),d.getDate()+1);
+    var newRes = Object.assign({},res);
+    this.newRes = newRes;
+    this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
+    if (date<today) this.newRes['DATE TO FLY']=(d.getMonth()+1) + "/" + d.getDate() + "/" + d.getFullYear();
+    this.newRes['Ref#'] = 13-res['Ref#'];
+    console.log(this.newRes['Ref#']);
+    var hour = (d.getTime()-today.getTime())/3600000;
+    var enough = (parseInt(res.smfltnum.substring(0,2))-hour);
+    this.code.selected = this.travelCodes.filter(function ( tc ) {
+      return tc.ref === newRes['Ref#'];
+    })[0];
+    this.makeList(this.newRes.smfltnum);
     
   }
   
@@ -269,7 +290,7 @@ class MainController {
   }
   
   showHelp(){
-    this.quickModal("The first line contains input boxes for the details of your new reservation.  Below that are all the reservations associated with your account.  Click Add/Update to finalize your reservation, then you will see it below.  If you wish to make a change, the Remove and Edit buttons are available.  Click Edit to bring an existing reservation to the top row where you can edit it.  Click Undo if you change your mind and do not wish to make an edit. If your desired departure time does not appear in the pull-down list, please call us to make your reservation or choose another time.");
+    this.quickModal("The first line contains input boxes for the details of your new reservation.  Below that are all the reservations associated with your account.  Click Add/Update to finalize your reservation, then you will see it below.  If you wish to make a change, the Remove and Edit buttons are available.  The orange button allows you to create a new reservation in the opposite direction of the original one. Click Edit to bring an existing reservation to the top row where you can edit it.  Click Undo if you change your mind and do not wish to make an edit. If your desired departure time does not appear in the pull-down list, please call us to make your reservation or choose another time.");
   }
   
   overWeight(){
