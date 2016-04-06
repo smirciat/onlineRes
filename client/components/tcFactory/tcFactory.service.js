@@ -77,6 +77,10 @@ angular.module('tempApp')
                return callback(d); 
             });
 
+        },
+        refreshFlights: function(){
+            oldBody={};
+            oldBody1={};
         }
     };
 }]);

@@ -16,6 +16,14 @@ angular.module('tempApp')
     scope.gridOptions = gridSettings.get(scope.myApi).gridOptions;
     scope.tempData = [];
     var flight;
+    var sections, pilots, aircrafts, pilotSch, aircraftSch;
+    tcFactory.getAircraft(function(ac){
+      aircraftSch = ac;
+    });
+    tcFactory.getPilots(function(p){
+     pilotSch = p;
+    });
+    
     scope.addData = function(){
       var object = angular.copy(gridSettings.get(scope.myApi).newRecord);
       object.smfltnum = scope.smfltnum + "A";
@@ -56,6 +64,15 @@ angular.module('tempApp')
       scope.index = scope.gridOptions.data.indexOf(rowEntity);
       //rowEntity.dateModified = new Date();
       var preSave = gridSettings.get(scope.myApi).preSave;
+      pilots=[];
+      aircrafts=[];
+      sections=[];
+      aircraftSch.forEach(function(ac){
+        aircrafts.push(ac.Aircraft);
+      });
+      pilotSch.forEach(function(p){
+        pilots.push(p.Pilot);
+      });
       preSave.forEach(function(element){
         rowEntity[element] = new Date(rowEntity[element]);
       });
@@ -95,10 +112,39 @@ angular.module('tempApp')
                 flight = flights[i]['FLIGHT#'];
                 i=flights.length;
               }
+              else {
+                pilots = pilots.filter(function(p){
+                  return p.toUpperCase()!==flights[i].PILOT.toUpperCase();
+                });
+                aircrafts = aircrafts.filter(function(a){
+                  return a.toUpperCase()!==flights[i].AIRCRAFT.toUpperCase();
+                });
+                sections.push(flights[i]['FLIGHT#'].substring(0,1));
+              }
             }
             if (!rowEntity['FLIGHT#']) {
               if (flight) rowEntity['FLIGHT#'] = flight;
-              else rowEntity['FLIGHT#'] = '5' + rowEntity.smfltnum;
+              else {
+                //no room for res, create new flight
+                if (pilots.length>0&&aircrafts.length>0){
+                  sections.sort(function(a,b){
+                    return b<a;
+                  });
+                  rowEntity['FLIGHT#'] = (parseInt(sections[sections.length-1],10)+1) + rowEntity.smfltnum;
+                  var newFlight = {AIRCRAFT:aircrafts[0], PILOT:pilots[0], 
+                       "FLIGHT#":rowEntity['FLIGHT#'].substring(0,3) + 'A', 
+                       SmFltNum:rowEntity.smfltnum.substring(0,2) + 'A',
+                       DATE:rowEntity['DATE TO FLY']
+                  };
+                  $http.patch('/api/flights/',newFlight);
+                  var otherFlight = Object.assign({},newFlight);
+                  otherFlight.SmFltNum = newFlight.SmFltNum.substring(0,2) + 'B';
+                  otherFlight['FLIGHT#'] = newFlight['FLIGHT#'].substring(0,3) + 'B';
+                  $http.patch('/api/flights/',otherFlight);
+                  tcFactory.refreshFlights();
+                }
+                else rowEntity['FLIGHT#'] = '9' + rowEntity.smfltnum;
+              }
             }
             if (rowEntity._id) return ($http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity));
             else {

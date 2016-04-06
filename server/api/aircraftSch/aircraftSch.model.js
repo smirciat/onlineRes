@@ -4,7 +4,7 @@ export default function(sequelize, DataTypes) {
   return sequelize.define('AircraftSch', {
     Ref:	DataTypes.INTEGER,
     Aircraft:	DataTypes.STRING(50),	
-    'Date': 	DataTypes.DATE,	
+    'Date Available': 	DataTypes.DATE,	
     Type:	DataTypes.STRING(50),	
     Fuel:	DataTypes.INTEGER,
     'Max Load':	DataTypes.INTEGER,	
