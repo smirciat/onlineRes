@@ -62,7 +62,7 @@ function removeEntity(res) {
 
 // Gets a list of AircraftSchs
 export function index(req, res) {
-  AircraftSch.findAll()
+  AircraftSch.findAll({order:[['Ref','ASC']]})
     .then(responseWithResult(res))
     .catch(handleError(res));
 }

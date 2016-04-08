@@ -76,8 +76,9 @@ angular.module('tempApp')
       preSave.forEach(function(element){
         rowEntity[element] = new Date(rowEntity[element]);
       });
+      var body = {date:rowEntity['DATE TO FLY']||rowEntity['DATE'], smfltnum:rowEntity.smfltnum||rowEntity.SmFltNum};
+      //reservations only
       if (scope.myApi==='reservations'){
-        var body = {date:rowEntity['DATE TO FLY'], smfltnum:rowEntity.smfltnum};
         var tcs,flights, res, temp;
         var promise = tcFactory.getData(function(data){
           tcs=data;
@@ -154,14 +155,33 @@ angular.module('tempApp')
             }
         })
         ;
-      }  
+      }
+      //other api's
       else {
-        if (rowEntity._id) promise =  ($http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity));
-            else {
+        if (rowEntity._id) {
+          //this is an update
+          if (rowEntity.Pilot) rowEntity.PILOT = rowEntity.Pilot.value;
+          if (rowEntity.Aircraft) rowEntity.AIRCRAFT = rowEntity.Aircraft.value;
+          promise =  ($http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity));
+          //update other half of flight
+          $http.post('/api/flights/o',body).then(function(response){
+            var flights = response.data.filter(function(flt){
+              var end = 'B';
+              if (rowEntity['FLIGHT#'].substring(3).toUpperCase()==='B') end = 'A';
+              return flt['FLIGHT#'].toUpperCase()===(rowEntity['FLIGHT#'].substring(0,3) + end).toUpperCase();
+            });
+            if (flights.length>0) {
+              flights[0].PILOT = rowEntity.PILOT;
+              flights[0].AIRCRAFT = rowEntity.AIRCRAFT;
+              $http.patch('/api/' + scope.myApi + '/' + flights[0]._id, flights[0]);
+            }
+          });
+        }
+        else {
               scope.gridOptions.data.splice(scope.index,1);
               if (!rowEntity.hasOwnProperty('uid')) scope.addData();
               promise = $http.patch('/api/' + scope.myApi + '/', rowEntity);
-            }
+        }
       }
         
        //actually save the change
@@ -185,10 +205,23 @@ angular.module('tempApp')
           data.forEach(function(d){
             d.value=d['Route'];
           });
+          scope.gridOptions.columnDefs[6].editDropdownOptionsArray= data;
+        });
+      }
+      if (scope.myApi==="flights"){
+        //$http.get('/api/travelCodes').success(function(data){
+        tcFactory.getPilots(function(data) {
+          data.forEach(function(d){
+            d.value=d['Pilot'];
+          });
           scope.gridOptions.columnDefs[4].editDropdownOptionsArray= data;
         });
-        
-        
+        tcFactory.getAircraft(function(data) {
+          data.forEach(function(d){
+            d.value=d['Aircraft'];
+          });
+          scope.gridOptions.columnDefs[5].editDropdownOptionsArray= data;
+        });
       }
     };
     
@@ -219,6 +252,10 @@ angular.module('tempApp')
           scope.print();
         });
       });  
+    };
+    
+    scope.flushRows = function(){
+      scope.gridApi.rowEdit.flushDirtyRows(scope.gridApi.grid);
     };
     
     scope.makeQuery = function(){

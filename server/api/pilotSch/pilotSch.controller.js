@@ -61,7 +61,7 @@ function removeEntity(res) {
 
 // Gets a list of PilotSchs
 export function index(req, res) {
-  PilotSch.findAll()
+  PilotSch.findAll({order:[['Ref','ASC']]})
     .then(responseWithResult(res))
     .catch(handleError(res));
 }

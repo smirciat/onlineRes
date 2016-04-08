@@ -45,10 +45,10 @@
   <div ng-repeat="flight in section.flights">
     <div class="row">
       <div class="col-md-1 lg">Flt#</div>
-      <div class="col-md-2 lg">{{flight.flight}}</div>
+      <div class="col-md-2 bld lg">{{flight.flight}}</div>
       <div class="col-md-3 lg">{{flight.date | date : 'MM/dd/yyyy'}}</div>
       <div class="col-md-2 lg">{{flight.aircraft}}</div>
-      <div class="col-md-4 lg">{{flight.pilot}}</div>
+      <div class="col-md-4 bld lg">{{flight.pilot}}</div>
     </div>
     <div class="row">
         <div class="col-md-4 lg">Total Load HOM:</div>
@@ -62,22 +62,22 @@
         <div class="col-md-12 lg">___________________________________________________________________________________________________</div>
       </div>
       <div class="row">
-        <div class="col-md-4 lg">{{tc.code}}</div>
-        <div class="col-md-2 lg">Weight</div>
-        <div class="col-md-2 lg">FrtWt</div>
+        <div class="col-md-6 lg">{{tc.code}}</div>
+        <div class="col-md-1 lg">Wt</div>
+        <div class="col-md-1 lg">FtWt</div>
         <div class="col-md-2 lg">Invoice#</div>
-        <div class="col-md-2 lg">Time</div>
+        <div class="col-md-1 lg">Time</div>
       </div>
       <div class="row">
         <div class="col-md-12 lg">‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾</div>
       </div>
       <div ng-repeat="res in tc.reservations"> 
        <div class="row">
-          <div class="col-md-4 lg">{{res.FIRST + ' ' + res.LAST}}</div>
-          <div class="col-md-2 lg">{{res.WEIGHT}}</div>
-          <div class="col-md-2 lg">{{res.FWeight}}</div>
-          <div class="col-md-2 lg">{{res['INVOICE#']}}</div>
-          <div class="col-md-2 lg">{{res.time}}</div>
+          <div class="col-md-6 lg">{{res.FIRST + ' ' + res.LAST}}</div>
+          <div class="col-md-1 lg">{{res.WEIGHT}}</div>
+          <div class="col-md-1 lg">{{res.FWeight}}</div>
+          <div class="col-md-2 lgg">{{res['INVOICE#']}}</div>
+          <div class="col-md-1 lg">{{res.time}}</div>
        </div> 
       </div>
       </br>
@@ -90,7 +90,7 @@
   </div>
   <div ng-repeat="one in one.four">
    <div class="row">
-    <div class="col-md-3 lg">Seats installed</div>
+    <div class="col-md-3 lgg">Seats installed</div>
     <div class="col-md-4 lg">_________________</div>
     <div class="col-md-3 lg">{{section.pilotCert}}</div>
     <div class="col-md-1 lg">SC__</div>

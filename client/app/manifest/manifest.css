@@ -1,7 +1,15 @@
 @media screen,print {
-  .lg {
+  .bld {
+    font-weight:bold; 
+  }
+  .lgg {
+    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
     font-weight:bold; 
     font-size:large;
+  }
+  .lg {
+    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    font-size:x-large;
   }
   em { text-decoration:underline; }
 }
@@ -201,9 +209,9 @@
   td.visible-md {
     display: table-cell !important;
   }
-  @page { margin:1.5cm }
+  @page { margin:0cm }
     @page :first {
-      margin-top:1.5cm;
+      margin-top:0cm;
     }
     @page :left {
       margin-left:4.75cm;

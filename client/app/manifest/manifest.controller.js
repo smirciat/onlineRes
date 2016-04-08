@@ -61,19 +61,7 @@ angular.module('tempApp')
           }
           
         }
-        //for (var i=0;i<hours[hourIndex].sections[sectionIndex].flights[flightIndex].tcs.length;i++){
-        //  if (hours[hourIndex].sections[sectionIndex].flights[flightIndex].tcs[i].tc===tc) tcIndex = i;
-        //}
-        //if (tcIndex===-1) {
-        //  hours[hourIndex].sections[sectionIndex].flights[flightIndex].tcs.push({tc:tc,reservations:[]});
-        //  hours[hourIndex].sections[sectionIndex].flights[flightIndex].tcs.sort(function(a,b){
-        //    return a.tc>b.tc;
-        //  });
-        //  for (var i=0;i<hours[hourIndex].sections[sectionIndex].flights[flightIndex].tcs.length;i++){
-        //    if (hours[hourIndex].sections[sectionIndex].flights[flightIndex].tcs[i].tc===tc) tcIndex = i;
-        //  }
-          
-        //}
+       
         hours[hourIndex].sections[sectionIndex].flights[flightIndex].reservations.push(res);
         //reservations[reservations.length-1].time set
         var tvlC= hours[hourIndex].sections[sectionIndex].flights[flightIndex].reservations[hours[hourIndex].sections[sectionIndex].flights[flightIndex].reservations.length-1]['Ref#'];
@@ -115,9 +103,10 @@ angular.module('tempApp')
                //aircraft and pilot and total load HOM for sections[i].flights[j]
                
                for (var i=0;i<hours[h].sections.length;i++){
-                 hours[h].sections[i].code = tcs.filter(function(element){
+                 var temp = tcs.filter(function(element){
                   return element['Ref#']===hours[h].sections[i].section;
-                 })[0]['Route'];
+                 });
+                 if (temp.length>0) hours[h].sections[i].code = temp[0]['Route'];
                }
             
         }
@@ -158,6 +147,5 @@ angular.module('tempApp')
         });
       });
       this.hours=hours;
-      console.log(hours);
     });
   });
