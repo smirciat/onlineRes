@@ -228,6 +228,8 @@ class MainController {
     var tomorrow = new Date(d.getFullYear(),d.getMonth(),d.getDate()+1);
     var newRes = Object.assign({},res);
     this.newRes = newRes;
+    this.newRes._id=undefined;
+    this.newRes['INVOICE#']=undefined;
     this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
     if (date<today) this.newRes['DATE TO FLY']=(d.getMonth()+1) + "/" + d.getDate() + "/" + d.getFullYear();
     this.newRes['Ref#'] = 13-res['Ref#'];
