@@ -12,6 +12,7 @@ angular.module('tempApp')
     var reservations;
     var oldBody = {};
     var oldBody1={};
+    var name;
     return {
         getData: function (callback) {
             if(travelCodes) {
@@ -58,6 +59,12 @@ angular.module('tempApp')
                     return callback(aircraft = d);
                 });
             }
+        },
+        setName: function(nm){
+            name=nm;
+        },
+        getName: function(){
+            return name;
         },
         setDate: function(dt){
             date=dt;

@@ -6,6 +6,7 @@ class MainController {
 
   constructor($http, $scope, Auth, Modal, $timeout, $location) {
     this.$http = $http;
+    
     this.Auth = Auth;
     this.$location = $location;
     this.awesomeThings = [];
@@ -232,8 +233,8 @@ class MainController {
      this.newRes['INVOICE#']=undefined;
      this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
      if (date<today) this.newRes['DATE TO FLY']=(d.getMonth()+1) + "/" + d.getDate() + "/" + d.getFullYear();
+     this.newRes['DATE RESERVED']=(d.getMonth()+1) + "/" + d.getDate() + "/" + d.getFullYear();
      this.newRes['Ref#'] = 13-res['Ref#'];
-     console.log(this.newRes['Ref#']);
      var hour = (d.getTime()-today.getTime())/3600000;
      var enough = (parseInt(res.smfltnum.substring(0,2))-hour);
      this.code.selected = this.travelCodes.filter(function ( tc ) {

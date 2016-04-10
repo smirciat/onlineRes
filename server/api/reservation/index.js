@@ -11,6 +11,7 @@ router.get('/:id', auth.isAuthenticated(),controller.show);
 router.get('/user/:id', auth.isAuthenticated(),controller.batch);
 router.post('/day', auth.isAuthenticated(),controller.daily);
 router.post('/o', auth.hasRole('admin'), controller.oneF);
+router.post('/name', auth.hasRole('admin'), controller.name);
 router.post('/', auth.isAuthenticated(),controller.create);
 router.put('/:id', auth.isAuthenticated(),controller.update);
 router.patch('/:id', auth.hasRole('admin'), controller.superUpdate);

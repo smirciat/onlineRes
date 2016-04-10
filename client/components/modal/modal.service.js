@@ -116,7 +116,7 @@ angular.module('tempApp')
                   classes: 'btn-success',
                   text: 'OK',
                   click: function(event) {
-                    quickModal.dismiss(event);
+                    quickModal.close(event);
                   }
                 }]
               }

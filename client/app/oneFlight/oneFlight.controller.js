@@ -3,6 +3,7 @@
 angular.module('tempApp')
   .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, uiGridConstants, tcFactory) {
     var d=new Date(Date.now());
+    this.nameTrue=false;
     this.res = [];
     this.date = tcFactory.getDate();
     this.smfltnum=tcFactory.getSmfltnum().substring(0,2);

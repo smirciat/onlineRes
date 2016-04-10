@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('tempApp')
-  .directive('myGrid', function ($http, uiGridConstants, gridSettings, socket, $q, tcFactory) {
+  .directive('myGrid', function ($http, uiGridConstants, gridSettings, socket, $q, tcFactory, $location, $timeout, Modal) {
   return {
     templateUrl: 'components/myGrid/myGrid.html',
     restrict: 'E',
     replace: true,
     scope: {
+      nameTrue:'@',
       myApi:'@',
       date:'=',
       smfltnum:'@',
@@ -15,6 +16,7 @@ angular.module('tempApp')
     link: function (scope, element, attrs ) {
     scope.gridOptions = gridSettings.get(scope.myApi).gridOptions;
     scope.tempData = [];
+    scope.quick=Modal.confirm.quickMessage();
     var flight;
     var sections, pilots, aircrafts, pilotSch, aircraftSch;
     tcFactory.getAircraft(function(ac){
@@ -55,6 +57,9 @@ angular.module('tempApp')
             })[0]['Route'];
         //scope.gridOptions.data.splice(index,0,newRow.entity);    
         scope.gridOptions.data.push(newRow.entity);
+        $timeout(function(){
+          scope.gridApi.rowEdit.setRowsDirty([scope.gridOptions.data[scope.gridOptions.data.length-1]]);
+        },100);
       });
       
     };
@@ -86,6 +91,27 @@ angular.module('tempApp')
               return element['Route']===rowEntity.travelCode.value;
           })[0]['Ref#'];
           rowEntity.travelCode=undefined;
+          var obj = {first:rowEntity.FIRST,last:rowEntity.LAST,date:rowEntity['DATE TO FLY']};
+          return $http.post('/api/reservations/name',obj);
+        })
+        
+        .then(function(response){
+          var done=0;
+          for (var i=0;i<response.data.length;i++){
+            if (rowEntity.WEIGHT===0) {
+              rowEntity.WEIGHT=response.data[i].WEIGHT;
+              done++;
+            }
+            if (!rowEntity.Phone) {
+              rowEntity.Phone=response.data[i].Phone;
+              done++;
+            }
+            if (!rowEntity.email) {
+              rowEntity.email=response.data[i].email;
+              done++;
+            }
+            if (done>=3) i = response.data.length;
+          }
           return $http.post('/api/flights/o',body);
         })
         
@@ -146,6 +172,7 @@ angular.module('tempApp')
                 }
                 else rowEntity['FLIGHT#'] = '9' + rowEntity.smfltnum;
               }
+              
             }
             if (rowEntity._id) return ($http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity));
             else {
@@ -153,7 +180,10 @@ angular.module('tempApp')
               if (!rowEntity.hasOwnProperty('uid')) scope.addData();
               return $http.patch('/api/' + scope.myApi + '/', rowEntity);
             }
+            
         })
+        
+        
         ;
       }
       //other api's
@@ -240,8 +270,11 @@ angular.module('tempApp')
         
       
     scope.getData = function(query){
-      
-      $http.post('/api/' + scope.myApi +'/o', query).success(function(data){
+      var ext = '/o';
+      if (scope.nameTrue==="true") {
+        ext = '/name';
+      }
+      $http.post('/api/' + scope.myApi + ext, query).success(function(data){
         data = gridSettings.getFun(scope.myApi,data);
         scope.gridOptions.data=data;
         scope.addData();
@@ -249,6 +282,12 @@ angular.module('tempApp')
         socket.unsyncUpdates(scope.shortApi);
         socket.syncUpdates(scope.shortApi, scope.gridOptions.data, function(event, item, array){
           scope.gridOptions.data = gridSettings.getFun(scope.myApi,array);
+          scope.gridOptions.data.sort(function(a,b){
+            if (!a['FLIGHT#']) return true;
+            if (!b['FLIGHT#']) return false;
+            if (a['FLIGHT#']===b['FLIGHT#']) return a['Ref#']>b['Ref#'];
+            return a['FLIGHT#'].localeCompare(b['FLIGHT#']);
+          });
           scope.print();
         });
       });  
@@ -262,7 +301,38 @@ angular.module('tempApp')
       var date = new Date(scope.date);
       tempDate=new Date(date.getFullYear(),date.getMonth(),date.getDate(),0,0,0,0); 
       var query = {date: tempDate,hourOfDay:scope.smfltnum};
+      var tc = tcFactory.getName();
+      if (scope.nameTrue==="true") {
+        if (tc&&tc.length>1) query = {first:tcFactory.getName()[0], last:tcFactory.getName()[1],date:tcFactory.getDate()};
+        else query={};
+      }
       scope.getData(query);
+    };
+    
+    scope.getName = function(row){
+      tcFactory.setName([row.entity.FIRST,row.entity.LAST]);
+      tcFactory.setDate(row.entity['DATE TO FLY']);
+      $location.path('/oneName');
+    };
+    
+    scope.getInvoice = function(row){
+      var obj = {first:row.entity.FIRST,last:row.entity.LAST,date:row.entity['DATE TO FLY']};
+      return $http.post('/api/reservations/name',obj)
+        .then(function(response){
+          var count=0;
+          for (var i=0;i<response.data.length;i++){
+            if (!row.entity['INVOICE#']) {
+              console.log(response.data[i]['INVOICE#'].substring(0,8));
+              if (Number.isInteger(parseInt(response.data[i]['INVOICE#'].substring(0,8),10))) row.entity['INVOICE#']=response.data[i]['INVOICE#'];
+              scope.gridApi.rowEdit.setRowsDirty([row.entity]);
+            }
+            else {
+              if (row.entity['INVOICE#']===response.data[i]['INVOICE#']) count++;
+            }
+          }
+          if (count>0) scope.quick('This invoice has been used ' + count + ' times.');
+        })
+      ;
     };
     
     scope.$on('$destroy', function () {

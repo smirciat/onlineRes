@@ -11,6 +11,7 @@
 
 import _ from 'lodash';
 var sqldb = require('../../sqldb');
+var sequelize = require('sequelize');
 var Reservation = sqldb.Reservation;
 
 function handleError(res, statusCode) {
@@ -126,6 +127,33 @@ export function oneF(req, res) {
     .catch(handleError(res));
 }
 
+//get all reservations for the specified day and flight time
+export function name(req, res) {
+  var options = {};
+  console.log(req.body);
+  
+  if (req.body.first&&req.body.date){
+    var date = new Date(req.body.date); 
+    date.setDate(date.getDate()-365)
+    var startDate = (date.getMonth()+1) + '/' + (date.getDate()) + '/' + date.getFullYear();
+    var str = 'SELECT *, levenshtein("FIRST", \'' + req.body.first + '\'), levenshtein("LAST", \'' + req.body.last + '\') ' +
+        'FROM "Reservations" where dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') AND ' +
+        'dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\') AND ' +
+        '"DATE TO FLY" >= \'' + startDate + '\' ' +
+        'ORDER BY "DATE TO FLY" DESC  LIMIT 100 ';
+    if (!req.body.last) str = 'SELECT *, levenshtein("FIRST", \'' + req.body.first + '\') ' +
+        'FROM "Reservations" where dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') AND ' +
+        '"DATE TO FLY" >= \'' + startDate + '\' ' +
+        'ORDER BY "DATE TO FLY" DESC  LIMIT 100 ';
+  }
+  else {
+    res.status(500).end();
+    return null;
+  }
+  sqldb.sequelize.query(str, { raw:true, type: sequelize.QueryTypes.SELECT})
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
 
 // Gets a single Reservation from the DB
 export function show(req, res) {
