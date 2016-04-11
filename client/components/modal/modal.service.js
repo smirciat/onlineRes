@@ -112,7 +112,7 @@ angular.module('tempApp')
                 dismissable: true,
                 title: 'Important Message',
                 html: '<p> <strong>' + name + '</strong> </p>',
-                buttons: [ {//this is where you define you buttons and their appearances
+                buttons: [ {
                   classes: 'btn-success',
                   text: 'OK',
                   click: function(event) {
@@ -126,7 +126,45 @@ angular.module('tempApp')
               del.apply(event, args);
             });
           };
-        }        
+        } ,
+        choice(del = angular.noop) {
+          /**
+           * Open a delete confirmation modal
+           * @param  {String} name   - name or info to show on modal
+           * @param  {All}           - any additional args are passed straight to del callback
+           */
+          return function() {
+            var args = Array.prototype.slice.call(arguments),
+                name = args.shift(),
+                quickModal;
+
+            quickModal = openModal({
+              modal: {
+                dismissable: true,
+                title: 'Important Message',
+                html: '<p> <strong>' + name + '</strong> </p>',
+                buttons: [ {//this is where you define you buttons and their appearances
+                  classes: 'btn-info',
+                  text: 'OK',
+                  click: function(event) {
+                    quickModal.dismiss(event);
+                  }
+                },
+                {
+                  classes: 'btn-success',
+                  text: 'Inspect',
+                  click: function(event) {
+                    quickModal.close(event);
+                  }
+                }]
+              }
+            }, 'modal-success');
+
+            quickModal.result.then(function(event) {
+              del.apply(event, args);
+            });
+          };
+        }      
         
       }
     };

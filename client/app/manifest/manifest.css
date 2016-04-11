@@ -214,10 +214,12 @@
       margin-top:0cm;
     }
     @page :left {
+      margin-top:1cm;
       margin-left:4.75cm;
       margin-right:4.75cm;
     }
     @page :right {
+      margin-top:1cm;
       margin-left:4.75cm;
       margin-right:4.75cm;
     }

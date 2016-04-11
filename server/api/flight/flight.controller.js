@@ -106,6 +106,7 @@ export function oneD(req, res) {
 
 // Creates a new Flight in the DB
 export function create(req, res) {
+  console.log(req.body);
   Flight.create(req.body)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));

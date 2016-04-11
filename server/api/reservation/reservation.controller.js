@@ -100,6 +100,7 @@ export function daily(req, res) {
 //get all reservations for the specified day and flight time
 export function oneF(req, res) {
   var options = {};
+  var order = [['FLIGHT#','ASC'],['Ref#','ASC']];
   if (req.body.date) {
     
     var date = new Date(req.body.date); 
@@ -110,8 +111,8 @@ export function oneF(req, res) {
     };
   }
   else {
-    res.status(500).end();
-    return null;
+    //res.status(500).end();
+    //return null;
   }
   if (req.body.hourOfDay){
     //var smfltnum2 = req.body.hourOfDay.substring(0,2) + 'B';
@@ -119,10 +120,16 @@ export function oneF(req, res) {
     options['$or'] = [{smfltnum:req.body.hourOfDay+'A'},{smfltnum:req.body.hourOfDay+'B'}];
   }
   else {
-    res.status(500).end();
-    return null;
+    //res.status(500).end();
+    //return null;
   }
-  Reservation.findAll({where: options, order:[['FLIGHT#','ASC'],['Ref#','ASC']] } )
+  
+  if (req.body.invoice) {
+    order = [['DATE TO FLY','DESC']];
+    options['INVOICE#'] = req.body.invoice;
+  }
+  console.log(options);
+  Reservation.findAll({where: options, order: order} )
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
@@ -132,19 +139,22 @@ export function name(req, res) {
   var options = {};
   console.log(req.body);
   
-  if (req.body.first&&req.body.date){
-    var date = new Date(req.body.date); 
-    date.setDate(date.getDate()-365)
-    var startDate = (date.getMonth()+1) + '/' + (date.getDate()) + '/' + date.getFullYear();
-    var str = 'SELECT *, levenshtein("FIRST", \'' + req.body.first + '\'), levenshtein("LAST", \'' + req.body.last + '\') ' +
-        'FROM "Reservations" where dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') AND ' +
-        'dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\') AND ' +
-        '"DATE TO FLY" >= \'' + startDate + '\' ' +
-        'ORDER BY "DATE TO FLY" DESC  LIMIT 100 ';
-    if (!req.body.last) str = 'SELECT *, levenshtein("FIRST", \'' + req.body.first + '\') ' +
-        'FROM "Reservations" where dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') AND ' +
-        '"DATE TO FLY" >= \'' + startDate + '\' ' +
-        'ORDER BY "DATE TO FLY" DESC  LIMIT 100 ';
+  if (req.body.first){
+    //var date = new Date(req.body.date); 
+    //date.setDate(date.getDate()-365)
+    //var startDate = (date.getMonth()+1) + '/' + (date.getDate()) + '/' + date.getFullYear();
+    var str = 'SELECT * FROM "Reservations" WHERE (LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
+          'AND LEVENSHTEIN(LOWER("LAST"), \'' + req.body.last.toLowerCase()  + '\') < 2) ' +
+          'OR (dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') AND ' +
+          'dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
+          'OR (LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
+          'nickname = \'' + req.body.first.toLowerCase() + '\')) AND dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
+          'ORDER BY "DATE TO FLY" DESC  LIMIT 100';
+    if (!req.body.last) str = 'SELECT * FROM "Reservations" WHERE LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
+          'OR dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') ' +
+          'OR LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
+          'nickname = \'' + req.body.first.toLowerCase() + '\')) ' +
+          'ORDER BY "DATE TO FLY" DESC  LIMIT 100'; 
   }
   else {
     res.status(500).end();

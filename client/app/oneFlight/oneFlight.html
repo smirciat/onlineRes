@@ -1,6 +1,6 @@
 <navbar></navbar>
 <p></p>
-<div class="container">
+
     <div class="row">
       <div class="col-sm-2 col-md-2"><label class="form-control">Enter Date:</label></div>
       <div class="col-sm-3 col-md-4">
@@ -8,7 +8,6 @@
               <input class="form-control" ng-model="one.date" ng-change="one.print()" type="text"/>
           </div>
       </div>
-      <div class="col-md-1"></div>
       <div class="col-sm-2 col-md-2"><label class="form-control">Enter time of day:</label></div>
       <div class="col-sm-2 col-md-2">
           <ui-select ng-model="one.time.selected" theme="selectize" ng-disabled="disabled" ng-change="one.makeSm()">
@@ -21,11 +20,13 @@
       <div class="col-md-1">
         <button print-btn class="btn btn-success">Print</button>
       </div>
-      
+      <div class="col-md-1">
+        <button ng-click="one.addFlight()" class="btn btn-info">+Flight</button>
+      </div>
       
       
     </div>
-</div>
+
 <div class="whole">
   
   <div class="outer">

@@ -13,6 +13,7 @@ angular.module('tempApp')
     var oldBody = {};
     var oldBody1={};
     var name;
+    var invoice;
     return {
         getData: function (callback) {
             if(travelCodes) {
@@ -59,6 +60,12 @@ angular.module('tempApp')
                     return callback(aircraft = d);
                 });
             }
+        },
+        setInvoice: function(i){
+            invoice=i;
+        },
+        getInvoice: function(){
+            return invoice;
         },
         setName: function(nm){
             name=nm;

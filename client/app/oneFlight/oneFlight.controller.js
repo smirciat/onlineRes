@@ -2,12 +2,21 @@
 
 angular.module('tempApp')
   .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, uiGridConstants, tcFactory) {
+    var aircraftSch, pilotSch 
+    tcFactory.getAircraft(function(ac){
+      aircraftSch = ac;
+    });
+    tcFactory.getPilots(function(p){
+      pilotSch = p;
+    });
     var d=new Date(Date.now());
     this.nameTrue=false;
     this.res = [];
     this.date = tcFactory.getDate();
     this.smfltnum=tcFactory.getSmfltnum().substring(0,2);
     this.times = [];
+    var date; 
+    var smfltnum;
     this.time={};
     this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
     for (var i=7;i<=19;i++){
@@ -22,6 +31,46 @@ angular.module('tempApp')
       else this.smfltnum=this.time.selected.ref.toString();
       tcFactory.setSmfltnum(this.smfltnum+'A');
       this.print();
+    };
+    this.addFlight = function(){
+      date = this.date;
+      smfltnum = this.smfltnum;
+      var pilots=[];
+      var aircrafts=[];
+      var sections= ['0'];
+      aircraftSch.forEach(function(ac){
+        aircrafts.push(ac.Aircraft);
+      });
+      pilotSch.forEach(function(p){
+        pilots.push(p.Pilot);
+      });
+      body = {date:date, smfltnum:smfltnum+'A'};
+      tcFactory.getFlights(body,function(flights){
+        flights.forEach(function(flight){
+          sections.push(flight['FLIGHT#'].substring(0,1));
+          pilots = pilots.filter(function(p){
+            return p.toUpperCase()!==flight.PILOT.toUpperCase();
+          });
+          aircrafts = aircrafts.filter(function(a){
+            return a.toUpperCase()!==flight.AIRCRAFT.toUpperCase();
+          });
+        });
+        sections.sort(function(a,b){
+          return b-a;
+        });
+        var newFlight = {AIRCRAFT:aircrafts[0], PILOT:pilots[0], 
+                         "FLIGHT#":(parseInt(sections[0],10)+1)+smfltnum + 'A', 
+                         SmFltNum:smfltnum + 'A',
+                         DATE:date
+        };
+        $http.patch('/api/flights/',newFlight);
+        var otherFlight = Object.assign({},newFlight);
+        otherFlight.SmFltNum = newFlight.SmFltNum.substring(0,2) + 'B';
+        otherFlight['FLIGHT#'] = newFlight['FLIGHT#'].substring(0,3) + 'B';
+        $http.patch('/api/flights/',otherFlight);
+        tcFactory.refreshFlights();
+      });  
+        
     };
     this.print = function(){
       tcFactory.setDate(this.date);

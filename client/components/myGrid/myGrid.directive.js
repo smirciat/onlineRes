@@ -17,13 +17,19 @@ angular.module('tempApp')
     scope.gridOptions = gridSettings.get(scope.myApi).gridOptions;
     scope.tempData = [];
     scope.quick=Modal.confirm.quickMessage();
+    scope.invoice = Modal.confirm.choice(function(response){
+      $location.path('/invoice');
+    });
     var flight;
-    var sections, pilots, aircrafts, pilotSch, aircraftSch;
+    var sections, pilots, aircrafts, pilotSch, aircraftSch, travelCodes;
     tcFactory.getAircraft(function(ac){
       aircraftSch = ac;
     });
     tcFactory.getPilots(function(p){
      pilotSch = p;
+    });
+    tcFactory.getData(function(t){
+     travelCodes = t;
     });
     
     scope.addData = function(){
@@ -69,21 +75,21 @@ angular.module('tempApp')
       scope.index = scope.gridOptions.data.indexOf(rowEntity);
       //rowEntity.dateModified = new Date();
       var preSave = gridSettings.get(scope.myApi).preSave;
-      pilots=[];
-      aircrafts=[];
-      sections=[];
-      aircraftSch.forEach(function(ac){
-        aircrafts.push(ac.Aircraft);
-      });
-      pilotSch.forEach(function(p){
-        pilots.push(p.Pilot);
-      });
       preSave.forEach(function(element){
         rowEntity[element] = new Date(rowEntity[element]);
       });
       var body = {date:rowEntity['DATE TO FLY']||rowEntity['DATE'], smfltnum:rowEntity.smfltnum||rowEntity.SmFltNum};
       //reservations only
       if (scope.myApi==='reservations'){
+        pilots=[];
+        aircrafts=[];
+        sections=[];
+        aircraftSch.forEach(function(ac){
+          aircrafts.push(ac.Aircraft);
+        });
+        pilotSch.forEach(function(p){
+          pilots.push(p.Pilot);
+        });
         var tcs,flights, res, temp;
         var promise = tcFactory.getData(function(data){
           tcs=data;
@@ -306,6 +312,11 @@ angular.module('tempApp')
         if (tc&&tc.length>1) query = {first:tcFactory.getName()[0], last:tcFactory.getName()[1],date:tcFactory.getDate()};
         else query={};
       }
+      if (scope.nameTrue==="invoice") {
+        tc = tcFactory.getInvoice();
+        if (tc) query = {invoice:tc};
+        else query = {};
+      }
       scope.getData(query);
     };
     
@@ -317,22 +328,30 @@ angular.module('tempApp')
     
     scope.getInvoice = function(row){
       var obj = {first:row.entity.FIRST,last:row.entity.LAST,date:row.entity['DATE TO FLY']};
-      return $http.post('/api/reservations/name',obj)
+      $http.post('/api/reservations/name',obj)
         .then(function(response){
-          var count=0;
           for (var i=0;i<response.data.length;i++){
             if (!row.entity['INVOICE#']) {
               console.log(response.data[i]['INVOICE#'].substring(0,8));
               if (Number.isInteger(parseInt(response.data[i]['INVOICE#'].substring(0,8),10))) row.entity['INVOICE#']=response.data[i]['INVOICE#'];
               scope.gridApi.rowEdit.setRowsDirty([row.entity]);
-            }
-            else {
-              if (row.entity['INVOICE#']===response.data[i]['INVOICE#']) count++;
-            }
+            }  
           }
-          if (count>0) scope.quick('This invoice has been used ' + count + ' times.');
         })
       ;
+      if (row.entity['INVOICE#']) {  
+        obj = {invoice:row.entity['INVOICE#']};
+        $http.post('/api/reservations/o',obj).then(function(response){
+          var count=0;
+          for (var i=0;i<response.data.length;i++){
+            if (row.entity['INVOICE#']===response.data[i]['INVOICE#']) count++;
+          }
+          if (count>0) {
+              tcFactory.setInvoice(row.entity['INVOICE#']);
+              scope.invoice('Invoice ' + row.entity['INVOICE#']  + ' has been used ' + count + ' times.');
+          }
+        });
+      }
     };
     
     scope.$on('$destroy', function () {
