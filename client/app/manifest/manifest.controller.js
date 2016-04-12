@@ -18,6 +18,7 @@ angular.module('tempApp')
     
     $http.post('/api/reservations/day', body).then(response => {
       response.data.forEach(function(res){
+        if (!res.LAST) res.LAST="";
         hour=res['FLIGHT#'].substring(1,3);
         section=res['Ref#'];
         flight=res['FLIGHT#'];

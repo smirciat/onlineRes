@@ -143,14 +143,15 @@ export function name(req, res) {
     //var date = new Date(req.body.date); 
     //date.setDate(date.getDate()-365)
     //var startDate = (date.getMonth()+1) + '/' + (date.getDate()) + '/' + date.getFullYear();
-    var str = 'SELECT * FROM "Reservations" WHERE (LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
+    if (req.body.last)
+      var str = 'SELECT * FROM "Reservations" WHERE (LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
           'AND LEVENSHTEIN(LOWER("LAST"), \'' + req.body.last.toLowerCase()  + '\') < 2) ' +
           'OR (dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') AND ' +
           'dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
           'OR (LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
           'nickname = \'' + req.body.first.toLowerCase() + '\')) AND dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
           'ORDER BY "DATE TO FLY" DESC  LIMIT 100';
-    if (!req.body.last) str = 'SELECT * FROM "Reservations" WHERE LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
+    else str = 'SELECT * FROM "Reservations" WHERE LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
           'OR dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') ' +
           'OR LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
           'nickname = \'' + req.body.first.toLowerCase() + '\')) ' +

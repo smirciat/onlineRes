@@ -1,27 +1,24 @@
 <navbar></navbar>
 <p>.</p>
-<div class="container"> 
+<div print-section class="container"> 
  
   <div ng-repeat="hour in man.hours" ng-click="man.oneFlight(hour.hour)">
    
    <div class="row">
-     <div class="col-md-2 ">{{hour.hour + ':00 hour'}}</div>
+     <div class="col-md-4 ">{{hour.hour + ':00 hour'}}</div>
    </div>
    <div ng-repeat="section in hour.sections">
     <div class="row">
       <div class="col-md-1 "></div>
-      <div class="col-md-2 ">{{section.code + ' ' + section.time}}</div>
-    </div>
-    <div class="row">
-      <div class="col-md-1 "></div>
-      <div class="col-md-11 ">‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾</div>
+      <div class="col-md-11 bottom">{{section.code + ' ' + section.time}}</div>
     </div>
     <div ng-repeat="flight in section.flights">
       <div class="row" >
         
         <div class="col-md-2 "></div>
-        <div class="col-md-2 "><em>{{flight.flight}}</em></div>
-        <div class="col-md-8 "><em>{{flight.date | date : 'MM/dd/yyyy'}}{{ ' ' + flight.aircraft + ' ' + flight.pilot}}</em></div>
+        <div class="col-md-2 bottom">{{flight.flight}}</div>
+        <div class="col-md-2 bottom">{{flight.date | date : 'MM/dd/yyyy'}}</div>
+        <div class="col-md-6 bottom">{{flight.aircraft + ' ' + flight.pilot}}</div>
       </div>
       
       

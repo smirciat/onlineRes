@@ -81,9 +81,10 @@ angular.module('tempApp')
       var body = {date:rowEntity['DATE TO FLY']||rowEntity['DATE'], smfltnum:rowEntity.smfltnum||rowEntity.SmFltNum};
       //reservations only
       if (scope.myApi==='reservations'){
+        if (rowEntity['FLIGHT#'].substring(1)!==rowEntity.smfltnum) rowEntity['FLIGHT#']=undefined;
         pilots=[];
         aircrafts=[];
-        sections=[];
+        sections=['0'];
         aircraftSch.forEach(function(ac){
           aircrafts.push(ac.Aircraft);
         });
@@ -105,8 +106,10 @@ angular.module('tempApp')
           var done=0;
           for (var i=0;i<response.data.length;i++){
             if (rowEntity.WEIGHT===0) {
-              rowEntity.WEIGHT=response.data[i].WEIGHT;
-              done++;
+              if (response.data[i].WEIGHT&&response.data[i].WEIGHT>0) {
+                rowEntity.WEIGHT=response.data[i].WEIGHT;
+                done++;
+              }
             }
             if (!rowEntity.Phone) {
               rowEntity.Phone=response.data[i].Phone;
@@ -165,6 +168,7 @@ angular.module('tempApp')
                   });
                   rowEntity['FLIGHT#'] = (parseInt(sections[sections.length-1],10)+1) + rowEntity.smfltnum;
                   var newFlight = {AIRCRAFT:aircrafts[0], PILOT:pilots[0], 
+                       "PAY TIME":0,
                        "FLIGHT#":rowEntity['FLIGHT#'].substring(0,3) + 'A', 
                        SmFltNum:rowEntity.smfltnum.substring(0,2) + 'A',
                        DATE:rowEntity['DATE TO FLY']
@@ -180,7 +184,10 @@ angular.module('tempApp')
               }
               
             }
-            if (rowEntity._id) return ($http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity));
+            if (rowEntity._id) {
+              rowEntity.UPDATED = new Date(Date.now());
+              return ($http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity));
+            }
             else {
               scope.gridOptions.data.splice(scope.index,1);
               if (!rowEntity.hasOwnProperty('uid')) scope.addData();
@@ -287,6 +294,28 @@ angular.module('tempApp')
         scope.shortApi = scope.myApi.substr(0,scope.myApi.length-1);
         socket.unsyncUpdates(scope.shortApi);
         socket.syncUpdates(scope.shortApi, scope.gridOptions.data, function(event, item, array){
+          array = array.filter(function(element){
+            var result = true;
+            if (query.date&&result) {
+              var date = new Date(query.date);
+              var year = date.getFullYear();
+              var month = date.getMonth();
+              var day = date.getDate();
+              var date1 = new Date(element['DATE TO FLY']||element['DATE']);
+              var year1 = date1.getFullYear();
+              var month1 = date1.getMonth();
+              var day1 = date1.getDate();
+              result = new Date(year, month, day ,0,0,0,0).getTime() === new Date(year1,month1,day1,0,0,0,0).getTime();
+            }
+            if (query.hourOfDay&&result) {
+              if (element.smfltnum) result = query.hourOfDay===element.smfltnum.substring(0,2);
+              else if (element.SmFltNum) result = query.hourOfDay===element.SmFltNum.substring(0,2);
+            }
+            if (query.invoice&&result) result = query.invoice===element['INVOICE#']
+            if (query.first&&result) result = query.first.substring(0,1).toLowerCase()===element.FIRST.substring(0,1).toLowerCase();
+            if (query.last&&result) result = query.last.substring(0,1).toLowerCase()===element.LAST.substring(0,1).toLowerCase();
+            return result;
+          });
           scope.gridOptions.data = gridSettings.getFun(scope.myApi,array);
           scope.gridOptions.data.sort(function(a,b){
             if (!a['FLIGHT#']) return true;
@@ -309,7 +338,7 @@ angular.module('tempApp')
       var query = {date: tempDate,hourOfDay:scope.smfltnum};
       var tc = tcFactory.getName();
       if (scope.nameTrue==="true") {
-        if (tc&&tc.length>1) query = {first:tcFactory.getName()[0], last:tcFactory.getName()[1],date:tcFactory.getDate()};
+        if (tc&&tc.length>1) query = {first:tcFactory.getName()[0], last:tcFactory.getName()[1]};
         else query={};
       }
       if (scope.nameTrue==="invoice") {

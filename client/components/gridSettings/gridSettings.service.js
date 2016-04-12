@@ -49,28 +49,31 @@ var flightDate;
       enableCellEditOnFocus: true,
       columnDefs: [
           { name: ' ', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-danger" type="button" id="removeRow"  ng-click="grid.appScope.removeRow(row)">X</button></div>', width:35 },
-          { name: '.', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-warning" type="button" id="return"  ng-click="grid.appScope.return(row)"><i class="fa fa-refresh"></i></button></div>', width:35 },
-          { name: 'First Name', field:'FIRST' },
+          { name: '.', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-warning" type="button" id="return"  ng-click="grid.appScope.return(row)"><i class="fa fa-refresh"></i></button></div>', width:38 },
+          { name: 'First Name', field:'FIRST'},
           { name: 'Last Name', field:'LAST'}, 
           { name: 'SF#', field:'smfltnum', width:50},
-          { name: 'FLT#', field:'FLIGHT#', width:75},
+          { name: 'FLT#', field:'FLIGHT#', width:60},
           { name: 'Travel Code', field: 'travelCode.value',  editModelField: 'travelCode', 
              editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
           
           { name: 'Body', field: 'WEIGHT', width:60},
-          { name: 'Frt', field:'FWeight', width:50},
+          { name: 'Frt', field:'FWeight', width:45},
           //{ name: 'Flight Number', field: 'flightId.value', editModelField: 'flightId', 
           //   editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
-          { name: 'Date', field:'DATE TO FLY' , type: 'date', cellFilter: 'date:"MM/dd/yyyy"'},
+          { name: 'Date', field:'DATE TO FLY' , type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:115},
           { name: 'INVOICE#'},
           //{ name: 'Travel Code', field: 'Ref#', editModelField: 'Ref#', 
           //   editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
           { name: 'Phone'},
           { name: 'Email', field:'email'},
-          { name: 'RESERVED', enableCellEdit:false, field:'DATE RESERVED', type: 'date', cellFilter: 'date:"MM/dd/yyyy"'},
+          { name: 'RESERVED', enableCellEdit:false, field:'DATE RESERVED', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:100},
+          { name: 'UPDATED', enableCellEdit:false, type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:100},
           { name: '`', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-info" type="button" ng-click="grid.appScope.getName(row)"><i class="fa fa-male"></i></button></div>', width:35 },
-          { name: '\'', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-primary" type="button" ng-click="grid.appScope.getInvoice(row)"><i class="fa fa-info"></i></button></div>', width:35 },
-          { name: ',', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-success" type="button" ng-click="grid.appScope.flushRows()"><i class="fa fa-hdd-o"></i></button></div>', width:35 } 
+          { name: '\'', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-primary" type="button" ng-click="grid.appScope.getInvoice(row)"><i class="fa fa-info"></i></button></div>', width:32 },
+          { name: ',', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-success" type="button" ng-click="grid.appScope.flushRows()"><i class="fa fa-hdd-o"></i></button></div>', width:36 }
+          
+          
       ],
       data : [] },
       

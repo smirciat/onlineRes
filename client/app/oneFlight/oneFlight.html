@@ -23,12 +23,9 @@
       <div class="col-md-1">
         <button ng-click="one.addFlight()" class="btn btn-info">+Flight</button>
       </div>
-      
-      
     </div>
 
 <div class="whole">
-  
   <div class="outer">
     <my-grid name-true="false" my-api="reservations" date="one.date" smfltnum={{one.smfltnum}} print="one.print()"></my-grid>
   </div>
@@ -57,20 +54,13 @@
       <div class="col-md-3 lg"></div>
       <div class="col-md-3 lg">Fuel_____________________</div>
     </div>
-    
     <div ng-repeat="tc in flight.tcs"> 
-      <div class="row">
-        <div class="col-md-12 lg">___________________________________________________________________________________________________</div>
-      </div>
-      <div class="row">
+      <div class="row bottom top">
         <div class="col-md-6 lg">{{tc.code}}</div>
         <div class="col-md-1 lg">Wt</div>
         <div class="col-md-1 lg">FtWt</div>
         <div class="col-md-2 lg">Invoice#</div>
         <div class="col-md-1 lg">Time</div>
-      </div>
-      <div class="row">
-        <div class="col-md-12 lg">‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾</div>
       </div>
       <div ng-repeat="res in tc.reservations"> 
        <div class="row">
@@ -81,21 +71,21 @@
           <div class="col-md-1 lg">{{res.time}}</div>
        </div> 
       </div>
-      </br>
+      <br/>
     </div>
   </div> 
-  </br>
+  <div class="row"><div class="col-md-1 lg"><p>.</p></div></div>
   <div class="row">
     <div class="col-md-1 lg">ETA:</div>
     <div class="col-md-3 lg">{{section.endTime}}</div>
   </div>
   <div ng-repeat="one in one.four">
-   <div class="row">
-    <div class="col-md-3 lgg">Seats installed</div>
-    <div class="col-md-4 lg">_________________</div>
+   <div class="row bottom">
+    <div class="col-md-4 lg">Seats installed</div>
+    <div class="col-md-3 lg"></div>
     <div class="col-md-3 lg">{{section.pilotCert}}</div>
-    <div class="col-md-1 lg">SC__</div>
-    <div class="col-md-1 lg">____</div>
+    <div class="col-md-1 lg">SC</div>
+    <div class="col-md-1 lg"></div>
    </div>  
   </div>
   <p class="break"></p>

@@ -59,6 +59,7 @@ angular.module('tempApp')
           return b-a;
         });
         var newFlight = {AIRCRAFT:aircrafts[0], PILOT:pilots[0], 
+                         "PAY TIME":0,
                          "FLIGHT#":(parseInt(sections[0],10)+1)+smfltnum + 'A', 
                          SmFltNum:smfltnum + 'A',
                          DATE:date
@@ -78,6 +79,7 @@ angular.module('tempApp')
       sections=[];
     $http.post('/api/reservations/day', body).then(response => {
       response.data.forEach(function(res){
+        if (!res.LAST) res.LAST="";
         section=res['FLIGHT#'].substring(0,1);
         flight=res['FLIGHT#'];
         tc = res['Ref#'];

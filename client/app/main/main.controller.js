@@ -148,7 +148,6 @@ class MainController {
         if (this.newRes._id){
           // has an _id field, its an edited reservation
           this.resEntry = 'UPDATED RESERVATION: ' + this.resEntry;
-          this.newRes.UPDATED = Date.now();
           this.newRes['FLIGHT#']="1" + this.newRes.smfltnum;
           //put
           this.update("Update",this.resEntry,this.newRes);
@@ -214,6 +213,7 @@ class MainController {
     }
     var newRes = Object.assign({},res);
     this.newRes = newRes;
+    this.newRes.UPDATED = d;
     this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
     this.code.selected = this.travelCodes.filter(function ( tc ) {
       return tc.ref === newRes['Ref#'];
