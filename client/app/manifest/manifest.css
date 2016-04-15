@@ -1,10 +1,12 @@
 @media screen,print {
+  .seven{
+    height:10in;
+  }
   .bld {
     font-weight:bold; 
   }
   .bottom{
     border-bottom: 1px solid black;
-    
   }
   .top{
     border-top: 1px solid black;
@@ -19,6 +21,7 @@
     font-size:x-large;
   }
   em { text-decoration:underline; }
+  
 }
 @media print {
   .break{

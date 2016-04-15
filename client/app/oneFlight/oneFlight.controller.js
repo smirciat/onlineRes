@@ -124,6 +124,7 @@ angular.module('tempApp')
           }
           
         }
+        if (res['INVOICE#']) res['INVOICE#'] = res['INVOICE#'].substring(0,9);
         sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations.push(res);
         //reservations[reservations.length-1].time set
         var hr = body.smfltnum.substring(0,2);

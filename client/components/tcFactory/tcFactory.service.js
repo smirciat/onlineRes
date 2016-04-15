@@ -26,15 +26,22 @@ angular.module('tempApp')
             }
         },
         getFlights: function (body,callback) {
-            if (flights&&oldBody.date===body.date&&oldBody.smfltnum===body.smfltnum) return callback(flights);
+            //if (body.smfltnum) body.smfltnum = body.smfltnum.toUpperCase();
+            if (oldBody.date) oldBody.date = new Date(oldBody.date);
+            if (body.date) body.date = new Date(body.date);
+            if (flights&&oldBody.date&&
+                         oldBody.date.getMonth()===body.date.getMonth()&&
+                         oldBody.date.getFullYear()===body.date.getFullYear()&&
+                         oldBody.date.getDate()===body.date.getDate()) return callback(flights);
             else {
                 oldBody=body;
-                $http.post('/api/flights/o',body).success(function(d) {
+                $http.post('/api/flights/o',{date:body.date}).success(function(d) {
                   return callback(flights=d);
                 });
             }
         },
         getReservations: function (body,callback) {
+            if (body.smfltnum) body.smfltnum = body.smfltnum.toUpperCase();
             if (reservations&&oldBody1.date===body.date&&oldBody1.smfltnum===body.smfltnum) return callback(reservations);
             else {
                 oldBody1=body;

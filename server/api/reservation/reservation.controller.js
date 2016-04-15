@@ -128,7 +128,6 @@ export function oneF(req, res) {
     order = [['DATE TO FLY','DESC']];
     options['INVOICE#'] = req.body.invoice;
   }
-  console.log(options);
   Reservation.findAll({where: options, order: order} )
     .then(responseWithResult(res))
     .catch(handleError(res));

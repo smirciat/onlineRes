@@ -12,9 +12,9 @@ var flightDate;
         enableCellEditOnFocus: true,
         columnDefs: [
           { name: ' ' , enableCellEdit:false, cellTemplate: '<div><button class="btn btn-danger" type="button" id="removeRow"  ng-click="grid.appScope.removeRow(row)">X</button></div>', width:35 },
-          { name: 'SmFltNum', enableCellEdit:false, sort: {
+          { name: 'SmFltNum', sort: {
                 direction: uiGridConstants.ASC, priority: 0}},
-          { name: 'FLIGHT#', enableCellEdit:false, displayName:'Flight Number', sort: {
+          { name: 'FLIGHT#', displayName:'Flight Number', sort: {
                 direction: uiGridConstants.ASC, priority: 1}},
           { name: 'DATE', enableCellEdit:false, displayName:'Flight Date', type:'date', 
                 cellFilter: 'date:"MM/dd/yyyy"' },
@@ -47,6 +47,9 @@ var flightDate;
       gridOptions:{
       rowEditWaitInterval: -1,
       enableCellEditOnFocus: true,
+      exporterMenuCsv: false,
+      enableGridMenu:true,
+      showColumnMenu:true,
       columnDefs: [
           { name: ' ', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-danger" type="button" id="removeRow"  ng-click="grid.appScope.removeRow(row)">X</button></div>', width:35 },
           { name: '.', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-warning" type="button" id="return"  ng-click="grid.appScope.return(row)"><i class="fa fa-refresh"></i></button></div>', width:38 },
@@ -61,14 +64,19 @@ var flightDate;
           { name: 'Frt', field:'FWeight', width:45},
           //{ name: 'Flight Number', field: 'flightId.value', editModelField: 'flightId', 
           //   editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
-          { name: 'Date', field:'DATE TO FLY' , type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:115},
-          { name: 'INVOICE#'},
+          { name: 'Date', field:'DATE TO FLY' , type: 'date', cellFilter: 'date:"MM/dd/yyyy"'},
+          { name: 'Invoice',field:'INVOICE#'},
           //{ name: 'Travel Code', field: 'Ref#', editModelField: 'Ref#', 
           //   editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
           { name: 'Phone'},
-          { name: 'Email', field:'email'},
-          { name: 'RESERVED', enableCellEdit:false, field:'DATE RESERVED', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:100},
-          { name: 'UPDATED', enableCellEdit:false, type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:100},
+          { name: 'Pilot', field: 'pilot.value',  editModelField: 'pilot', 
+             editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
+          { name: 'Aircraft', field: 'aircraft.value',  editModelField: 'aircraft', 
+             editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
+          
+          { name: 'Email', field:'email', visible:false},
+          { name: 'RESERVED', enableCellEdit:false, field:'DATE RESERVED', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:100, visible:false},
+          { name: 'UPDATED', enableCellEdit:false, type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:100, visible:false},
           { name: '`', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-info" type="button" ng-click="grid.appScope.getName(row)"><i class="fa fa-male"></i></button></div>', width:35 },
           { name: '\'', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-primary" type="button" ng-click="grid.appScope.getInvoice(row)"><i class="fa fa-info"></i></button></div>', width:32 },
           { name: ',', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-success" type="button" ng-click="grid.appScope.flushRows()"><i class="fa fa-hdd-o"></i></button></div>', width:36 }
@@ -92,17 +100,16 @@ var flightDate;
       preSave: ['DATE TO FLY','DATE RESERVED'],
       
       processAfterGet: function(data){
-        //$http.get('/api/travelCodes').success(function(tcs){
-        tcFactory.getData(function(tcs) {
-          data.forEach(function(d){
-            d.travelCode={};
-            d.travelCode.value = tcs.filter(function(element){
-              return element['Ref#']===d['Ref#'];
-            })[0]['Route'];
+        
+          return tcFactory.getData(function(tcs) {
+            data.forEach(function(d){
+              d.travelCode={};
+              d.travelCode.value = tcs.filter(function(element){
+                return element['Ref#']===d['Ref#'];
+              })[0]['Route'];
+            });
+            return data;
           });
-          //if (d.flightId) d.flightId.value = d.flightId.number;
-        });
-        return data;
         
       }
       

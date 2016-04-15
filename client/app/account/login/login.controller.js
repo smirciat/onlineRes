@@ -22,7 +22,8 @@ class LoginController {
       })
       .then(() => {
         // Logged in, redirect to home
-        this.$location.path('/');
+        if (this.Auth.hasRole('admin')) this.$location.path('/oneFlight');
+        else this.$location.path('/');
       })
       .catch(err => {
         this.errors.other = err.message;
