@@ -132,10 +132,12 @@ angular.module('tempApp')
                  var flight = flights.filter(function(flt){
                    return (flt['FLIGHT#'].toUpperCase()===hours[h].sections[i].flights[j].flight.toUpperCase());
                  })[0];
-                 hours[h].sections[i].flights[j].aircraft = flight.AIRCRAFT;
-                 hours[h].sections[i].flights[j].pilot = flight.PILOT;
-                 hours[h].sections[i].pilot = flight.PILOT;
-                 hours[h].sections[i].flights[j].date = flight.DATE;
+                 if (flight) {
+                   hours[h].sections[i].flights[j].aircraft = flight.AIRCRAFT;
+                   hours[h].sections[i].flights[j].pilot = flight.PILOT;
+                   hours[h].sections[i].pilot = flight.PILOT;
+                   hours[h].sections[i].flights[j].date = flight.DATE;
+                 }
                  hours[h].sections[i].flights[j].total=0;
                  
                    for (var l=0;l<hours[h].sections[i].flights[j].reservations.length;l++){

@@ -2,3 +2,27 @@
   background-color: #1fe0f0;
   color: #153ff0;
 } 
+.grid .ui-grid-row .green.odd {
+  background-color: #ccffcc;
+  border: .5px solid lightgray;
+}
+.grid .ui-grid-row .green.even {
+  background-color: #e6ffe6;
+  border: .5px solid lightgray;
+}
+.grid .ui-grid-row .red.odd {
+  background-color: #ffccff;
+  border: .5px solid lightgray;
+}
+.grid .ui-grid-row .red.even {
+  background-color: #ffe6ff;
+  border: .5px solid lightgray;
+}
+.grid .ui-grid-row .yellow.even {
+  background-color: #ffff66;
+  border: .5px solid lightgray;
+}
+.grid .ui-grid-row .yellow.odd {
+  background-color: #ffff99;
+  border: .5px solid lightgray;
+}

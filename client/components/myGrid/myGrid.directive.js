@@ -278,6 +278,17 @@ angular.module('tempApp')
             });
           
         }
+        if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="Last Name"&&rowEntity.WEIGHT===0) {
+          //look up body weight
+          $http.post('/api/reservations/name',{first:rowEntity.FIRST,last:rowEntity.LAST}).success(function(data){
+            for (var i=0;i<data.length;i++){
+              if (data[i].WEIGHT>0) {
+                rowEntity.WEIGHT = data[i].WEIGHT;
+                i=data.length;
+              }
+            }
+          });
+        }
         
       });
     };
@@ -338,6 +349,9 @@ angular.module('tempApp')
     scope.setPlanePilot = function(){
         var flts;
         if (scope.gridOptions.data.length>0){
+          for (var i=0;i<scope.gridOptions.data.length;i++){
+            scope.gridOptions.data[i].count=i;
+          }
           var body = {date:scope.gridOptions.data[0]['DATE TO FLY'],smfltnum:scope.gridOptions.data[0].smfltnum};
           tcFactory.getFlights(body,function(flights){
             return tcFactory.getPilots(function(pilots){
