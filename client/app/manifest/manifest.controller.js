@@ -154,6 +154,7 @@ angular.module('tempApp')
             for (var h=0;h<hours.length;h++){
               for (var i=0;i<hours[h].sections.length;i++){
                 hours[h].sections[i].pilotCert = pilotSch.filter(function(pilot){
+                  if (!hours[h].sections[i].pilot) return false;
                   return pilot.Pilot.toUpperCase()===hours[h].sections[i].pilot.toUpperCase();
                 })[0].lic;
               }  

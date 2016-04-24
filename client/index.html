@@ -19,10 +19,13 @@
       <link rel="stylesheet" href="bower_components/angularjs-datepicker/dist/angular-datepicker.min.css" />
       <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
       <link rel="stylesheet" href="bower_components/angularPrint/angularPrint.css" />
+      <link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/style.css" />
       <!-- endbower -->
     <!-- endbuild -->
     <link rel="stylesheet" media="all" href="bower_components/bootswatch-dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/bootstrap-social/bootstrap-social.css" />
+    <link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/themes.css" />
+    
     <!-- build:css({.tmp,client}) app/app.css -->
       <link rel="stylesheet" href="app/app.css">
       <!-- injector:css -->
@@ -36,6 +39,7 @@
       <link rel="stylesheet" href="app/oneName/oneName.css">
       <link rel="stylesheet" href="app/searchName/searchName.css">
       <link rel="stylesheet" href="app/todaysFlights/todaysFlights.css">
+      <link rel="stylesheet" href="components/chat/chat.css">
       <link rel="stylesheet" href="components/footer/footer.css">
       <link rel="stylesheet" href="components/modal/modal.css">
       <link rel="stylesheet" href="components/myGrid/myGrid.css">
@@ -88,9 +92,13 @@
       <script src="bower_components/angular-touch/angular-touch.js"></script>
       <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
       <script src="bower_components/angularPrint/angularPrint.js"></script>
+      <script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>
+      <script src="bower_components/angular-bootstrap-simple-chat/src/scripts/templates.js"></script>
+      <script src="bower_components/angular-scroll-glue/src/scrollglue.js"></script>
       <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <!-- build:js(.tmp) app/app.js -->
       <script src="app/app.js"></script>
       <!-- injector:js -->
@@ -98,9 +106,11 @@
       <script src="components/auth/auth.module.js"></script>
       <script src="components/util/util.module.js"></script>
       <script src="app/todaysFlights/todaysFlights.controller.js"></script>
+      <script src="app/admin/admin.controller.1.js"></script>
       <script src="app/admin/admin.controller.js"></script>
       <script src="app/account/account.js"></script>
       <script src="app/admin/admin.router.js"></script>
+      <script src="app/admin/templates.js"></script>
       <script src="app/app.constant.js"></script>
       <script src="app/invoice/invoice.controller.js"></script>
       <script src="app/invoice/invoice.js"></script>
@@ -123,6 +133,9 @@
       <script src="components/auth/interceptor.service.js"></script>
       <script src="components/auth/router.decorator.js"></script>
       <script src="components/auth/user.service.js"></script>
+      <script src="components/chat/chat.controller.js"></script>
+      <script src="components/chat/chat.directive.js"></script>
+      <script src="components/datepickerPopup/datepickerPopup.directive.js"></script>
       <script src="components/footer/footer.directive.js"></script>
       <script src="components/gridSettings/gridSettings.service.js"></script>
       <script src="components/modal/modal.service.js"></script>

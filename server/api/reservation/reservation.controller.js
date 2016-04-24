@@ -100,6 +100,7 @@ export function daily(req, res) {
 //get all reservations for the specified day and flight time
 export function oneF(req, res) {
   var options = {};
+  if (req.body.smfltnum&&!req.body.hourOfDay) req.body.hourOfDay = req.body.smfltnum.substring(0,2);
   var order = [['FLIGHT#','ASC'],['Ref#','ASC']];
   if (req.body.date) {
     
@@ -115,13 +116,7 @@ export function oneF(req, res) {
     //return null;
   }
   if (req.body.hourOfDay){
-    //var smfltnum2 = req.body.hourOfDay.substring(0,2) + 'B';
-    //if (req.body.hourOfDay.toUpperCase().substring(2)==='B') smfltnum2 = req.body.hourOfDay.substring(0,2) + 'A';
     options['$or'] = [{smfltnum:req.body.hourOfDay+'A'},{smfltnum:req.body.hourOfDay+'B'}];
-  }
-  else {
-    //res.status(500).end();
-    //return null;
   }
   
   if (req.body.invoice) {

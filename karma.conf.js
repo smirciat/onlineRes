@@ -28,6 +28,12 @@ module.exports = function(config) {
       'client/bower_components/microplugin/src/microplugin.js',
       'client/bower_components/selectize/dist/js/selectize.js',
       'client/bower_components/angularjs-datepicker/dist/angular-datepicker.min.js',
+      'client/bower_components/angular-touch/angular-touch.js',
+      'client/bower_components/angular-ui-grid/ui-grid.js',
+      'client/bower_components/angularPrint/angularPrint.js',
+      'client/bower_components/angular-bootstrap-simple-chat/src/scripts/index.js',
+      'client/bower_components/angular-bootstrap-simple-chat/src/scripts/templates.js',
+      'client/bower_components/angular-scroll-glue/src/scrollglue.js',
       'client/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'node_modules/socket.io-client/socket.io.js',

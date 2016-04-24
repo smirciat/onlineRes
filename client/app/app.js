@@ -20,7 +20,9 @@ angular.module('tempApp', [
   'ui.grid.rowEdit',
   'ui.grid.selection', 
   'ui.grid.exporter',
-  'AngularPrint'
+  'AngularPrint',
+  'irontec.simpleChat',
+  'luegg.directives'
 ])
   .config(function($routeProvider, $locationProvider) {
     $routeProvider

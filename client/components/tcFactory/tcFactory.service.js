@@ -2,8 +2,9 @@
 
 angular.module('tempApp')
   .service('tcFactory', ['$http', function ($http) {
-    var date = new Date(Date.now());
-    date = (date.getMonth()+1) + '/' + date.getDate() + '/' + date.getFullYear();
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var d = new Date(Date.now());
+    var date =date||months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
     var smfltnum = "09A";
     var travelCodes;
     var pilots;
@@ -26,7 +27,6 @@ angular.module('tempApp')
             }
         },
         getFlights: function (body,callback) {
-            //if (body.smfltnum) body.smfltnum = body.smfltnum.toUpperCase();
             if (oldBody.date) oldBody.date = new Date(oldBody.date);
             if (body.date) body.date = new Date(body.date);
             if (flights&&oldBody.date&&
@@ -34,8 +34,8 @@ angular.module('tempApp')
                          oldBody.date.getFullYear()===body.date.getFullYear()&&
                          oldBody.date.getDate()===body.date.getDate()) return callback(flights);
             else {
-                oldBody=body;
                 $http.post('/api/flights/o',{date:body.date}).success(function(d) {
+                  oldBody=body;
                   return callback(flights=d);
                 });
             }
@@ -44,8 +44,8 @@ angular.module('tempApp')
             if (body.smfltnum) body.smfltnum = body.smfltnum.toUpperCase();
             if (reservations&&oldBody1.date===body.date&&oldBody1.smfltnum===body.smfltnum) return callback(reservations);
             else {
-                oldBody1=body;
-                $http.post('/api/reservations/day',body).success(function(d) {
+                $http.post('/api/reservations/o',body).success(function(d) {
+                  oldBody1=body;
                   return callback(reservations=d);
                 });
             }
@@ -84,7 +84,8 @@ angular.module('tempApp')
             date=dt;
         },
         getDate: function(){
-            return date;
+            var d = new Date(date);
+            return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
         },
         setSmfltnum: function(sm){
            smfltnum=sm.toUpperCase();

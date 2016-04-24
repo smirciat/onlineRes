@@ -45,6 +45,7 @@ angular.module('tempApp')
         if (row.entity._id) { 
           $http.put('/api/' + scope.myApi + '/superdelete/' + row.entity._id);
           if (scope.myApi==='flights') {
+            tcFactory.refreshFlights();
             var newFlight = row.entity['FLIGHT#'].substring(0,3) + 'B';
             if (row.entity['FLIGHT#'].substring(3).toUpperCase()==='B') newFlight=row.entity['FLIGHT#'].substring(0,3) + 'A';
             row.entity['FLIGHT#']=newFlight;
@@ -59,7 +60,6 @@ angular.module('tempApp')
             });
           }
         }
-         
     };
     
     scope.return = function(row){
@@ -75,16 +75,16 @@ angular.module('tempApp')
       newRow.entity['DATE RESERVED'] = new Date(Date.now());
       var index = scope.gridOptions.data.indexOf(row);
       tcFactory.getData(function(tcs) {
-        newRow.entity.travelCode.value = tcs.filter(function(element){
+        var values = tcs.filter(function(element){
               return element['Ref#']===newRow.entity['Ref#'];
-            })[0]['Route'];
+            });
+        if (values.length>0) newRow.entity.travelCode.value = values[0]['Route'];
         //scope.gridOptions.data.splice(index,0,newRow.entity);    
         scope.gridOptions.data.push(newRow.entity);
         $timeout(function(){
           scope.gridApi.rowEdit.setRowsDirty([scope.gridOptions.data[scope.gridOptions.data.length-1]]);
         },100);
       });
-      
     };
     
     scope.index=0;
@@ -98,7 +98,7 @@ angular.module('tempApp')
       var body = {date:rowEntity['DATE TO FLY']||rowEntity['DATE'], smfltnum:rowEntity.smfltnum||rowEntity.SmFltNum};
       //reservations only
       if (scope.myApi==='reservations'){
-        if (rowEntity['FLIGHT#'].substring(1)!==rowEntity.smfltnum) rowEntity['FLIGHT#']=undefined;
+        if (rowEntity['FLIGHT#']&&rowEntity['FLIGHT#'].substring(1)!==rowEntity.smfltnum) rowEntity['FLIGHT#']=undefined;
         pilots=[];
         aircrafts=[];
         sections=['0'];
@@ -150,7 +150,7 @@ angular.module('tempApp')
           flights.sort(function(a,b){
             return a['FLIGHT#'].localeCompare(b['FLIGHT#']);
           });
-          return $http.post('/api/reservations/day',body);
+          return $http.post('/api/reservations/o',body);
         })
         
         .then(function(response){
@@ -199,7 +199,6 @@ angular.module('tempApp')
                 }
                 else rowEntity['FLIGHT#'] = '9' + rowEntity.smfltnum;
               }
-              
             }
             if (rowEntity._id) {
               rowEntity.UPDATED = new Date(Date.now());
@@ -210,11 +209,7 @@ angular.module('tempApp')
               if (!rowEntity.hasOwnProperty('uid')) scope.addData();
               return $http.patch('/api/' + scope.myApi + '/', rowEntity);
             }
-            
-        })
-        
-        
-        ;
+        });
       }
       //other api's
       else {
@@ -222,7 +217,9 @@ angular.module('tempApp')
           //this is an update
           if (rowEntity.Pilot) rowEntity.PILOT = rowEntity.Pilot.value;
           if (rowEntity.Aircraft) rowEntity.AIRCRAFT = rowEntity.Aircraft.value;
-          promise =  ($http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity));
+          promise =  $http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity).then(function(response){
+            tcFactory.refreshFlights();
+          });
           //update other half of flight
           $http.post('/api/flights/o',body).then(function(response){
             var flights = response.data.filter(function(flt){
@@ -240,14 +237,14 @@ angular.module('tempApp')
         else {
               scope.gridOptions.data.splice(scope.index,1);
               if (!rowEntity.hasOwnProperty('uid')) scope.addData();
-              promise = $http.patch('/api/' + scope.myApi + '/', rowEntity);
+              promise = $http.patch('/api/' + scope.myApi + '/', rowEntity).then(function(response){
+                tcFactory.refreshFlights();
+              });
         }
       }
         
        //actually save the change
       scope.gridApi.rowEdit.setSavePromise( rowEntity, promise);
-            
-
     };
     
     scope.gridOptions.multiSelect=false;
@@ -276,7 +273,6 @@ angular.module('tempApp')
                   scope.setPlanePilot();
                 });
             });
-          
         }
         if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="Last Name"&&rowEntity.WEIGHT===0) {
           //look up body weight
@@ -284,12 +280,12 @@ angular.module('tempApp')
             for (var i=0;i<data.length;i++){
               if (data[i].WEIGHT>0) {
                 rowEntity.WEIGHT = data[i].WEIGHT;
+                if (!rowEntity.Phone) rowEntity.Phone=data[i].Phone;
                 i=data.length;
               }
             }
           });
         }
-        
       });
     };
 
@@ -433,8 +429,6 @@ angular.module('tempApp')
       });  
     };
     
-    
-    
     scope.flushRows = function(){
       scope.gridApi.rowEdit.flushDirtyRows(scope.gridApi.grid);
     };
@@ -468,8 +462,8 @@ angular.module('tempApp')
         .then(function(response){
           for (var i=0;i<response.data.length;i++){
             if (!row.entity['INVOICE#']) {
-              console.log(response.data[i]['INVOICE#'].substring(0,8));
-              if (Number.isInteger(parseInt(response.data[i]['INVOICE#'].substring(0,8),10))) row.entity['INVOICE#']=response.data[i]['INVOICE#'];
+              if (response.data[i]['INVOICE#']&&Number.isInteger(parseInt(response.data[i]['INVOICE#'].substring(0,8),10))) 
+                row.entity['INVOICE#']=response.data[i]['INVOICE#'];
               scope.gridApi.rowEdit.setRowsDirty([row.entity]);
             }  
           }
@@ -502,8 +496,6 @@ angular.module('tempApp')
       });
     }
     //scope.getData(scope.query);
-    
-    
    }
   };
   });

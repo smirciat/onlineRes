@@ -1,14 +1,14 @@
 <navbar></navbar>
 <p></p>
     <div class="row">
-      <div class="col-sm-2 col-md-2"><label class="form-control">Enter Date:</label></div>
-      <div class="col-sm-3 col-md-4">
+      <div class="col-sm-2 col-xs-2 col-md-2"><label class="form-control">Enter Date:</label></div>
+      <div class="col-sm-3 col-xs-4 col-md-4">
           <div class="datepicker" date-format="MMM d, yyyy" >
               <input class="form-control" ng-model="one.date" ng-change="one.print()" type="text"/>
           </div>
       </div>
-      <div class="col-sm-2 col-md-2"><label class="form-control">Enter time of day:</label></div>
-      <div class="col-sm-2 col-md-2">
+      <div class="col-sm-2 col-xs-2 col-md-2"><label class="form-control">Enter time of day:</label></div>
+      <div class="col-sm-2 col-xs-2 col-md-2">
           <ui-select ng-model="one.time.selected" theme="selectize" ng-disabled="disabled" ng-change="one.makeSm()">
               <ui-select-match placeholder="Choose...">{{$select.selected.time}}</ui-select-match>
               <ui-select-choices repeat="tm in one.times" >
@@ -16,10 +16,11 @@
               </ui-select-choices>
           </ui-select>
       </div>
-      <div class="col-md-1">
-        <button print-btn class="btn btn-success">Print</button>
+      <div class="col-xs-1 col-md-1" style="display:inline;">
+        <a href="#"><button print-btn class="btn btn-success"><i class="fa fa-print" aria-hidden="true"></i></button></a>
+        <a href="#"><chat></chat></a>
       </div>
-      <div class="col-md-1">
+      <div class="col-xs-1 col-md-1">
         <button ng-click="one.addFlight()" class="btn btn-info">+Flight</button>
       </div>
     </div>
@@ -34,41 +35,41 @@
  <div ng-repeat="section in one.sections">
   <div class="seven">  
     <div class="row">
-      <div class="col-md-9 lg">
+      <div class="col-xs-9 col-md-9 lg">
       </div>
-      <div class="col-md-3 lg">
+      <div class="col-xs-3 col-md-3 lg">
           ATD______________________
       </div>
     </div>
     <div ng-repeat="flight in section.flights">
       <div class="row">
-        <div class="col-md-1 lg">Flt#</div>
-        <div class="col-md-2 bld lg">{{flight.flight}}</div>
-        <div class="col-md-3 lg">{{flight.date | date : 'MM/dd/yyyy'}}</div>
-        <div class="col-md-2 lg">{{flight.aircraft}}</div>
-        <div class="col-md-4 bld lg">{{flight.pilot}}</div>
+        <div class="col-xs-1 col-md-1 lg">Flt#</div>
+        <div class="col-xs-2 col-md-2 bld lg">{{flight.flight}}</div>
+        <div class="col-xs-3 col-md-3 lg">{{flight.date | date : 'MM/dd/yyyy'}}</div>
+        <div class="col-xs-2 col-md-2 lg">{{flight.aircraft}}</div>
+        <div class="col-xs-4 col-md-4 bld lg">{{flight.pilot}}</div>
       </div>
       <div class="row">
-          <div class="col-md-4 lg">Total Load HOM:</div>
-        <div class="col-md-2 lg">{{flight.total}}</div> 
-        <div class="col-md-3 lg"></div>
-        <div class="col-md-3 lg">Fuel_____________________</div>
+          <div class="col-xs-4 col-md-4 lg">Total Load HOM:</div>
+        <div class="col-xs-2 col-md-2 lg">{{flight.total}}</div> 
+        <div class="col-xs-3 col-md-3 lg"></div>
+        <div class="col-xs-3 col-md-3 lg">Fuel_____________________</div>
       </div>
       <div ng-repeat="tc in flight.tcs"> 
         <div class="row bottom top">
-          <div class="col-md-6 lg">{{tc.code}}</div>
-          <div class="col-md-1 lg">Wt</div>
-          <div class="col-md-1 lg">FtWt</div>
-          <div class="col-md-2 lg">Invoice#</div>
-          <div class="col-md-1 lg">Time</div>
+          <div class="col-xs-6 col-md-6 lg">{{tc.code}}</div>
+          <div class="col-xs-1 col-md-1 lg">Wt</div>
+          <div class="col-xs-1 col-md-1 lg">FtWt</div>
+          <div class="col-xs-2 col-md-2 lg">Invoice#</div>
+          <div class="col-xs-1 col-md-1 lg">Time</div>
         </div>
         <div ng-repeat="res in tc.reservations"> 
          <div class="row">
-            <div class="col-md-6 lg">{{res.FIRST + ' ' + res.LAST}}</div>
-            <div class="col-md-1 lg">{{res.WEIGHT}}</div>
-            <div class="col-md-1 lg">{{res.FWeight}}</div>
-            <div class="col-md-2 ">{{res['INVOICE#']}}</div>
-            <div class="col-md-1 lg">{{res.time}}</div>
+            <div class="col-xs-6 col-md-6 lg">{{res.FIRST + ' ' + res.LAST}}</div>
+            <div class="col-xs-1 col-md-1 lg">{{res.WEIGHT}}</div>
+            <div class="col-xs-1 col-md-1 lg">{{res.FWeight}}</div>
+            <div class="col-xs-2 col-md-2 ">{{res['INVOICE#']}}</div>
+            <div class="col-xs-1 col-md-1 lg">{{res.time}}</div>
          </div> 
         </div>
         <br/>
@@ -77,16 +78,16 @@
   </div>
     <div>  
       <div class="row">
-        <div class="col-md-1 lg">ETA:</div>
-        <div class="col-md-3 lg">{{section.endTime}}</div>
+        <div class="col-xs-1 col-md-1 lg">ETA:</div>
+        <div class="col-xs-3 col-md-3 lg">{{section.endTime}}</div>
       </div>
       <div ng-repeat="one in one.four">
        <div class="row bottom">
-        <div class="col-md-4 lg">Seats installed</div>
-        <div class="col-md-3 lg"></div>
-        <div class="col-md-3 lg">{{section.pilotCert}}</div>
-        <div class="col-md-1 lg">SC</div>
-        <div class="col-md-1 lg"></div>
+        <div class="col-xs-4 col-md-4 lg">Seats installed</div>
+        <div class="col-xs-3 col-md-3 lg"></div>
+        <div class="col-xs-3 col-md-3 lg">{{section.pilotCert}}</div>
+        <div class="col-xs-1 col-md-1 lg">SC</div>
+        <div class="col-xs-1 col-md-1 lg"></div>
        </div>  
       </div>
     </div>
