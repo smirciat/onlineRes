@@ -21,8 +21,9 @@ angular.module('tempApp', [
   'ui.grid.selection', 
   'ui.grid.exporter',
   'AngularPrint',
-  'irontec.simpleChat',
-  'luegg.directives'
+  'luegg.directives',
+  'angular-web-notification',
+  'emoji'
 ])
   .config(function($routeProvider, $locationProvider) {
     $routeProvider

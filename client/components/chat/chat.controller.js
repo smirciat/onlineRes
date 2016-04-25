@@ -1,55 +1,70 @@
 'use strict';
 angular.module('tempApp')
-  .controller('ChatController', function($scope,$http,Auth,socket){
+  .controller('ChatController', function($scope,$timeout){
     var vm = this;
-    var tempArray =[];
-    this.visible = true;
-    this.expandOnNew = true;
-    this.http=$http;
-    var messages;
-    this.messages=[{username:'a',content:'1'}];
-    this.username = Auth.getCurrentUser().name;
     
-    $http.get('/api/chats').then(function(response){
-      tempArray=response.data;
-      messages = tempArray.filter(function(response){
-        return true;
-      });
-      
-      socket.syncUpdates('chat', tempArray, function(event, item, array){
-        array.sort(function(a,b){
-          return a.date<b.date;
-        });
-        vm.messages = [];
-        for (var i=0;i<50;i++) {
-          if (array.length>i) vm.messages.push(array[i]);
-          else i=50;
-        }
-      });
-      console.log(vm.messages)
-      vm.messages = messages;
-      console.log(vm.messages)
-      return vm.messages;
-    });
+    vm.isHidden = false;
+		vm.messages = $scope.messages;
+		vm.username = $scope.username;
+		
+		vm.myUserId = $scope.myUserId;
+		vm.inputPlaceholderText = $scope.inputPlaceholderText;
+		vm.submitButtonText = $scope.submitButtonText;
+		vm.title = $scope.title;
+		vm.theme = 'chat-th-' + $scope.theme;
+		vm.writingMessage = '';
+		vm.panelStyle = {'display': 'block'};
+		vm.chatButtonClass= 'fa-angle-double-down icon_minim';
+    vm.toggle = toggle;
+		vm.close = close;
+		vm.submitFunction = submitFunction;
     
-    
-    this.sendMessage = function(message, username) {
-      if(message && message !== '' && username) {
-        var msg = {
-          'username': username,
-          'content': message,
-          'date': new Date(Date.now())
-        };
-        vm.messages.push(msg);
-        console.log(vm.messages);
-        //vm.http.post('/api/chats',msg);
-        
-      }
-    };
-    
-    $scope.$on('$destroy', function () {
-      socket.unsyncUpdates('chat');
-    });
+		function submitFunction() {
+			$scope.submitFunction()(vm.writingMessage, vm.username);
+			vm.writingMessage = '';
+			scrollToBottom();
+		}
+
+		$scope.$watch('visible', function() { // make sure scroll to bottom on visibility change w/ history items
+			scrollToBottom();
+			$timeout(function() {
+				$scope.$chatInput.focus();
+			}, 250);
+		});
+		$scope.$watch('messages.length', function() {
+			//seems unnecessary, but it solved my problem.  Link between this.messages and $scope.messages was lost after initialization
+			
+			scrollToBottom();
+			if (!$scope.historyLoading) scrollToBottom(); // don't scrollToBottom if just loading history
+            if ($scope.expandOnNew && vm.isHidden) {
+                toggle();
+            }
+		});
+
+		function scrollToBottom() {
+			$timeout(function() { // use $timeout so it runs after digest so new height will be included
+				$scope.$msgContainer.scrollTop($scope.$msgContainer[0].scrollHeight);
+			}, 200, false);
+		}
+
+		function close() {
+			$scope.visible = false;
+		}
+
+		function toggle() {
+			if(vm.isHidden) {
+				vm.chatButtonClass = 'fa-angle-double-down icon_minim';
+				vm.panelStyle = {'display': 'block'};
+				vm.isHidden = false;
+				scrollToBottom();
+			} else {
+				vm.chatButtonClass = 'fa-expand icon_minim';
+				vm.panelStyle = {'display': 'none'};
+				vm.isHidden = true;
+			}
+		}
+		console.log(vm);
+    console.log($scope);
   
 });
 

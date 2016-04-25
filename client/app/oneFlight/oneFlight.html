@@ -2,7 +2,7 @@
 <p></p>
     <div class="row">
       <div class="col-sm-2 col-xs-2 col-md-2"><label class="form-control">Enter Date:</label></div>
-      <div class="col-sm-3 col-xs-4 col-md-4">
+      <div class="col-sm-3 col-xs-3 col-md-3">
           <div class="datepicker" date-format="MMM d, yyyy" >
               <input class="form-control" ng-model="one.date" ng-change="one.print()" type="text"/>
           </div>
@@ -16,9 +16,11 @@
               </ui-select-choices>
           </ui-select>
       </div>
-      <div class="col-xs-1 col-md-1" style="display:inline;">
-        <a href="#"><button print-btn class="btn btn-success"><i class="fa fa-print" aria-hidden="true"></i></button></a>
-        <a href="#"><chat></chat></a>
+      <div class="col-xs-1 col-md-1">
+        <button print-btn class="btn btn-success">Print</button>
+      </div>
+      <div class="col-xs-1 col-md-1">
+        <chat></chat>
       </div>
       <div class="col-xs-1 col-md-1">
         <button ng-click="one.addFlight()" class="btn btn-info">+Flight</button>

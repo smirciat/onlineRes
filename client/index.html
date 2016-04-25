@@ -19,13 +19,11 @@
       <link rel="stylesheet" href="bower_components/angularjs-datepicker/dist/angular-datepicker.min.css" />
       <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
       <link rel="stylesheet" href="bower_components/angularPrint/angularPrint.css" />
-      <link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/style.css" />
       <!-- endbower -->
     <!-- endbuild -->
     <link rel="stylesheet" media="all" href="bower_components/bootswatch-dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/bootstrap-social/bootstrap-social.css" />
-    <link rel="stylesheet" href="bower_components/angular-bootstrap-simple-chat/src/css/themes.css" />
-    
+    <link rel="stylesheet" href="bower_components/angular-emoji/dist/emoji.min.css" />
     <!-- build:css({.tmp,client}) app/app.css -->
       <link rel="stylesheet" href="app/app.css">
       <!-- injector:css -->
@@ -92,25 +90,25 @@
       <script src="bower_components/angular-touch/angular-touch.js"></script>
       <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
       <script src="bower_components/angularPrint/angularPrint.js"></script>
-      <script src="bower_components/angular-bootstrap-simple-chat/src/scripts/index.js"></script>
-      <script src="bower_components/angular-bootstrap-simple-chat/src/scripts/templates.js"></script>
       <script src="bower_components/angular-scroll-glue/src/scrollglue.js"></script>
+      <script src="bower_components/HTML5-Desktop-Notifications2/desktop-notify.js"></script>
+      <script src="bower_components/angular-web-notification/angular-web-notification.js"></script>
+      <script src="bower_components/angular-emoji/dist/emoji.min.js"></script>
       <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- build:js(.tmp) app/app.js -->
       <script src="app/app.js"></script>
       <!-- injector:js -->
       <script src="app/admin/admin.module.js"></script>
       <script src="components/auth/auth.module.js"></script>
       <script src="components/util/util.module.js"></script>
-      <script src="app/todaysFlights/todaysFlights.controller.js"></script>
+      <script src="app/todaysFlights/todaysFlights.js"></script>
       <script src="app/admin/admin.controller.1.js"></script>
       <script src="app/admin/admin.controller.js"></script>
       <script src="app/account/account.js"></script>
       <script src="app/admin/admin.router.js"></script>
-      <script src="app/admin/templates.js"></script>
       <script src="app/app.constant.js"></script>
       <script src="app/invoice/invoice.controller.js"></script>
       <script src="app/invoice/invoice.js"></script>
@@ -126,8 +124,8 @@
       <script src="app/oneName/oneName.js"></script>
       <script src="app/searchName/searchName.controller.js"></script>
       <script src="app/searchName/searchName.js"></script>
+      <script src="app/todaysFlights/todaysFlights.controller.js"></script>
       <script src="app/account/login/login.controller.js"></script>
-      <script src="app/todaysFlights/todaysFlights.js"></script>
       <script src="app/account/settings/settings.controller.js"></script>
       <script src="components/auth/auth.service.js"></script>
       <script src="components/auth/interceptor.service.js"></script>
@@ -151,6 +149,7 @@
       <script src="components/uiSelectWrap/uiSelectWrap.directive.js"></script>
       <script src="app/account/signup/signup.controller.js"></script>
       <script src="components/util/util.service.js"></script>
+      <script src="components/visibilityApiService/visibilityApiService.service.js"></script>
       <!-- endinjector -->
     <!-- endbuild -->
   </body>

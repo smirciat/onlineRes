@@ -10,6 +10,8 @@ export default function(sequelize, DataTypes) {
     },
     username: DataTypes.STRING,
     content: DataTypes.STRING,
-    date: DataTypes.DATE
+    date: DataTypes.DATE,
+    fromUserId: DataTypes.STRING,
+    imageUrl: DataTypes.STRING
   });
 }

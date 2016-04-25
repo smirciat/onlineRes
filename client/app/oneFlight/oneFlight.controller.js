@@ -201,9 +201,11 @@ angular.module('tempApp')
         }  
         tcFactory.getPilots(function(pilotSch){
           for (var i=0;i<sections.length;i++){
-            sections[i].pilotCert = pilotSch.filter(function(pilot){
+            var p = pilotSch.filter(function(pilot){
+              if (!sections[i].pilot) return false;
               return pilot.Pilot.toUpperCase()===sections[i].pilot.toUpperCase();
-            })[0].lic;
+            });
+            if (p.length>0) sections[i].pilotCert = p[0].lic;
           }  
         
         });
