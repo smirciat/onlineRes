@@ -27,6 +27,22 @@ angular.module('tempApp')
     var body;
     this.four = [1,2,3,4];
       
+    this.today = function(){
+      d=new Date(Date.now());
+      this.date = (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getFullYear();
+      tcFactory.setDate(this.date);
+      var smfltnum = (d.getHours()+1);
+      if (smfltnum===24) smfltnum=19;
+      if (smfltnum<7) smfltnum=7;
+      if (smfltnum>19) smfltnum =19;
+      if (smfltnum<10) smfltnum = '0' + smfltnum + 'A';
+      else smfltnum = smfltnum + 'A';
+      tcFactory.setSmfltnum(smfltnum);
+      this.smfltnum=smfltnum.substring(0,2);
+      this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
+      tcFactory.refreshFlights();
+    };
+    
     this.makeSm = function(){
       if (this.time.selected.ref<10) this.smfltnum="0" + this.time.selected.ref;
       else this.smfltnum=this.time.selected.ref.toString();

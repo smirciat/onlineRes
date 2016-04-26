@@ -270,7 +270,12 @@ angular.module('tempApp')
               $http.patch('/api/flights/' + response.data[0]._id,response.data[0])
                 .then(function(res){
                   tcFactory.refreshFlights();
-                  scope.setPlanePilot();
+                  //scope.setPlanePilot();
+                  //force socket refresh
+                  if (rowEntity._id) {
+                    rowEntity.Comment = Date.now().toString();
+                    $http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity);
+                  }
                 });
             });
         }
@@ -374,6 +379,7 @@ angular.module('tempApp')
                     })[0]['Aircraft'];
                   }
                 });
+                
                 return scope.gridOptions.data;
               });
             });
@@ -394,6 +400,8 @@ angular.module('tempApp')
         scope.shortApi = scope.myApi.substr(0,scope.myApi.length-1);
         socket.unsyncUpdates(scope.shortApi);
         socket.syncUpdates(scope.shortApi, scope.gridOptions.data, function(event, item, array){
+          //refresh tcFactory flights if pilot/aircraft update
+          if (item.Comment) tcFactory.refreshFlights();
           if (scope.shortApi==='reservation') array.forEach(function(r){
             //cleanse newRecord of contaminated data for unknown reason
             if (!r.hasOwnProperty('uid')) {
@@ -438,7 +446,9 @@ angular.module('tempApp')
             return a['FLIGHT#'].localeCompare(b['FLIGHT#']);
           });
           scope.print();
-          if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') scope.setPlanePilot();
+          if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') {
+            scope.setPlanePilot();
+          }
         });
       });  
     };
