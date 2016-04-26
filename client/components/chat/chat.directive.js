@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .directive('chat', function ($http,Auth,socket,$timeout,webNotification) {
+  .directive('chat', function ($http,Auth,socket,$timeout,webNotification,$location) {
     return {
       templateUrl: 'components/chat/chat.html',
 			replace: true,
@@ -58,10 +58,12 @@ angular.module('tempApp')
                   body: item.content + '\nfrom: ' + item.username,
                   icon: '../bower_components/HTML5-Desktop-Notifications2/alert.ico',
                   onClick: function onNotificationClicked() {
-                    var NewWin = window.open('/admin');
-                    NewWin.focus();
+                    //var NewWin = window.open('/admin');
+                    window.focus();
                     $timeout(function(){
-                      NewWin.focus();
+                      //NewWin.focus();
+                      window.focus();
+                      $location.path('/admin');
                     },60);
                   }//,
                   //autoClose: 10000 //auto close the notification after 10 seconds (you can manually close it via hide function)
@@ -105,12 +107,16 @@ angular.module('tempApp')
         };
         
         scope.toggleVisible = function(){
-          scope.shown = !scope.shown;
-          scope.scroll();
+          $timeout(function(){
+            $('#myModal').modal('show');
+            scope.shown = !scope.shown;
+            scope.scroll();
+          },300);
+          
         };
         
         scope.scroll = function(){
-          scope.messages = messages.slice(-50);
+          if (messages) scope.messages = messages.slice(-50);
           $timeout(function(){
             scope.messages = messages.slice(-51);
           },200);
@@ -179,10 +185,7 @@ angular.module('tempApp')
     		}
         
         if (scope.showInit==='true') {
-          $timeout(function(){
-            $('#myModal').modal('show');
-            scope.toggleVisible();
-          },300);
+          scope.toggleVisible();
         }
       }
     };

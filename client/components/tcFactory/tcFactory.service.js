@@ -5,7 +5,12 @@ angular.module('tempApp')
     var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     var d = new Date(Date.now());
     var date =date||months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
-    var smfltnum = "09A";
+    var smfltnum = (d.getHours()+1);
+    if (smfltnum===24) smfltnum=19;
+    if (smfltnum<7) smfltnum=7;
+    if (smfltnum>19) smfltnum =19;
+    if (smfltnum<10) smfltnum = '0' + smfltnum + 'A';
+    else smfltnum = smfltnum + 'A';
     var travelCodes;
     var pilots;
     var aircraft;

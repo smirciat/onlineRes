@@ -78,8 +78,7 @@ angular.module('tempApp')
         var values = tcs.filter(function(element){
               return element['Ref#']===newRow.entity['Ref#'];
             });
-        if (values.length>0) newRow.entity.travelCode.value = values[0]['Route'];
-        //scope.gridOptions.data.splice(index,0,newRow.entity);    
+        if (values.length>0) newRow.entity.travelCode.value = values[0]['Route'];  
         scope.gridOptions.data.push(newRow.entity);
         $timeout(function(){
           scope.gridApi.rowEdit.setRowsDirty([scope.gridOptions.data[scope.gridOptions.data.length-1]]);
@@ -206,8 +205,9 @@ angular.module('tempApp')
             }
             else {
               scope.gridOptions.data.splice(scope.index,1);
+              //if return res (reverse copy) don't addData
               if (!rowEntity.hasOwnProperty('uid')) scope.addData();
-              return $http.patch('/api/' + scope.myApi + '/', rowEntity);
+              return $http.patch('/api/' + scope.myApi + '/', rowEntity).then(function(response){});
             }
         });
       }
@@ -394,6 +394,20 @@ angular.module('tempApp')
         scope.shortApi = scope.myApi.substr(0,scope.myApi.length-1);
         socket.unsyncUpdates(scope.shortApi);
         socket.syncUpdates(scope.shortApi, scope.gridOptions.data, function(event, item, array){
+          if (scope.shortApi==='reservation') array.forEach(function(r){
+            //cleanse newRecord of contaminated data for unknown reason
+            if (!r.hasOwnProperty('uid')) {
+              r.FIRST = '';
+              r.LAST='';
+              r['FLIGHT#']='';
+              r.WEIGHT=0;
+              r.FWeight=0;
+              r.pilot={};
+              r.aircraft={};
+              r['INVOICE#']='';
+              r.Phone='';
+            }
+          });
           array = array.filter(function(element){
             var result = true;
             if (query.date&&result) {
