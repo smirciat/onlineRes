@@ -37,9 +37,7 @@ angular.module('tempApp')
       var object = angular.copy(gridSettings.get(scope.myApi).newRecord);
       object.smfltnum = scope.smfltnum + "A";
       object['DATE TO FLY'] = scope.date;
-      $timeout(function(){
-        scope.gridOptions.data.push(object);
-      },400);
+      scope.gridOptions.data.push(object);
     };
     
     scope.removeRow = function(row) {
@@ -266,7 +264,6 @@ angular.module('tempApp')
         var body = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].toUpperCase()};
         var body1 = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].substring(0,3) +'B'};
         if (rowEntity['FLIGHT#'].substring(3).toUpperCase()==='B') body1 = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].substring(0,3) +'A'};
-        
         if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="Travel Code"&&rowEntity.smfltnum){
           tcFactory.getData(function(tcs){
             var t = tcs.filter(function(element){
@@ -412,34 +409,44 @@ angular.module('tempApp')
         reload=false;
         data = gridSettings.getFun(scope.myApi,data);
         scope.gridOptions.data=data;
+        scope.tempData=data.slice();
         scope.addData();
         if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') scope.setPlanePilot();
         scope.shortApi = scope.myApi.substr(0,scope.myApi.length-1);
         socket.unsyncUpdates(scope.shortApi);
-        socket.syncUpdates(scope.shortApi, scope.gridOptions.data, function(event, item, array){
-          if (event==='created') array = array.filter(function(element){
+        socket.syncUpdates(scope.shortApi, scope.tempData, function(event, item, array){
+          //this is similar to the implementation in the socket service, but is duplicated here since new records are only synced with socket service after they are saved.  Working on data array on this side allows those unsaved records to be preserved after socket update.
+          if (event==='created') {
             var result = true;
             if (query.date&&result) {
               var date = new Date(query.date);
               var year = date.getFullYear();
               var month = date.getMonth();
               var day = date.getDate();
-              var date1 = new Date(element['DATE TO FLY']||element['DATE']);
+              var date1 = new Date(item['DATE TO FLY']||item['DATE']);
               var year1 = date1.getFullYear();
               var month1 = date1.getMonth();
               var day1 = date1.getDate();
               result = new Date(year, month, day ,0,0,0,0).getTime() === new Date(year1,month1,day1,0,0,0,0).getTime();
             }
             if (query.hourOfDay&&result) {
-              if (element.smfltnum) result = query.hourOfDay===element.smfltnum.substring(0,2);
-              else if (element.SmFltNum) result = query.hourOfDay===element.SmFltNum.substring(0,2);
+              if (item.smfltnum) result = query.hourOfDay===item.smfltnum.substring(0,2);
+              else if (item.SmFltNum) result = query.hourOfDay===item.SmFltNum.substring(0,2);
             }
-            if (query.invoice&&result) result = query.invoice===element['INVOICE#']
-            if (query.first&&result) result = query.first.substring(0,1).toLowerCase()===element.FIRST.substring(0,1).toLowerCase();
-            if (query.last&&result) result = query.last.substring(0,1).toLowerCase()===element.LAST.substring(0,1).toLowerCase();
-            return result;
-          });
-          scope.gridOptions.data = gridSettings.getFun(scope.myApi,array);
+            if (query.invoice&&result) result = query.invoice===item['INVOICE#'];
+            if (query.first&&result) result = query.first.substring(0,1).toLowerCase()===item.FIRST.substring(0,1).toLowerCase();
+            if (query.last&&result) result = query.last.substring(0,1).toLowerCase()===item.LAST.substring(0,1).toLowerCase();
+            if (result) scope.gridOptions.data.push(item);
+          }
+          if (event==='updated'){
+            var oldItem = _.find(scope.gridOptions.data, {_id: item._id});
+            var index = scope.gridOptions.data.indexOf(oldItem);
+            scope.gridOptions.data.splice(index, 1, item);
+          }
+          if (event==='deleted'){
+            _.remove(scope.gridOptions.data, {_id: item._id}); 
+          }
+          scope.gridOptions.data = gridSettings.getFun(scope.myApi,scope.gridOptions.data);
           if ($location.path()==='/oneFlight') scope.gridOptions.data.sort(function(a,b){
             if (!a['FLIGHT#']) return true;
             if (!b['FLIGHT#']) return false;
