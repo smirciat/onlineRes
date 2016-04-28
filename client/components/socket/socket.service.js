@@ -44,7 +44,6 @@ angular.module('tempApp')
           } else {
             array.push(item);
           }
-
           cb(event, item, array);
         });
 

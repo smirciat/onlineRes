@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .service('tcFactory', ['$http', function ($http) {
+  .service('tcFactory', ['$http', 'socket', function ($http,socket) {
     var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     var d = new Date(Date.now());
     var date =date||months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
@@ -41,9 +41,30 @@ angular.module('tempApp')
             else {
                 $http.post('/api/flights/o',{date:body.date}).success(function(d) {
                   oldBody=body;
-                  return callback(flights=d);
+                  flights=d;
+                  var dt;
+                  socket.unsyncUpdates('flight');
+                  socket.syncUpdates('flight', flights, function(event, item, array){
+                     
+                     if (oldBody.date){
+                        
+                        flights=array.filter(function(flight){
+                            dt=new Date(flight.DATE);
+                            return (dt.getMonth()===oldBody.date.getMonth()
+                                   &&dt.getDate()===oldBody.date.getDate()
+                                   &&dt.getFullYear()===oldBody.date.getFullYear());
+                        }); 
+                     } 
+                     
+                  });
+                  return callback(flights);
                 });
             }
+        },
+        getF: function () {
+            
+                  return flights;
+
         },
         getReservations: function (body,callback) {
             if (body.smfltnum) body.smfltnum = body.smfltnum.toUpperCase();

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, uiGridConstants, tcFactory) {
+  .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, uiGridConstants, tcFactory,Modal) {
     var aircraftSch, pilotSch 
     this.arr=[];
     tcFactory.getAircraft(function(ac){
@@ -43,41 +43,71 @@ angular.module('tempApp')
       tcFactory.refreshFlights();
     };
     
+    this.plus = function(){
+      this.smfltnum = (parseInt(this.smfltnum,10)+1).toString();
+      this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
+      this.makeSm();
+    };
+    
+    this.minus = function(){
+      this.smfltnum = (parseInt(this.smfltnum,10)-1).toString();
+      this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
+      this.makeSm();
+    };
+    
     this.makeSm = function(){
       if (this.time.selected.ref<10) this.smfltnum="0" + this.time.selected.ref;
       else this.smfltnum=this.time.selected.ref.toString();
       tcFactory.setSmfltnum(this.smfltnum+'A');
       this.print();
     };
+    
+    var quick=Modal.confirm.quickMessage();
+    
     this.addFlight = function(){
       date = this.date;
       smfltnum = this.smfltnum;
       var pilots=[];
       var aircrafts=[];
-      var sections= ['0'];
+      var sections= [];
+      
       aircraftSch.forEach(function(ac){
         aircrafts.push(ac.Aircraft);
       });
       pilotSch.forEach(function(p){
         pilots.push(p.Pilot);
       });
+      
+        
       body = {date:date, smfltnum:smfltnum+'A'};
       tcFactory.getFlights(body,function(flights){
+        flights=flights.filter(function(flight){
+          if (flight.SmFltNum) return body.smfltnum.toUpperCase()===flight.SmFltNum.toUpperCase();
+          else return false;
+        });
         flights.forEach(function(flight){
           sections.push(flight['FLIGHT#'].substring(0,1));
           pilots = pilots.filter(function(p){
-            return p.toUpperCase()!==flight.PILOT.toUpperCase();
+            if (flight.PILOT) return p.toUpperCase()!==flight.PILOT.toUpperCase();
+            else return true;
           });
           aircrafts = aircrafts.filter(function(a){
-            return a.toUpperCase()!==flight.AIRCRAFT.toUpperCase();
+            if (flight.AIRCRAFT) return a.toUpperCase()!==flight.AIRCRAFT.toUpperCase();
+            else return true;
           });
         });
+        
         sections.sort(function(a,b){
-          return b-a;
+          return a-b;
         });
+        var newSection = 1;
+        for (var i=0;i<sections.length;i++){
+          if (parseInt(sections[i],10)===newSection) newSection++;
+        }
+        
         var newFlight = {AIRCRAFT:aircrafts[0], PILOT:pilots[0], 
                          "PAY TIME":0,
-                         "FLIGHT#":(parseInt(sections[0],10)+1)+smfltnum + 'A', 
+                         "FLIGHT#":newSection+smfltnum + 'A', 
                          SmFltNum:smfltnum + 'A',
                          DATE:date
         };
@@ -85,8 +115,10 @@ angular.module('tempApp')
         var otherFlight = Object.assign({},newFlight);
         otherFlight.SmFltNum = newFlight.SmFltNum.substring(0,2) + 'B';
         otherFlight['FLIGHT#'] = newFlight['FLIGHT#'].substring(0,3) + 'B';
-        $http.patch('/api/flights/',otherFlight);
-        tcFactory.refreshFlights();
+        $http.patch('/api/flights/',otherFlight).then(function(res){
+          quick('Flight #' + newFlight['FLIGHT#'] + ' and #' + otherFlight['FLIGHT#'] + ' added.');
+        });
+        
       });  
         
     };

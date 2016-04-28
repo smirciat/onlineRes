@@ -29,3 +29,6 @@
 .grid{
   font-weight:bold; 
 }
+.selectize-dropdown-content {
+  max-height:400px;
+}

@@ -27,8 +27,8 @@ class MainController {
     this.firstFlight = 9;
     this.lastFlight = 16;
     this.flightMatrix = [{flight:17, start:"2/3/2016", end:"11/4/2016"},
-    {flight:18, start:"5/1/2016", end:"10/1/2016"},
-    {flight:8, start:"5/1/2016", end:"9/15/2016"}
+    {flight:18, start:"5/2/2016", end:"10/1/2016"},
+    {flight:8, start:"5/2/2016", end:"9/15/2016"}
     ];
     
     this.travelCodes = [

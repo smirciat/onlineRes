@@ -4,13 +4,16 @@
       <div class="col-xs-1 col-md-1">
         <button ng-click="one.today()" class="btn btn-success">Today</button>
       </div>
-      <div class="col-sm-2 col-xs-2 col-md-1"><label class="form-control">Enter Date:</label></div>
+      <div class="col-sm-2 col-xs-2 col-md-1"><label class="form-control">Date:</label></div>
       <div class="col-sm-3 col-xs-3 col-md-3">
           <div class="datepicker" date-format="MMM d, yyyy" >
               <input class="form-control" ng-model="one.date" ng-change="one.print()" type="text"/>
           </div>
       </div>
-      <div class="col-sm-2 col-xs-2 col-md-2"><label class="form-control">Enter time of day:</label></div>
+      <div class="col-sm-2 col-xs-2 col-md-2"><label class="form-control">
+        <a href='#' ng-click="one.minus()"><i class="fa fa-minus-circle  fa-2x" aria-hidden="true"></i></a>__
+        <a href='#' ng-click="one.plus()"><i class="fa fa-plus-circle  fa-2x" aria-hidden="true"></i></a>
+      </label></div>
       <div class="col-sm-2 col-xs-2 col-md-2">
           <ui-select ng-model="one.time.selected" theme="selectize" ng-disabled="disabled" ng-change="one.makeSm()">
               <ui-select-match placeholder="Choose...">{{$select.selected.time}}</ui-select-match>
