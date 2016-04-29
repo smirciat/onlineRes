@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, uiGridConstants, tcFactory,Modal) {
+  .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, uiGridConstants, tcFactory,Modal,$window,$timeout) {
     var aircraftSch, pilotSch ;
     this.arr=[];
     tcFactory.getAircraft(function(ac){
@@ -59,7 +59,7 @@ angular.module('tempApp')
       if (this.time.selected.ref<10) this.smfltnum="0" + this.time.selected.ref;
       else this.smfltnum=this.time.selected.ref.toString();
       tcFactory.setSmfltnum(this.smfltnum+'A');
-      this.print();
+      //this.print();
     };
     
     var quick=Modal.confirm.quickMessage();
@@ -255,13 +255,14 @@ angular.module('tempApp')
             });
             if (p.length>0) sections[i].pilotCert = p[0].lic;
           }  
-        
+          
         });
       });
       this.sections=sections;
+      $timeout($window.print,0);
     });
     };//end of this.print
     
-    this.print();
+    //this.print();
     
   });

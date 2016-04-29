@@ -463,7 +463,7 @@ angular.module('tempApp')
             if (a['FLIGHT#']===b['FLIGHT#']) return a['Ref#']>b['Ref#'];
             return a['FLIGHT#'].localeCompare(b['FLIGHT#']);
           });
-          scope.print();
+          //scope.print();
           if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') {
             scope.setPlanePilot();
           }
