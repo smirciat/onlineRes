@@ -45,7 +45,6 @@ angular.module('tempApp')
                   var dt;
                   socket.unsyncUpdates('flight');
                   socket.syncUpdates('flight', flights, function(event, item, array){
-                     
                      if (oldBody.date){
                         
                         flights=array.filter(function(flight){

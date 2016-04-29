@@ -14,13 +14,14 @@ angular.module('tempApp')
         return;
       }
       var fullName = formData.data.split(' ');
-      if (fullName.length>1) {
+      if (fullName.length>0) {
         var first = fullName[0];
-        var last = fullName[1];
+        var last;
+        if (fullName.length>1) last = fullName[1];
         tcFactory.setName([first, last]);
         this.date = new Date(Date.now());
       }
       else this.quickModal("Try again to enter the name");
     });
-    this.getName("Please enter First and Last Name with a space in between.");
+    this.getName("Please enter just First Name, or First and Last Name with a space in between.");
   });

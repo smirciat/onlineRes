@@ -2,7 +2,7 @@
 
 angular.module('tempApp')
   .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, uiGridConstants, tcFactory,Modal) {
-    var aircraftSch, pilotSch 
+    var aircraftSch, pilotSch ;
     this.arr=[];
     tcFactory.getAircraft(function(ac){
       aircraftSch = ac;

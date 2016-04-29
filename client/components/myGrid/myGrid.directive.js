@@ -46,7 +46,7 @@ angular.module('tempApp')
         if (row.entity._id) { 
           $http.put('/api/' + scope.myApi + '/superdelete/' + row.entity._id);
           if (scope.myApi==='flights') {
-            tcFactory.refreshFlights();
+            //tcFactory.refreshFlights();
             var newFlight = row.entity['FLIGHT#'].substring(0,3) + 'B';
             if (row.entity['FLIGHT#'].substring(3).toUpperCase()==='B') newFlight=row.entity['FLIGHT#'].substring(0,3) + 'A';
             row.entity['FLIGHT#']=newFlight;
@@ -201,7 +201,7 @@ angular.module('tempApp')
                   otherFlight.SmFltNum = newFlight.SmFltNum.substring(0,2) + 'B';
                   otherFlight['FLIGHT#'] = newFlight['FLIGHT#'].substring(0,3) + 'B';
                   $http.patch('/api/flights/',otherFlight);
-                  tcFactory.refreshFlights();
+                  //tcFactory.refreshFlights();
                 }
                 else rowEntity['FLIGHT#'] = '9' + rowEntity.smfltnum;
               }
@@ -225,7 +225,7 @@ angular.module('tempApp')
           if (rowEntity.Pilot) rowEntity.PILOT = rowEntity.Pilot.value;
           if (rowEntity.Aircraft) rowEntity.AIRCRAFT = rowEntity.Aircraft.value;
           promise =  $http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity).then(function(response){
-            tcFactory.refreshFlights();
+            //tcFactory.refreshFlights();
           });
           //update other half of flight
           $http.post('/api/flights/o',body).then(function(response){
@@ -245,7 +245,7 @@ angular.module('tempApp')
               scope.gridOptions.data.splice(scope.index,1);
               if (!rowEntity.hasOwnProperty('uid')) scope.addData();
               promise = $http.patch('/api/' + scope.myApi + '/', rowEntity).then(function(response){
-                tcFactory.refreshFlights();
+                //tcFactory.refreshFlights();
               });
         }
       }
@@ -287,7 +287,7 @@ angular.module('tempApp')
               response.data[0][colDef.name.toUpperCase()]=newValue;
               $http.patch('/api/flights/' + response.data[0]._id,response.data[0])
                 .then(function(res){
-                  tcFactory.refreshFlights();
+                  //tcFactory.refreshFlights();
                   scope.setPlanePilot();
                 });
             });
@@ -416,6 +416,20 @@ angular.module('tempApp')
         socket.unsyncUpdates(scope.shortApi);
         socket.syncUpdates(scope.shortApi, scope.tempData, function(event, item, array){
           //this is similar to the implementation in the socket service, but is duplicated here since new records are only synced with socket service after they are saved.  Working on data array on this side allows those unsaved records to be preserved after socket update.
+          if (event==='updated'){
+            var oldItem = _.find(scope.gridOptions.data, {_id: item._id});
+            if (oldItem) {
+              var date = new Date(query.date);
+              var date1 = new Date(item['DATE TO FLY']||item['DATE']);
+              var smfltnum = item.smfltnum||item.SmFltNum;
+              if (smfltnum.substring(0,2)===query.hourOfDay&&date.getDate()===date1.getDate()&&date.getMonth()===date1.getMonth()) {
+                var index = scope.gridOptions.data.indexOf(oldItem);
+                scope.gridOptions.data.splice(index, 1, item);
+              }
+              else  _.remove(scope.gridOptions.data, {_id: item._id});
+            }
+            else event='created';
+          }
           if (event==='created') {
             var result = true;
             if (query.date&&result) {
@@ -438,11 +452,7 @@ angular.module('tempApp')
             if (query.last&&result) result = query.last.substring(0,1).toLowerCase()===item.LAST.substring(0,1).toLowerCase();
             if (result) scope.gridOptions.data.push(item);
           }
-          if (event==='updated'){
-            var oldItem = _.find(scope.gridOptions.data, {_id: item._id});
-            var index = scope.gridOptions.data.indexOf(oldItem);
-            scope.gridOptions.data.splice(index, 1, item);
-          }
+          
           if (event==='deleted'){
             _.remove(scope.gridOptions.data, {_id: item._id}); 
           }
