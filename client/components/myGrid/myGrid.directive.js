@@ -538,6 +538,7 @@ angular.module('tempApp')
     });
     if (scope.smfltnum) {
       scope.$watch('smfltnum',function(){
+        //don't need two makeQUery's on page reload!
         if (!reload) scope.makeQuery();
       });
     }

@@ -11,6 +11,7 @@ angular.module('tempApp')
       },
       link: function(scope, element, attrs){
         scope.shown=false;
+        scope.classes="btn btn-warning";
         var tempArray =[];
         scope.inputPlaceholderText = 'Write message here...';
         scope.submitButtonText = 'Send';
@@ -48,25 +49,28 @@ angular.module('tempApp')
             scope.username = Auth.getCurrentUser().name;
             scope.myUserId = Auth.getCurrentUser()._id;
           }
-          tempArray=response.data;
-          messages = tempArray.filter(function(response){
+          messages = response.data.filter(function(response){
             return true;
           });
           socket.syncUpdates('chat', messages, function(event, item, array){
             if ((!scope.shown||document.hidden||!document.hasFocus())&&item.fromUserId!=scope.myUserId) {
+              if (!scope.shown) scope.classes = "button-flashing";
               webNotification.showNotification('New Chat Message in Reservations', {
                   body: item.content + '\nfrom: ' + item.username,
                   icon: '../bower_components/HTML5-Desktop-Notifications2/alert.ico',
+                  requireInteraction: true,
+                  tag: 'require-interaction',
                   onClick: function onNotificationClicked() {
                     //var NewWin = window.open('/admin');
                     window.focus();
                     $timeout(function(){
                       //NewWin.focus();
+                      scope.classes = "btn btn-warning";
                       window.focus();
-                      $location.path('/admin');
+                      scope.toggleVisible();
                     },60);
                   }//,
-                  //autoClose: 10000 //auto close the notification after 10 seconds (you can manually close it via hide function)
+                  //autoClose: 0 //auto close the notification after 10 seconds (you can manually close it via hide function)
               }, function onShow(error, hide) {
                   if (error) {
                       window.alert('Unable to show notification: ' + error.message);
@@ -76,9 +80,10 @@ angular.module('tempApp')
                       //setTimeout(function hideNotification() {
                           //console.log('Hiding notification....');
                           //hide(); //manually close the notification (you can skip this if you use the autoClose option)
-                      //}, 5000);
+                      //}, 0);
                   }
-              });
+              }
+              );
             }
             array.sort(function(a,b){
               return a.date>b.date;
@@ -105,12 +110,15 @@ angular.module('tempApp')
             
           }
         };
-        
+        $('#myModal').on('hidden.bs.modal',function(){
+          scope.shown = false;
+        });
         scope.toggleVisible = function(){
           $timeout(function(){
             $('#myModal').modal('show');
-            scope.shown = !scope.shown;
+            scope.shown = true;
             scope.scroll();
+            scope.classes = "btn btn-warning";
           },300);
           
         };
@@ -138,7 +146,7 @@ angular.module('tempApp')
     		};
     		
     		scope.$watch('visible', function() { // make sure scroll to bottom on visibility change w/ history items
-    			
+    			//console.log(scope.visible)
     			$timeout(function() {
     				scope.scrollToBottom();
     				scope.$chatInput.focus();
@@ -146,7 +154,7 @@ angular.module('tempApp')
     		});
     		
     		scope.$watch('shown', function() { // make sure scroll to bottom on visibility change w/ history items
-    			
+    			//console.log(scope.shown)
     			$timeout(function() {
     				scope.scrollToBottom();
     				scope.$chatInput.focus();
