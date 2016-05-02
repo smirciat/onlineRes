@@ -320,9 +320,13 @@ class MainController {
     //month starts with 0 for Jan var tempDate="2/18/16";
     var query = "date=" + this.newRes['DATE TO FLY'];
     this.$http.get('/api/reservations?' + query).then(response => {
-      var letter="A";
-      if (this.code.selected.ref>6) letter="B";
       var sm="";
+      var sma="B";
+      var letter="A";
+      if (this.code.selected.ref>6) {
+        letter="B";
+        sma="A";
+      }
       var date = new Date(this.newRes['DATE TO FLY']);
       var d = new Date(Date.now());
       var today = new Date(d.getFullYear(),d.getMonth(),d.getDate());
@@ -332,18 +336,25 @@ class MainController {
       for (var i=this.firstFlight;i<=this.lastFlight;i++){
           //initiate the current smfltnum as sm
           sm=i+letter;
+          sma=i+sma;
           if (i<10) sm="0"+sm;
           var resList=response.data.filter(function(res){
             return res.smfltnum.toUpperCase()===sm.toUpperCase();
+          });
+          var resListAlt = response.data.filter(function(res){
+            return res.smfltnum.toUpperCase()===sma.toUpperCase();
           });
           //no more than 8 passengers on any smfltnum to avoid overbooking
           maxPax=8;
           if (i===9&&date.getDay()>0&&date.getDay()<6) {
             maxPax=12;
           }
+          //keep them from being first pax on 8:00 flight
+          var enough = (i-hour);
+          if (enough<0) enough+=24;
+          if (date>=today && date<=tomorrow && enough<13 && i===8 && resList.length===0 && resListAlt.length===0) maxPax=0;
+          
           if (resList.length<maxPax){
-            
-            var enough = (i-hour);
             if (date<today) {}
             else {
               if (date>=today && date<tomorrow && enough<2) {}
