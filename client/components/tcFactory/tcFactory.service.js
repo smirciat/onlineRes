@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .service('tcFactory', ['$http', 'socket', function ($http,socket) {
+  .factory('tcFactory', ['$http', 'socket', function ($http,socket) {
     var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     var d = new Date(Date.now());
     var date =date||months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
@@ -13,6 +13,7 @@ angular.module('tempApp')
     else smfltnum = smfltnum + 'A';
     var travelCodes;
     var pilots;
+    var dt;
     var aircraft;
     var flights;
     var reservations;
@@ -20,6 +21,20 @@ angular.module('tempApp')
     var oldBody1={};
     var name;
     var invoice;
+    var sync = function(){
+      socket.unsyncUpdates('flight');
+      socket.syncUpdates('flight', flights, function(event, item, array){
+         if (oldBody.date){
+            
+            flights=array.filter(function(flight){
+                dt=new Date(flight.DATE);
+                return (dt.getMonth()===oldBody.date.getMonth()
+                       &&dt.getDate()===oldBody.date.getDate()
+                       &&dt.getFullYear()===oldBody.date.getFullYear());
+            }); 
+         } 
+      }); 
+    };
     return {
         getData: function (callback) {
             if(travelCodes) {
@@ -37,26 +52,15 @@ angular.module('tempApp')
             if (flights&&oldBody.date&&
                          oldBody.date.getMonth()===body.date.getMonth()&&
                          oldBody.date.getFullYear()===body.date.getFullYear()&&
-                         oldBody.date.getDate()===body.date.getDate()) return callback(flights);
+                         oldBody.date.getDate()===body.date.getDate()) {
+                            sync();
+                            return callback(flights);
+                         }
             else {
                 $http.post('/api/flights/o',{date:body.date}).success(function(d) {
                   oldBody=body;
                   flights=d;
-                  var dt;
-                  socket.unsyncUpdates('flight');
-                  socket.syncUpdates('flight', flights, function(event, item, array){
-                     console.log(oldBody)
-                     if (oldBody.date){
-                        
-                        flights=array.filter(function(flight){
-                            dt=new Date(flight.DATE);
-                            return (dt.getMonth()===oldBody.date.getMonth()
-                                   &&dt.getDate()===oldBody.date.getDate()
-                                   &&dt.getFullYear()===oldBody.date.getFullYear());
-                        }); 
-                     } 
-                     
-                  });
+                  sync();
                   return callback(flights);
                 });
             }

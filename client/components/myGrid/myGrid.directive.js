@@ -32,7 +32,9 @@ angular.module('tempApp')
     tcFactory.getData(function(t){
      travelCodes = t;
     });
-    
+    tcFactory.getFlights({date:scope.date},function(f){
+     
+    });
     scope.addData = function(){
       var object = angular.copy(gridSettings.get(scope.myApi).newRecord);
       object.smfltnum = scope.smfltnum + "A";

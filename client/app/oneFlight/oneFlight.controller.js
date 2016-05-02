@@ -55,6 +55,10 @@ angular.module('tempApp')
       this.makeSm();
     };
     
+    this.upDate =function(){
+      tcFactory.setDate(new Date(this.date));
+    };
+    
     this.makeSm = function(){
       if (this.time.selected.ref<10) this.smfltnum="0" + this.time.selected.ref;
       else this.smfltnum=this.time.selected.ref.toString();
