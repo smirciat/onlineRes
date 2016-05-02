@@ -5,6 +5,7 @@ angular.module('tempApp')
     $routeProvider
       .when('/invoice', {
         templateUrl: 'app/invoice/invoice.html',
-        controller: 'InvoiceCtrl'
+        controller: 'InvoiceCtrl',
+        controllerAs:'invoice'
       });
   });
