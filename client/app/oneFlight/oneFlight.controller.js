@@ -40,7 +40,7 @@ angular.module('tempApp')
       tcFactory.setSmfltnum(smfltnum);
       this.smfltnum=smfltnum.substring(0,2);
       this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
-      tcFactory.refreshFlights();
+      //tcFactory.refreshFlights();
     };
     
     this.plus = function(){
