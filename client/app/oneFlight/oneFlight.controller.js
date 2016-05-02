@@ -29,8 +29,8 @@ angular.module('tempApp')
       
     this.today = function(){
       d=new Date(Date.now());
-      this.date = (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getFullYear();
-      tcFactory.setDate(this.date);
+      tcFactory.setDate(d);
+      this.date=tcFactory.getDate();
       var smfltnum = (d.getHours()+1);
       if (smfltnum===24) smfltnum=19;
       if (smfltnum<7) smfltnum=7;

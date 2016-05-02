@@ -3,8 +3,9 @@
 angular.module('tempApp')
   .factory('tcFactory', ['$http', 'socket', function ($http,socket) {
     var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     var d = new Date(Date.now());
-    var date =date||months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    var date =date||days[d.getDay()] + ' ' + months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
     var smfltnum = (d.getHours()+1);
     if (smfltnum===24) smfltnum=19;
     if (smfltnum<7) smfltnum=7;
@@ -111,11 +112,12 @@ angular.module('tempApp')
             return name;
         },
         setDate: function(dt){
-            date=dt;
+            dt = new Date(dt)
+            date=days[dt.getDay()] + ' ' + months[dt.getMonth()] + ' ' + dt.getDate() + ', ' + dt.getFullYear();
         },
         getDate: function(){
-            var d = new Date(date);
-            return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+            dt = new Date(date);
+            return days[dt.getDay()] + ' ' + months[dt.getMonth()] + ' ' + dt.getDate() + ', ' + dt.getFullYear();
         },
         setSmfltnum: function(sm){
            smfltnum=sm.toUpperCase();
