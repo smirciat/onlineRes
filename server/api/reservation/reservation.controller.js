@@ -145,11 +145,21 @@ export function name(req, res) {
           'OR (LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
           'nickname = \'' + req.body.first.toLowerCase() + '\')) AND dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
           'ORDER BY "DATE TO FLY" DESC  LIMIT 100';
-    else str = 'SELECT * FROM "Reservations" WHERE LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
-          'OR dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') ' +
-          'OR LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
-          'nickname = \'' + req.body.first.toLowerCase() + '\')) ' +
-          'ORDER BY "DATE TO FLY" DESC  LIMIT 100'; 
+    //else str = 'SELECT * FROM "Reservations" WHERE LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
+    //      'OR dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') ' +
+    //      'OR LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
+    //      'nickname = \'' + req.body.first.toLowerCase() + '\')) ' +
+    //      'ORDER BY "DATE TO FLY" DESC  LIMIT 100'; 
+    else {
+      req.body.last=req.body.first;
+      var str = 'SELECT * FROM "Reservations" WHERE (LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
+          'OR LEVENSHTEIN(LOWER("LAST"), \'' + req.body.last.toLowerCase()  + '\') < 2) ' +
+          'OR (dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') OR ' +
+          'dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
+          'OR (LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
+          'nickname = \'' + req.body.first.toLowerCase() + '\')) AND dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
+          'ORDER BY "DATE TO FLY" DESC  LIMIT 100';
+    }
   }
   else {
     res.status(500).end();
