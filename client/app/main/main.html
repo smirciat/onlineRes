@@ -61,7 +61,7 @@
             </div>
           </td>
           <td>
-            <ui-select ng-model="main.smfltnum.selected" theme="selectize" ng-disabled="disabled" >
+            <ui-select class="mainselectize" ng-model="main.smfltnum.selected" theme="selectize" ng-disabled="disabled" >
               <ui-select-match placeholder="Choose...">{{$select.selected.time}}</ui-select-match>
               <ui-select-choices repeat="tm in main.timeList" >
                 <div ng-bind-html="tm.time | highlight: $select.search"></div>
