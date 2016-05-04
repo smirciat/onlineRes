@@ -462,7 +462,7 @@ angular.module('tempApp')
           if ($location.path()==='/oneFlight') scope.gridOptions.data.sort(function(a,b){
             if (!a['FLIGHT#']) return true;
             if (!b['FLIGHT#']) return false;
-            if (a['FLIGHT#']===b['FLIGHT#']) return a['Ref#']>b['Ref#'];
+            if (a['FLIGHT#'].toUpperCase()===b['FLIGHT#'].toUpperCase()) return a['Ref#']>b['Ref#'];
             return a['FLIGHT#'].localeCompare(b['FLIGHT#']);
           });
           //scope.print();

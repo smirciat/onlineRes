@@ -285,7 +285,7 @@ class MainController {
       
     },response => {
       //this is a failure
-      this.$http.put('/api/mails/' + this.user()._id, {res:this.resEntry}).then(response => {
+      this.$http.put('/api/mails/' + this.user()._id, {res:this.resEntry,uid:this.user()._id}).then(response => {
         //log an email failure
       });
     });

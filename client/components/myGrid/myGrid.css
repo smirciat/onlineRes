@@ -32,3 +32,6 @@
 .selectize-dropdown-content {
   max-height:340px;
 }
+.mainselectize .selectize-dropdown-content {
+  max-height:150px;
+}

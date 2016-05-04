@@ -48,7 +48,7 @@
             </form>
           </td>
           <td>
-            <ui-select ng-model="main.code.selected" theme="selectize" ng-disabled="disabled" ng-change="main.makeList()">
+            <ui-select class="mainselectize" ng-model="main.code.selected" theme="selectize" ng-disabled="disabled" ng-change="main.makeList()">
               <ui-select-match placeholder="Choose...">{{$select.selected.name}}</ui-select-match>
               <ui-select-choices repeat="tc in main.travelCodes" >
                 <div ng-bind-html="tc.name | highlight: $select.search"></div>
