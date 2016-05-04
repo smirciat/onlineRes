@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .factory('email', function () {
+  .factory('email', function ($http) {
     var template = function(res) {
       return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' +
         '<html xmlns="http://www.w3.org/1999/xhtml" style="font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">' +
@@ -118,21 +118,36 @@ angular.module('tempApp')
       };
     return {
       sendEmail: function(res, resEntry, user){
+        user = user||{};
         var mailOptions = {
           to: user.email, // list of receivers
           subject: 'Reservation with Smokey Bay Air', // Subject line
           text: resEntry, // plaintext body
           html: template(res) // html body
         };
-        this.$http.post('/api/mails', mailOptions).then(response => {
+        $http.post('/api/mails', mailOptions).then(response => {
           //res.status = 500 for fail, 200 for success
           
         },response => {
           //this is a failure
-          this.$http.put('/api/mails/' + this.user()._id, {res:resEntry,uid:user._id}).then(response => {
+          $http.put('/api/mails', {res:resEntry,uid:user._id}).then(response => {
             //log an email failure
           });
         });
-      }
-    }
+      },
+      travelCodes:  [
+        {name:"Homer to Seldovia",ref:1,time:":00"},
+        {name:"Homer to Port Graham",ref:2,time:":00"},
+        {name:"Homer to Nanwalek",ref:3,time:":00"},
+        {name:"Seldovia to Nanwalek",ref:4,time:":15"},
+        {name:"Seldovia to Port Graham",ref:5,time:":15"},
+        {name:"Nanwalek to Port Graham",ref:6,time:":25"},
+        {name:"Port Graham to Nanwalek",ref:7,time:":25"},
+        {name:"Port Graham to Seldovia",ref:8,time:":25"},
+        {name:"Nanwalek to Seldovia",ref:9,time:":25"},
+        {name:"Nanwalek to Homer",ref:10,time:":25"},
+        {name:"Port Graham to Homer",ref:11,time:":25"},
+        {name:"Seldovia to Homer",ref:12,time:":40"}  
+      ]
+    };
   });

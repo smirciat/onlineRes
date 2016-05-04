@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .directive('myGrid', function ($http, uiGridConstants, gridSettings, socket, $q, tcFactory, $location, $timeout, Modal) {
+  .directive('myGrid', function ($http, uiGridConstants, gridSettings, socket, $q, tcFactory, $location, $timeout, Modal,email) {
   return {
     templateUrl: 'components/myGrid/myGrid.html',
     restrict: 'E',
@@ -140,6 +140,7 @@ angular.module('tempApp')
             }
             if (done>=3) i = response.data.length;
           }
+          if (rowEntity.dirty&&rowEntity.email) sendEmail(rowEntity);
           return $http.post('/api/flights/o',body);
         })
         
@@ -305,6 +306,10 @@ angular.module('tempApp')
               }
             }
           });
+        }
+        if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&(colDef.name==="SF#"||colDef.name==="Date")) {
+          //for sake of determining if sending an email is appropriate
+          rowEntity.dirty=true;
         }
       });
     };
@@ -544,6 +549,21 @@ angular.module('tempApp')
         if (!reload) scope.makeQuery();
       });
     }
-   }
+    var sendEmail = function(res){
+      if (res['Ref#']<=12) {
+        var code = email.travelCodes.filter(function ( tc ) {
+          return tc.ref === res['Ref#'];
+        })[0];
+        res.FROM = code.name;
+        if (parseInt(res.smfltnum.substring(0,2),10)<12) res.TIME=parseInt(res.smfltnum.substring(0,2),10) + code.time + ' AM';
+        else if (parseInt(res.smfltnum.substring(0,2),10)===12) res.TIME="12" + code.time + ' PM';
+             else res.TIME=(parseInt(res.smfltnum.substring(0,2),10)-12) + code.time + ' PM';
+        var d = new Date(res["DATE TO FLY"]);
+        res.DATE = (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getFullYear();
+        var resEntry = res.FIRST + ' ' + res.LAST + ' has a reservation at ' +  res.TIME + ' on ' + res.DATE + ' from ' + res.FROM + '.';
+        email.sendEmail(res,resEntry,res);
+      }
+    };
+  }
   };
   });

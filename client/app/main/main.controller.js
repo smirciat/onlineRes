@@ -31,20 +31,7 @@ class MainController {
     {flight:8, start:"5/2/2016", end:"9/15/2016"}
     ];
     
-    this.travelCodes = [
-      {name:"Homer to Seldovia",ref:1,time:":00"},
-      {name:"Homer to Port Graham",ref:2,time:":00"},
-      {name:"Homer to Nanwalek",ref:3,time:":00"},
-      {name:"Seldovia to Nanwalek",ref:4,time:":15"},
-      {name:"Seldovia to Port Graham",ref:5,time:":15"},
-      {name:"Nanwalek to Port Graham",ref:6,time:":25"},
-      {name:"Port Graham to Nanwalek",ref:7,time:":25"},
-      {name:"Port Graham to Seldovia",ref:8,time:":25"},
-      {name:"Nanwalek to Seldovia",ref:9,time:":25"},
-      {name:"Nanwalek to Homer",ref:10,time:":25"},
-      {name:"Port Graham to Homer",ref:11,time:":25"},
-      {name:"Seldovia to Homer",ref:12,time:":40"}  
-    ];
+    this.travelCodes = this.email.travelCodes;
     
     this.quickModal=Modal.confirm.quickMessage();
     
@@ -215,7 +202,7 @@ class MainController {
     this.newRes = newRes;
     this.newRes.UPDATED = d;
     this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
-    this.code.selected = this.travelCodes.filter(function ( tc ) {
+    this.code.selected = this.email.travelCodes.filter(function ( tc ) {
       return tc.ref === newRes['Ref#'];
     })[0];
     this.makeList(this.newRes.smfltnum);
@@ -237,7 +224,7 @@ class MainController {
      this.newRes['Ref#'] = 13-res['Ref#'];
      var hour = (d.getTime()-today.getTime())/3600000;
      var enough = (parseInt(res.smfltnum.substring(0,2))-hour);
-     this.code.selected = this.travelCodes.filter(function ( tc ) {
+     this.code.selected = this.email.travelCodes.filter(function ( tc ) {
        return tc.ref === newRes['Ref#'];
      })[0];
      this.makeList(this.newRes.smfltnum);
@@ -267,7 +254,7 @@ class MainController {
   }
   
   convert(refnum){
-    var obj = this.travelCodes.filter(function ( tc ) {
+    var obj = this.email.travelCodes.filter(function ( tc ) {
       return tc.ref === refnum;
     })[0];
     return obj.name;
