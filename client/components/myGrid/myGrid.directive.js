@@ -116,7 +116,7 @@ angular.module('tempApp')
           rowEntity['Ref#'] = tcs.filter(function(element){
               return element['Route']===rowEntity.travelCode.value;
           })[0]['Ref#'];
-          rowEntity.travelCode=undefined;
+          //rowEntity.travelCode=undefined;
           var obj = {first:rowEntity.FIRST,last:rowEntity.LAST,date:rowEntity['DATE TO FLY']};
           return $http.post('/api/reservations/name',obj);
         })
@@ -210,7 +210,7 @@ angular.module('tempApp')
               }
             }
             if (rowEntity._id) {
-              rowEntity.UPDATED = new Date(Date.now());
+              
               return ($http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity));
             }
             else {
@@ -310,6 +310,7 @@ angular.module('tempApp')
         if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&(colDef.name==="SF#"||colDef.name==="Date")) {
           //for sake of determining if sending an email is appropriate
           rowEntity.dirty=true;
+          if (rowEntity._id) rowEntity.UPDATED = new Date(Date.now());
         }
       });
     };
@@ -463,14 +464,18 @@ angular.module('tempApp')
           if (event==='deleted'){
             _.remove(scope.gridOptions.data, {_id: item._id}); 
           }
+          if ($location.path()!=='/oneFlight') scope.gridOptions.data=scope.tempData.slice();
           scope.gridOptions.data = gridSettings.getFun(scope.myApi,scope.gridOptions.data);
-          if ($location.path()==='/oneFlight') scope.gridOptions.data.sort(function(a,b){
+          if ($location.path()==='/oneFlight'||$location.path()==='/todaysFlights') scope.gridOptions.data.sort(function(a,b){
             if (!a['FLIGHT#']) return true;
             if (!b['FLIGHT#']) return false;
-            if (a['FLIGHT#'].toUpperCase()===b['FLIGHT#'].toUpperCase()) return a['Ref#']>b['Ref#'];
+            if (a['FLIGHT#'].toUpperCase()===b['FLIGHT#'].toUpperCase()&&$location.path()==='/oneFlight') return a['Ref#']>b['Ref#'];
             return a['FLIGHT#'].localeCompare(b['FLIGHT#']);
           });
-          //scope.print();
+          else scope.gridOptions.data.sort(function(a,b){
+            if (a['DATE TO FLY']) return new Date(b['DATE TO FLY']) - new Date(a['DATE TO FLY']);
+            return true;
+          });
           if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') {
             scope.setPlanePilot();
           }

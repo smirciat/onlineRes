@@ -29,8 +29,15 @@
 .grid{
   font-weight:bold; 
 }
-.selectize-dropdown-content {
-  max-height:340px;
+@media screen and (min-width: 900px) { 
+  .selectize-dropdown-content {
+    max-height:340px;
+  }
+}
+@media screen and (max-width: 900px) { 
+  .selectize-dropdown-content {
+    max-height:150px;
+  }
 }
 .mainselectize .selectize-dropdown-content {
   max-height:150px;

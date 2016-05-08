@@ -44,7 +44,7 @@ angular.module('tempApp')
       preSave: ['date'] ,
       
       processAfterGet: function(data){
-        data.forEach(function(d){
+        if (data) data.forEach(function(d){
           d.Pilot = {value:d.PILOT};
           d.Aircraft = {value:d.AIRCRAFT};
         });
@@ -113,7 +113,7 @@ angular.module('tempApp')
       processAfterGet: function(data){
         
           return tcFactory.getData(function(tcs) {
-            data.forEach(function(d){
+            if (data) data.forEach(function(d){
               d.travelCode={};
               d.travelCode.value = tcs.filter(function(element){
                 return element['Ref#']===d['Ref#'];
