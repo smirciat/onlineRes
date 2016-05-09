@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .directive('myGrid', function ($http, uiGridConstants, gridSettings, socket, $q, tcFactory, $location, $timeout, Modal,email) {
+  .directive('myGrid', function ($http, uiGridConstants, gridSettings, socket, $q, tcFactory, $location, $timeout, Modal,email,User) {
   return {
     templateUrl: 'components/myGrid/myGrid.html',
     restrict: 'E',
@@ -14,6 +14,7 @@ angular.module('tempApp')
       print:'&'
     },
     link: function (scope, element, attrs ) {
+    scope.users = User.query();
     scope.gridOptions = gridSettings.get(scope.myApi).gridOptions;
     scope.tempData = [];
     scope.quick=Modal.confirm.quickMessage();
@@ -138,7 +139,20 @@ angular.module('tempApp')
               rowEntity.email=response.data[i].email;
               done++;
             }
-            if (done>=3) i = response.data.length;
+            if (!rowEntity.uid){
+              if (response.data[i].uid) {
+                //I don't want to paste in uid if the name does not match.  users might add res for another person, if they spot someone else's res in their list, they might delete it accidentally
+                var users = scope.users.filter(function(user){
+                  return user._id===response.data[i].uid;
+                });
+                if (users.length>0&&users[0].name&&
+                      users[0].name.toUpperCase()===response.data[i].FIRST.toUpperCase() + ' ' + response.data[i].LAST.toUpperCase()) {
+                  rowEntity.uid=response.data[i].uid;
+                  done++;
+                }
+              }
+            }
+            if (done>=4) i = response.data.length;
           }
           if (rowEntity.dirty&&rowEntity.email) sendEmail(rowEntity);
           return $http.post('/api/flights/o',body);
