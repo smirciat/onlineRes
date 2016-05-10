@@ -263,10 +263,126 @@ angular.module('tempApp')
         });
       });
       this.sections=sections;
+      enterTimes(response.data); 
       $timeout($window.print,0);
     });
     };//end of this.print
     
-    //this.print();
+    var enterTimes = function(reservations){
+      var possibilities = tcFactory.getPossibility();
+      var covered = tcFactory.getCovered();
+      var success,sectionRes,route,sections,otherFlight,otherFlightUsed,start,end,flightDate,thisCovered, hours,minutes;
+      //enter pilot times into each flight for this smfltnum
+      tcFactory.getFlights(body,function(f){
+        var allFlights=f.filter(function(flight){
+          return flight.SmFltNum.substring(0,2)===tcFactory.getSmfltnum().substring(0,2);
+        });
+        //clean times
+        allFlights.forEach(function(flight){
+          flight['PAY TIME']=0;
+          for (var i=1;i<5;i++){
+            start = 'Start' + i;
+            end = 'End' + i;
+            route = 'Route' + i;
+            flight[start] = null;
+            flight[end] = null;
+            flight[route] = null;
+          }
+        });
+        //ignore duplicates
+        sections=[];
+        for (var i=0;i<allFlights.length;i++) {
+          if (sections.indexOf(allFlights[i]['FLIGHT#'].toUpperCase())<0) {
+            sections.push(allFlights[i]['FLIGHT#'].toUpperCase());
+          }
+          else {
+            //remove spliced flight from database
+            $http.delete('/api/flights/' + allFlights[i]._id).then(function(res){
+              console.log('deleted ' )
+              console.log(allFlights[i])
+            });
+            allFlights.splice(i,1);
+            
+            sections=[];
+            i=-1;
+          }
+        }
+        var flights=allFlights.filter(function(flight){
+          return flight.SmFltNum.toUpperCase()===tcFactory.getSmfltnum().substring(0,2)+'A';
+        });
+        //each section (just the 'A' sides for now)
+        flights.forEach(function(flight){
+          
+          //loop possibilities, if true, this possibility is the routing
+          for (var i=0;i<possibilities.length;i++){
+            success=true;
+            //within each possibility, loop reservations for current section to prove true or false
+            sectionRes=reservations.filter(function(res){
+              return res['FLIGHT#'].substring(0,1)===flight['FLIGHT#'].substring(0,1);
+            });
+            if (sectionRes.length===0) success=false;
+            else sectionRes.forEach(function(res){
+              if (res['Ref#']>12) return success=false;
+              route=covered.filter(function(c){
+                return c.ref===res['Ref#'];
+              });
+              if (route.length>0) {
+                route=route[0];
+                //is possibilities[i].count contained in route.covered?  if so, success!
+                if (route.covered.indexOf(possibilities[i].count)<0) success=false;
+              }
+              else success=false;
+            });
+            if (success) {
+              //we have found our routing for this section!
+              //write appropriate flight times for the found possibility  
+              console.log(possibilities[i]);// + ' for section ' + flight['FLIGHT#'].substring(0,1));
+              otherFlight = allFlights.filter(function(f){
+                return f['FLIGHT#'].toUpperCase()===flight['FLIGHT#'].substring(0,3) + 'B';
+              });
+              if (otherFlight.length>0) otherFlight=otherFlight[0];
+              else otherFlight=undefined;
+              otherFlightUsed=false;
+              var d = new Date(flight['DATE']);
+              flightDate = new Date(d.getFullYear(),d.getMonth(),d.getDate(),0,0,0,0);
+              for (var j=0;j<possibilities[i].includes.length;j++){
+                thisCovered = covered.filter(function(c){
+                  return c.ref===possibilities[i].includes[j];
+                });
+                if (thisCovered.length>0) {
+                  thisCovered=thisCovered[0];
+                  start = 'Start' + (j%4+1);
+                  end = 'End' + (j%4+1);
+                  route = 'Route' + (j%4+1);
+                  d=flightDate;
+                  hours = parseInt(flight.SmFltNum.substring(0,2),10);
+                  if (j<4){
+                    flight[start] = hours + ':' + thisCovered.start;
+                    flight[end] = hours + ':' + thisCovered.end;
+                    flight[route] = possibilities[i].includes[j];
+                    flight['PAY TIME'] += (thisCovered.end-thisCovered.start)/60;
+                  }
+                  else {
+                    if (otherFlight){
+                      otherFlightUsed=true;
+                      otherFlight[start] = hours + ':' + thisCovered.start;
+                      otherFlight[end] = hours + ':' + thisCovered.end;
+                      otherFlight[route] = possibilities[i].includes[j];
+                      otherFlight['PAY TIME'] += (thisCovered.end-thisCovered.start)/60;
+                    }
+                  }
+                }
+              }
+              console.log(flight)
+              //save changes
+              $http.put('/api/flights/'+ flight._id,flight);
+              if (otherFlightUsed) $http.put('/api/flights/'+ otherFlight._id,otherFlight);
+              i=possibilities.length;
+            }
+          }
+        });
+      });
+      
+    }
     
   });
