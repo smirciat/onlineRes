@@ -2,13 +2,16 @@
 
 angular.module('tempApp')
   .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, tcFactory,Modal,$window,$timeout) {
-    var aircraftSch, pilotSch ;
+    var aircraftSch, pilotSch, tcs;
     this.arr=[];
     tcFactory.getAircraft(function(ac){
       aircraftSch = ac;
     });
     tcFactory.getPilots(function(p){
       pilotSch = p;
+    });
+    tcFactory.getData(function(t){
+      tcs=t;
     });
     var d=new Date(Date.now());
     this.nameTrue=false;
@@ -232,7 +235,12 @@ angular.module('tempApp')
                for (var k=0;k<sections[i].flights[j].tcs.length;k++){
                  for (var l=0;l<sections[i].flights[j].tcs[k].reservations.length;l++){
                    var r = sections[i].flights[j].tcs[k].reservations[l]['Ref#'];
-                   if ((r>0&&r<4)||(r>9&&r<13)) {
+                   var t = tcs.filter(function(tc){
+                     return r===tc['Ref#'];
+                   });
+                   if (t.length>0) t=t[0];
+                   else t={};
+                   if (t.Origin==="HOM"||t.Destination==="HOM") {
                      sections[i].flights[j].total += sections[i].flights[j].tcs[k].reservations[l]['WEIGHT'] + sections[i].flights[j].tcs[k].reservations[l]['FWeight'];
                    }
                    if (r===6||r===9||r===10) {
