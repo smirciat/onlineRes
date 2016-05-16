@@ -20,3 +20,6 @@ label.form-control{
   box-shadow:none;
   text-align:right;
 }
+._720kb-datepicker-calendar-day._720kb-datepicker-today {
+  font-weight: bold;
+}
