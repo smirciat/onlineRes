@@ -309,7 +309,7 @@ angular.module('tempApp')
                 });
             });
         }
-        if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="Last Name"&&rowEntity.WEIGHT===0) {
+        if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="Last Name"&&rowEntity.WEIGHT===0&&rowEntity.FIRST&&rowEntity.LAST) {
           //look up body weight
           $http.post('/api/reservations/name',{first:rowEntity.FIRST,last:rowEntity.LAST}).success(function(data){
             for (var i=0;i<data.length;i++){
