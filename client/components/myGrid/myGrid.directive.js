@@ -123,38 +123,40 @@ angular.module('tempApp')
         })
         
         .then(function(response){
-          var done=0;
-          for (var i=0;i<response.data.length;i++){
-            if (rowEntity.WEIGHT===0) {
-              if (response.data[i].WEIGHT&&response.data[i].WEIGHT>0) {
-                rowEntity.WEIGHT=response.data[i].WEIGHT;
-                done++;
-              }
-            }
-            if (!rowEntity.Phone) {
-              rowEntity.Phone=response.data[i].Phone;
-              done++;
-            }
-            if (!rowEntity.email) {
-              rowEntity.email=response.data[i].email;
-              done++;
-            }
-            if (!rowEntity.uid){
-              if (response.data[i].uid) {
-                //I don't want to paste in uid if the name does not match.  users might add res for another person, if they spot someone else's res in their list, they might delete it accidentally
-                var users = scope.users.filter(function(user){
-                  return user._id===response.data[i].uid;
-                });
-                if (users.length>0&&users[0].name&&
-                      users[0].name.toUpperCase()===response.data[i].FIRST.toUpperCase() + ' ' + response.data[i].LAST.toUpperCase()) {
-                  rowEntity.uid=response.data[i].uid;
+          if (rowEntity.LAST) {//no need to look up attributes for a res if there is no last name
+            var done=0;
+            for (var i=0;i<response.data.length;i++){
+              if (rowEntity.WEIGHT===0) {
+                if (response.data[i].WEIGHT&&response.data[i].WEIGHT>0) {
+                  rowEntity.WEIGHT=response.data[i].WEIGHT;
                   done++;
                 }
               }
+              if (!rowEntity.Phone) {
+                rowEntity.Phone=response.data[i].Phone;
+                done++;
+              }
+              if (!rowEntity.email) {
+                rowEntity.email=response.data[i].email;
+                done++;
+              }
+              if (!rowEntity.uid){
+                if (response.data[i].uid) {
+                  //I don't want to paste in uid if the name does not match.  users might add res for another person, if they spot someone else's res in their list, they might delete it accidentally
+                  var users = scope.users.filter(function(user){
+                    return user._id===response.data[i].uid;
+                  });
+                  if (users.length>0&&users[0].name&&
+                        users[0].name.toUpperCase()===response.data[i].FIRST.toUpperCase() + ' ' + response.data[i].LAST.toUpperCase()) {
+                    rowEntity.uid=response.data[i].uid;
+                    done++;
+                  }
+                }
+              }
+              if (done>=4) i = response.data.length;
             }
-            if (done>=4) i = response.data.length;
+            if (rowEntity.dirty&&rowEntity.email) sendEmail(rowEntity);
           }
-          if (rowEntity.dirty&&rowEntity.email) sendEmail(rowEntity);
           return $http.post('/api/flights/o',body);
         })
         
