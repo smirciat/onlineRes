@@ -15,6 +15,14 @@ angular.module('tempApp')
       if (row.entity['WEIGHT']===0&&row.entity['FWeight']>0) cellClass += ' yellow';
       return cellClass;
     };
+    var cellTemplateFirst = '<div class="typeaheadcontainer"><input type="text" ' +
+    'class="typeaheadcontrol"' +
+    'ng-model="grid.appScope.myData[rowRenderIndex].state" ' +
+    'uib-typeahead="FIRST as first.FIRST for first in grid.appScope.firsts | filter:$viewValue | limitTo:8" ' +
+    'ng-required="true" ' +
+    'typeahead-editable ="true"' +
+    'typeahead-on-select="grid.appScope.typeaheadSelected(row.entity, $item)" ' +
+    '/></div>';
             
     //flights api options within an bject
     params.flights = {
@@ -64,7 +72,7 @@ angular.module('tempApp')
       columnDefs: [
           { name: ' ', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-danger" type="button" id="removeRow"  ng-click="grid.appScope.removeRow(row)">X</button></div>', width:35 },
           { name: '.', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-warning" type="button" id="return"  ng-click="grid.appScope.return(row)"><i class="fa fa-refresh"></i></button></div>', width:38 },
-          { name: 'First Name', field:'FIRST',cellClass: cellColor,minWidth:100},
+          { name: 'First Name', field:'FIRST',editModelField:'FIRST',editableCellTemplate: cellTemplateFirst,cellClass: cellColor,minWidth:100},
           { name: 'Last Name', field:'LAST',cellClass: cellColor,minWidth:100}, 
           { name: 'SF#', field:'smfltnum', width:50,cellClass: cellColor,minWidth:100},
           { name: 'FLT#', field:'FLIGHT#', width:60,cellClass: cellColor,minWidth:100},

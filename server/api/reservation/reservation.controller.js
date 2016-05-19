@@ -131,8 +131,6 @@ export function oneF(req, res) {
 //get all reservations for the specified day and flight time
 export function name(req, res) {
   var options = {};
-  console.log(req.body);
-  
   if (req.body.first){
     //var date = new Date(req.body.date); 
     //date.setDate(date.getDate()-365)
@@ -169,7 +167,19 @@ export function name(req, res) {
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
-
+export function last(req, res) {
+  var str = 'SELECT DISTINCT "LAST" FROM "Reservations" ORDER BY "LAST"';
+  sqldb.sequelize.query(str, { raw:true, type: sequelize.QueryTypes.SELECT})
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+export function first(req, res) {
+  var str = 'SELECT DISTINCT "FIRST" FROM "Reservations" ORDER BY "FIRST"';
+  console.log(str)
+  sqldb.sequelize.query(str, { raw:true, type: sequelize.QueryTypes.SELECT})
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
 // Gets a single Reservation from the DB
 export function show(req, res) {
   Reservation.find({

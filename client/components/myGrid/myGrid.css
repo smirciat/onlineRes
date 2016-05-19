@@ -42,3 +42,10 @@
 .mainselectize .selectize-dropdown-content {
   max-height:150px;
 }
+.ngCell .typeaheadcontainer {
+  display: table; margin-right: auto; margin-left: auto;width:95%  
+}
+
+.ngCell .typeaheadcontrol {
+  width:100%
+}

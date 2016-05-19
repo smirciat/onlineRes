@@ -36,6 +36,16 @@ angular.module('tempApp')
     tcFactory.getFlights({date:scope.date},function(f){
      
     });
+    $http.post('/api/reservations/first').then(function(res){
+      scope.firsts=res.data;
+    });
+    $http.post('/api/reservations/last').then(function(res){
+      scope.lasts=res.data;
+    });
+    scope.typeaheadSelected = function(entity, selectedItem) {
+        entity.FIRST = selectedItem.FIRST;
+        scope.$broadcast('uiGridEventEndCellEdit');
+    };
     scope.addData = function(){
       var object = angular.copy(gridSettings.get(scope.myApi).newRecord);
       object.smfltnum = scope.smfltnum + "A";
