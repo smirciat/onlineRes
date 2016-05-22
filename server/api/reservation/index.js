@@ -12,7 +12,7 @@ router.get('/user/:id', auth.isAuthenticated(),controller.batch);
 router.post('/day', auth.isAuthenticated(),controller.daily);
 router.post('/o', auth.hasRole('admin'), controller.oneF);
 router.post('/name', auth.hasRole('admin'), controller.name);
-router.post('/first', auth.hasRole('admin'), controller.first);
+router.post('/first/', auth.hasRole('admin'), controller.first);
 router.post('/last', auth.hasRole('admin'), controller.last);
 router.post('/', auth.isAuthenticated(),controller.create);
 router.put('/:id', auth.isAuthenticated(),controller.update);

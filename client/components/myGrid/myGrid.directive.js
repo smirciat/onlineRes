@@ -24,6 +24,8 @@ angular.module('tempApp')
     var flight;
     var reload=true;
     var sections, pilots, aircrafts, pilotSch, aircraftSch, travelCodes;
+    scope.firsts=[];
+    scope.lasts=[];
     tcFactory.getAircraft(function(ac){
       aircraftSch = ac;
     });
@@ -37,14 +39,22 @@ angular.module('tempApp')
      
     });
     $http.post('/api/reservations/first').then(function(res){
-      scope.firsts=res.data;
+      res.data.forEach(function(first){
+        scope.firsts.push(first.FIRST);
+      });
     });
     $http.post('/api/reservations/last').then(function(res){
-      scope.lasts=res.data;
+      res.data.forEach(function(last){
+        scope.lasts.push(last.LAST);
+      });
     });
-    scope.typeaheadSelected = function(entity, selectedItem) {
-        entity.FIRST = selectedItem.FIRST;
+    scope.typeaheadSelected = function(entity, selectedItem,field) {
+        entity[field] = selectedItem;
         scope.$broadcast('uiGridEventEndCellEdit');
+    };
+    scope.clickedSomewhereElse = function(){
+      console.log('hit');
+      scope.$broadcast('uiGridEventEndCellEdit');
     };
     scope.addData = function(){
       var object = angular.copy(gridSettings.get(scope.myApi).newRecord);
@@ -289,6 +299,9 @@ angular.module('tempApp')
     //set gridApi on scope
       scope.gridApi = gridApi;
       gridApi.rowEdit.on.saveRow(scope, scope.saveRow);
+      gridApi.cellNav.on.navigate(scope,function(newRowcol, oldRowCol){
+          scope.$broadcast('uiGridEventEndCellEdit');
+      });
       scope.gridApi.edit.on.afterCellEdit(scope,function(rowEntity, colDef, newValue, oldValue){
         var body = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].toUpperCase()};
         var body1 = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].substring(0,3) +'B'};
@@ -332,6 +345,17 @@ angular.module('tempApp')
               }
             }
           });
+        }
+        if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="First Name"&&rowEntity.FIRST) {
+          if (newValue&&newValue.split(" ").length>1) {
+            rowEntity.LAST = newValue.split(" ")[1];
+            if (newValue.split(" ").length>2) {
+              for (var i=2;i<newValue.split(" ").length;i++){
+                rowEntity.LAST = rowEntity.LAST + ' ' + newValue.split(" ")[i];
+              }
+            }
+            rowEntity.FIRST = newValue.split(" ")[0];
+          }
         }
         if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&(colDef.name==="SF#"||colDef.name==="Date")) {
           //for sake of determining if sending an email is appropriate
@@ -443,7 +467,7 @@ angular.module('tempApp')
         reload=false;
         data = gridSettings.getFun(scope.myApi,data);
         scope.gridOptions.data=data;
-        scope.tempData=data.slice();
+        if (data) scope.tempData=data.slice();
         scope.addData();
         if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') scope.setPlanePilot();
         scope.shortApi = scope.myApi.substr(0,scope.myApi.length-1);
