@@ -299,7 +299,6 @@ angular.module('tempApp')
           scope.$broadcast('uiGridEventEndCellEdit');
           $timeout(function(){
             var el = document.getElementById('active-first');
-            console.log(el)
             if (el) angular.element(el).trigger('select');
           },100);
       });

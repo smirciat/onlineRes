@@ -14,13 +14,13 @@ angular.module('tempApp')
       if (row.entity['WEIGHT']===0&&row.entity['FWeight']>0) cellClass += ' yellow';
       return cellClass;
     };
-    var cellTemplateFirst = '<div class="typeaheadcontainer"><form><input id="active-first" type="text" ui-grid-editor ' +
-    'class="typeaheadcontrol"' +
+    var cellTemplateFirst = '<div class="typeaheadcontainer"><form><input id="active-first" type="text" ' +
+    'class="typeaheadcontrol" autocomplete="off" ' +
     'ng-model="MODEL_COL_FIELD" uib-typeahead="first for first in grid.appScope.firsts | filter:$viewValue | limitTo:8"' +
-    'typeahead-on-select="grid.appScope.typeaheadSelected(row.entity, $item,\'FIRST\')" ' +
+    'typeahead-on-select="grid.appScope.typeaheadSelected(row.entity, $item,\'FIRST\')" ui-grid-editor ' +
     '/></form</div>';
     var cellTemplateLast = '<div class="typeaheadcontainer"><form><input id="active-first" type="text" ui-grid-editor ' +
-    'class="typeaheadcontrol"' +
+    'class="typeaheadcontrol" autocomplete="off" ' +
     'ng-model="MODEL_COL_FIELD" uib-typeahead="first for first in grid.appScope.lasts | filter:$viewValue | limitTo:8"' +
     'typeahead-on-select="grid.appScope.typeaheadSelected(row.entity, $item,\'LAST\')" ' +
     '/></form></div>'; 
