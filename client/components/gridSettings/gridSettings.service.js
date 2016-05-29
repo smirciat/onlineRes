@@ -11,22 +11,27 @@ angular.module('tempApp')
       else cellClass = 'odd';
       if (row.entity['FLIGHT#']&&row.entity['FLIGHT#'].substring(3).toUpperCase()==='A') cellClass += ' green';
       else if (row.entity['FLIGHT#']) cellClass += ' red';
-      //if (row.entity['INVOICE#']&&row.entity['INVOICE#'].toLowerCase() === 'nr') return cellClass + ' red';
       if (row.entity['WEIGHT']===0&&row.entity['FWeight']>0) cellClass += ' yellow';
       return cellClass;
     };
-    var cellTemplateFirst = '<div class="typeaheadcontainer"><input type="text" ' +
+    var cellTemplateFirst = '<div class="typeaheadcontainer"><input id="active-first" type="text" ' +
     'class="typeaheadcontrol"' +
-    'click-anywhere-but-here="grid.appScope.clickedSomewhereElse()"' +
-    'ng-model="MODEL_COL_FIELD" typeahead="first for first in grid.appScope.firsts | filter:$viewValue | limitTo:8"' +
+    'ng-model="MODEL_COL_FIELD" uib-typeahead="first for first in grid.appScope.firsts | filter:$viewValue | limitTo:8"' +
     'typeahead-on-select="grid.appScope.typeaheadSelected(row.entity, $item,\'FIRST\')" ' +
     '/></div>';
-    var cellTemplateLast = '<div class="typeaheadcontainer"><input type="text" ' +
+    var cellTemplateLast = '<div class="typeaheadcontainer"><input id="active-first" type="text" ' +
     'class="typeaheadcontrol"' +
-    'click-anywhere-but-here="grid.appScope.clickedSomewhereElse()"' +
-    'ng-model="MODEL_COL_FIELD" typeahead="first for first in grid.appScope.lasts | filter:$viewValue | limitTo:8"' +
+    'ng-model="MODEL_COL_FIELD" uib-typeahead="first for first in grid.appScope.lasts | filter:$viewValue | limitTo:8"' +
     'typeahead-on-select="grid.appScope.typeaheadSelected(row.entity, $item,\'LAST\')" ' +
     '/></div>'; 
+    var selectTemplate='<ui-select-wrap>'+
+                         '<ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true">'+
+                           '<ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match>'+
+                           '<ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()">' +
+                             '<span>{{ item.value }}</span>'+
+                           '</ui-select-choices>'+
+                         '</ui-select>'+
+                       '</ui-select-wrap>';
     //flights api options within an object
     params.flights = {
       gridOptions: {
@@ -69,33 +74,29 @@ angular.module('tempApp')
       gridOptions:{
       rowEditWaitInterval: -1,
       enableCellEditOnFocus: true,
+      enableRowSelection: false,
+      multiSelect: false,
       exporterMenuCsv: false,
       enableGridMenu:true,
       showColumnMenu:true,
       columnDefs: [
           { name: ' ', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-danger" type="button" id="removeRow"  ng-click="grid.appScope.removeRow(row)">X</button></div>', width:35 },
           { name: '.', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-warning" type="button" id="return"  ng-click="grid.appScope.return(row)"><i class="fa fa-refresh"></i></button></div>', width:38 },
-          { name: 'First Name', field:'FIRST',editModelField:'FIRST',editableCellTemplate: cellTemplateFirst,cellClass: cellColor,minWidth:100},
-          { name: 'Last Name', field:'LAST',editModelField:'LAST',editableCellTemplate: cellTemplateLast,cellClass: cellColor,minWidth:100}, 
+          { name: 'First Name', field:'FIRST',editableCellTemplate: cellTemplateFirst,cellClass: cellColor,minWidth:100},
+          { name: 'Last Name', field:'LAST',editableCellTemplate: cellTemplateLast,cellClass: cellColor,minWidth:100}, 
           { name: 'SF#', field:'smfltnum', width:50,cellClass: cellColor,minWidth:100},
           { name: 'FLT#', field:'FLIGHT#', width:60,cellClass: cellColor,minWidth:100},
           { name: 'Travel Code', field: 'travelCode.value',  editModelField: 'travelCode', cellClass: cellColor,minWidth:100,
-             editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
-          
+             editDropdownOptionsArray: [], editableCellTemplate: selectTemplate},
           { name: 'Body', field: 'WEIGHT', width:60,cellClass: cellColor,minWidth:100},
           { name: 'Frt', field:'FWeight', width:45,cellClass: cellColor,minWidth:100},
-          //{ name: 'Flight Number', field: 'flightId.value', editModelField: 'flightId', 
-          //   editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
           { name: 'Date', field:'DATE TO FLY' , type: 'date', cellFilter: 'date:"MM/dd/yyyy"',cellClass: cellColor,minWidth:100},
           { name: 'Invoice',field:'INVOICE#',cellClass: cellColor,minWidth:100},
-          //{ name: 'Travel Code', field: 'Ref#', editModelField: 'Ref#', 
-          //   editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
           { name: 'Phone',cellClass: cellColor,minWidth:100},
           { name: 'Pilot', field: 'pilot.value',  editModelField: 'pilot',cellClass: cellColor,minWidth:100, 
-             editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
+             editDropdownOptionsArray: [], editableCellTemplate: selectTemplate},
           { name: 'Aircraft', field: 'aircraft.value',  editModelField: 'aircraft',cellClass: cellColor,minWidth:100, 
-             editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
-          
+             editDropdownOptionsArray: [], editableCellTemplate: selectTemplate},
           { name: 'Email', field:'email', visible:false,cellClass: cellColor,minWidth:100},
           { name: 'RESERVED', enableCellEdit:false, field:'DATE RESERVED', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:100, visible:false,cellClass: cellColor},
           { name: 'UPDATED', enableCellEdit:false, type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:100, visible:false,cellClass: cellColor},
@@ -164,7 +165,6 @@ angular.module('tempApp')
       
     };
     
-    //$http.get('/api/travelCodes').success(function(data){
     tcFactory.getData(function(data) {
       var max=0;
       data.forEach(function(d){

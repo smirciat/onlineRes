@@ -1,19 +1,19 @@
 'use strict';
 
 angular.module('tempApp')
-  .factory('Modal', function ($rootScope, $modal) {
+  .factory('Modal', function ($rootScope, $uibModal) {
     /**
      * Opens a modal
      * @param  {Object} scope      - an object to be merged with modal's scope
      * @param  {String} modalClass - (optional) class(es) to be applied to the modal
-     * @return {Object}            - the instance $modal.open() returns
+     * @return {Object}            - the instance $uibModal.open() returns
      */
     function openModal(scope = {}, modalClass = 'modal-default') {
       var modalScope = $rootScope.$new();
 
       angular.extend(modalScope, scope);
 
-      return $modal.open({
+      return $uibModal.open({
         templateUrl: 'components/modal/modal.html',
         windowClass: modalClass,
         scope: modalScope
@@ -76,7 +76,7 @@ angular.module('tempApp')
                 name = args.shift(),
                 formData = {},
                 theModal;
-            theModal = openModal({ //openModal is a function the modal service defines.  It is just a wrapper for $Modal
+            theModal = openModal({ //openModal is a function the modal service defines.  It is just a wrapper for $uibModal
               modal: {
                 formData:formData,
                 dismissable: true,

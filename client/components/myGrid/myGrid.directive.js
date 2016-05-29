@@ -52,10 +52,6 @@ angular.module('tempApp')
         entity[field] = selectedItem;
         scope.$broadcast('uiGridEventEndCellEdit');
     };
-    scope.clickedSomewhereElse = function(){
-      console.log('hit');
-      scope.$broadcast('uiGridEventEndCellEdit');
-    };
     scope.addData = function(){
       var object = angular.copy(gridSettings.get(scope.myApi).newRecord);
       object.smfltnum = scope.smfltnum + "A";
@@ -301,6 +297,11 @@ angular.module('tempApp')
       gridApi.rowEdit.on.saveRow(scope, scope.saveRow);
       gridApi.cellNav.on.navigate(scope,function(newRowcol, oldRowCol){
           scope.$broadcast('uiGridEventEndCellEdit');
+          $timeout(function(){
+            var el = document.getElementById('active-first');
+            console.log(el)
+            if (el) angular.element(el).trigger('select');
+          },100);
       });
       scope.gridApi.edit.on.afterCellEdit(scope,function(rowEntity, colDef, newValue, oldValue){
         var body = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].toUpperCase()};
@@ -406,11 +407,11 @@ angular.module('tempApp')
       }
     };
     
-    scope.selectedRow={};
+    //scope.selectedRow={};
     
-    scope.rowDate = function(){
-      return new Date(scope.selectedRow.entity.date);
-    };
+    //scope.rowDate = function(){
+    //  return new Date(scope.selectedRow.entity.date);
+    //};
     
     var tempDate=new Date(2016,2,4,0,0,0,0); 
     scope.query = "date=" + tempDate + "&hourOfDay=8";
