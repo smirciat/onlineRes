@@ -14,10 +14,10 @@ angular.module('tempApp')
       if (row.entity['WEIGHT']===0&&row.entity['FWeight']>0) cellClass += ' yellow';
       return cellClass;
     };
-    var cellTemplateFirst = '<div class="typeaheadcontainer"><form><input id="active-first" type="text" ' +
+    var cellTemplateFirst = '<div class="typeaheadcontainer"><form><input id="active-first" type="text" ui-grid-editor ' +
     'class="typeaheadcontrol" autocomplete="off" ' +
     'ng-model="MODEL_COL_FIELD" uib-typeahead="first for first in grid.appScope.firsts | filter:$viewValue | limitTo:8"' +
-    'typeahead-on-select="grid.appScope.typeaheadSelected(row.entity, $item,\'FIRST\')" ui-grid-editor ' +
+    'typeahead-on-select="grid.appScope.typeaheadSelected(row.entity, $item,\'FIRST\')" ' +
     '/></form</div>';
     var cellTemplateLast = '<div class="typeaheadcontainer"><form><input id="active-first" type="text" ui-grid-editor ' +
     'class="typeaheadcontrol" autocomplete="off" ' +
@@ -46,9 +46,9 @@ angular.module('tempApp')
           { name: 'DATE', enableCellEdit:false, displayName:'Flight Date', type:'date', 
                 cellFilter: 'date:"MM/dd/yyyy"',minWidth:100 },
           { name: 'Pilot',field: 'Pilot.value',  editModelField: 'Pilot',minWidth:100, 
-             editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
+             editDropdownOptionsArray: [], editableCellTemplate: selectTemplate },
           { name: 'Aircraft',field: 'Aircraft.value',  editModelField: 'Aircraft',minWidth:100, 
-             editDropdownOptionsArray: [], editableCellTemplate: '<ui-select-wrap><ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true"><ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match><ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()"><span>{{ item.value }}</span></ui-select-choices></ui-select></ui-select-wrap>' },
+             editDropdownOptionsArray: [], editableCellTemplate: selectTemplate },
           { name: '.', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-success" type="button" id="removeRow"  ng-click="grid.appScope.flushRows()"><i class="fa fa-hdd-o"></i></button></div>', width:35 } 
         ],
         data : [] 
