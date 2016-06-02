@@ -53,10 +53,12 @@ angular.module('tempApp')
         scope.$broadcast('uiGridEventEndCellEdit');
     };
     scope.addData = function(){
-      var object = angular.copy(gridSettings.get(scope.myApi).newRecord);
-      object.smfltnum = scope.smfltnum + "A";
-      object['DATE TO FLY'] = scope.date;
-      scope.gridOptions.data.push(object);
+      if ($location.path()==='/oneFlight') {
+        var object = angular.copy(gridSettings.get(scope.myApi).newRecord);
+        object.smfltnum = scope.smfltnum + "A";
+        object['DATE TO FLY'] = scope.date;
+        scope.gridOptions.data.push(object);
+      }
     };
     
     scope.removeRow = function(row) {
@@ -556,11 +558,21 @@ angular.module('tempApp')
       if ($location.path()==='/oneFlight'||$location.path()==='/todaysFlights') scope.gridOptions.data.sort(function(a,b){
         if (!a['FLIGHT#']) return true;
         if (!b['FLIGHT#']) return false;
-        if (a['FLIGHT#'].toUpperCase()===b['FLIGHT#'].toUpperCase()&&$location.path()==='/oneFlight') return a['Ref#']>b['Ref#'];
+        if (a['FLIGHT#'].toUpperCase()===b['FLIGHT#'].toUpperCase()&&$location.path()==='/oneFlight') {
+          if (a['Ref#']===b['Ref#']) return a._id>b._id;
+          return a['Ref#']>b['Ref#'];
+        }
         return a['FLIGHT#'].localeCompare(b['FLIGHT#']);
       });
       else scope.gridOptions.data.sort(function(a,b){
-        if (a['DATE TO FLY']) return new Date(b['DATE TO FLY']) - new Date(a['DATE TO FLY']);
+        if (a['DATE TO FLY']) {
+          if (new Date(a['DATE TO FLY'])===new Date(b['DATE TO FLY'])) return a._id>b._id;
+          return new Date(b['DATE TO FLY']) - new Date(a['DATE TO FLY']);
+        }
+        if (a['DATE']) {
+          if (new Date(a['DATE'])===new Date(b['DATE'])) return a.SmFltNum>b.SmFltNum;
+          return new Date(b['DATE']) - new Date(a['DATE']);
+        }
         return true;
       });
     };
