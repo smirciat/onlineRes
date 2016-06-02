@@ -85,6 +85,7 @@ angular.module('tempApp')
     scope.return = function(row){
       //make a copy of row in the opposite direction
       var newRow = jQuery.extend(true,{},row);
+      newRow.entity.return = true;
       newRow.entity['$$hashKey'] = undefined;
       newRow.entity._id=undefined;
       newRow.entity['Ref#'] = 13-newRow.entity['Ref#'];
@@ -302,7 +303,10 @@ angular.module('tempApp')
             if (el) angular.element(el).triggerHandler('select');
           },100);
           //if row change, fire save event
-          if (oldRowcol&&newRowcol.row.uid!==oldRowcol.row.uid) scope.flushRows();
+          if (oldRowcol&&newRowcol.row.uid!==oldRowcol.row.uid&&!newRowcol.row.entity.return) {
+            scope.flushRows();
+          }
+          if (newRowcol.row.entity.return) newRowcol.row.entity.return=false;
       });
       scope.gridApi.edit.on.afterCellEdit(scope,function(rowEntity, colDef, newValue, oldValue){
         var body = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].toUpperCase()};
