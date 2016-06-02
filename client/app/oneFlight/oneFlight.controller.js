@@ -232,6 +232,7 @@ angular.module('tempApp')
                else sections[i].flights[j].total=-9999;
                sections[i].flights[j].keb=sections[i].flights[j].total;
                var keb=0;
+               var extra=0;
                for (var k=0;k<sections[i].flights[j].tcs.length;k++){
                  for (var l=0;l<sections[i].flights[j].tcs[k].reservations.length;l++){
                    var r = sections[i].flights[j].tcs[k].reservations[l]['Ref#'];
@@ -246,8 +247,11 @@ angular.module('tempApp')
                    if (r===6||r===9||r===10) {
                      keb += sections[i].flights[j].tcs[k].reservations[l]['WEIGHT'] + sections[i].flights[j].tcs[k].reservations[l]['FWeight'];
                    }
+                   if (r===61) extra = 120;
+                   if (r===25||r===132) extra = 180;
                  }
                }
+               sections[i].flights[j].total += extra;
                if (keb>0) sections[i].flights[j].keb += keb;
                else sections[i].flights[j].keb = 0;
             }
