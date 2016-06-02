@@ -72,7 +72,7 @@ angular.module('tempApp')
 
     params.reservations = {
       gridOptions:{
-      rowEditWaitInterval: -1,
+      rowEditWaitInterval: -1,//7000,//-1,
       enableCellEditOnFocus: true,
       enableRowSelection: false,
       multiSelect: false,

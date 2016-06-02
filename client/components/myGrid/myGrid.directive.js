@@ -295,12 +295,14 @@ angular.module('tempApp')
     //set gridApi on scope
       scope.gridApi = gridApi;
       gridApi.rowEdit.on.saveRow(scope, scope.saveRow);
-      gridApi.cellNav.on.navigate(scope,function(newRowcol, oldRowCol){
+      gridApi.cellNav.on.navigate(scope,function(newRowcol, oldRowcol){
           scope.$broadcast('uiGridEventEndCellEdit');
           $timeout(function(){
             var el = document.getElementById('active-first');
             if (el) angular.element(el).triggerHandler('select');
           },100);
+          //if row change, fire save event
+          if (oldRowcol&&newRowcol.row.uid!==oldRowcol.row.uid) scope.flushRows();
       });
       scope.gridApi.edit.on.afterCellEdit(scope,function(rowEntity, colDef, newValue, oldValue){
         var body = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].toUpperCase()};
