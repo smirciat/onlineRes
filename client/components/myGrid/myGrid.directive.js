@@ -109,9 +109,20 @@ angular.module('tempApp')
       });
     };
     
-    scope.index=0;
     scope.saveRow = function( rowEntity ) {
-      scope.index = scope.gridOptions.data.indexOf(rowEntity);
+      var index = scope.gridOptions.data.indexOf(rowEntity);
+      //test for cancelable conditions
+      if (scope.myApi==='reservations'&&!rowEntity['WEIGHT']) rowEntity['WEIGHT']=0;
+      if (scope.myApi==='reservations'&&!rowEntity['FWeight']) rowEntity['FWeight']=0;
+      if ((!rowEntity['FIRST']||rowEntity['WEIGHT']+rowEntity['FWeight']===0||!rowEntity.travelCode.value||!rowEntity.smfltnum)&&!rowEntity['SmFltNum']) {
+        console.log('cancel')
+        scope.gridApi.rowEdit.setSavePromise( rowEntity, scope.cancel);
+        $timeout(function(){
+          scope.gridApi.rowEdit.setRowsDirty([scope.gridOptions.data[index]]);
+        },100);
+        return;
+      }
+      scope.index = scope.gridOptions.data.indexOf(rowEntity);//?not needed?
       //rowEntity.dateModified = new Date();
       var preSave = gridSettings.get(scope.myApi).preSave;
       preSave.forEach(function(element){
@@ -239,7 +250,6 @@ angular.module('tempApp')
                   otherFlight.SmFltNum = newFlight.SmFltNum.substring(0,2) + 'B';
                   otherFlight['FLIGHT#'] = newFlight['FLIGHT#'].substring(0,3) + 'B';
                   $http.patch('/api/flights/',otherFlight);
-                  //tcFactory.refreshFlights();
                 }
                 else rowEntity['FLIGHT#'] = '9' + rowEntity.smfltnum;
               }
@@ -414,12 +424,6 @@ angular.module('tempApp')
       }
     };
     
-    //scope.selectedRow={};
-    
-    //scope.rowDate = function(){
-    //  return new Date(scope.selectedRow.entity.date);
-    //};
-    
     var tempDate=new Date(2016,2,4,0,0,0,0); 
     scope.query = "date=" + tempDate + "&hourOfDay=8";
     gridSettings.setCriteria(tempDate,8);
@@ -536,6 +540,8 @@ angular.module('tempApp')
     scope.flushRows = function(){
       scope.gridApi.rowEdit.flushDirtyRows(scope.gridApi.grid);
     };
+    
+    scope.cancel = $q.when(scope.nothing);
     
     scope.makeQuery = function(){
       var date = new Date(scope.date);
