@@ -88,11 +88,15 @@ angular.module('tempApp')
       //make a copy of row in the opposite direction
       var newRow = jQuery.extend(true,{},row);
       newRow.entity.return = true;
+      newRow.entity.firstReturn = true;
       newRow.entity['$$hashKey'] = undefined;
       newRow.entity._id=undefined;
-      newRow.entity['Ref#'] = 13-newRow.entity['Ref#'];
+      if (newRow.entity['Ref#']<13) newRow.entity['Ref#'] = 13-newRow.entity['Ref#'];
+      else newRow.entity['Ref#']=undefined;
       newRow.entity['FLIGHT#'] = undefined;
       newRow.entity['INVOICE#'] = undefined;
+      newRow.entity.pilot = undefined;
+      newRow.entity.aircraft = undefined;
       if (newRow.entity.smfltnum.substring(2).toUpperCase()==='A') newRow.entity.smfltnum = newRow.entity.smfltnum.substring(0,2) + 'B';
       else newRow.entity.smfltnum = newRow.entity.smfltnum.substring(0,2) + 'A';
       newRow.entity['DATE RESERVED'] = new Date(Date.now());
@@ -103,9 +107,7 @@ angular.module('tempApp')
             });
         if (values.length>0) newRow.entity.travelCode.value = values[0]['Route'];  
         scope.gridOptions.data.push(newRow.entity);
-        $timeout(function(){
-          scope.gridApi.rowEdit.setRowsDirty([scope.gridOptions.data[scope.gridOptions.data.length-1]]);
-        },100);
+        
       });
     };
     
@@ -122,7 +124,6 @@ angular.module('tempApp')
         },100);
         return;
       }
-      scope.index = scope.gridOptions.data.indexOf(rowEntity);//?not needed?
       //rowEntity.dateModified = new Date();
       var preSave = gridSettings.get(scope.myApi).preSave;
       preSave.forEach(function(element){
@@ -318,7 +319,13 @@ angular.module('tempApp')
           if (oldRowcol&&newRowcol.row.uid!==oldRowcol.row.uid&&!newRowcol.row.entity.return) {
             scope.flushRows();
           }
-          if (newRowcol.row.entity.return) newRowcol.row.entity.return=false;
+          if (newRowcol.row.entity.return) {
+            var index = scope.gridOptions.data.indexOf(newRowcol.row.entity);
+            $timeout(function(){
+              scope.gridApi.rowEdit.setRowsDirty([scope.gridOptions.data[index]]);
+            },100);
+            newRowcol.row.entity.return=false;
+          }
       });
       scope.gridApi.edit.on.afterCellEdit(scope,function(rowEntity, colDef, newValue, oldValue){
         var body = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].toUpperCase()};
