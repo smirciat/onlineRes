@@ -142,7 +142,11 @@ angular.module('tempApp')
                   otherFlight.SmFltNum = newFlight.SmFltNum.substring(0,2) + 'B';
                   otherFlight['FLIGHT#'] = newFlight['FLIGHT#'].substring(0,3) + 'B';
                   $http.patch('/api/flights/',otherFlight);
+<<<<<<< HEAD
                   tcFactory.refreshFlights();
+=======
+                  //tcFactory.refreshFlights();
+>>>>>>> parent of eaa8797... cancel update conditions
                 }
                 else rowEntity['FLIGHT#'] = '9' + rowEntity.smfltnum;
               }
@@ -225,11 +229,19 @@ angular.module('tempApp')
       }
     };
     
+<<<<<<< HEAD
     scope.selectedRow={};
     
     scope.rowDate = function(){
       return new Date(scope.selectedRow.entity.date);
     };
+=======
+    //scope.selectedRow={};
+    
+    //scope.rowDate = function(){
+    //  return new Date(scope.selectedRow.entity.date);
+    //};
+>>>>>>> parent of eaa8797... cancel update conditions
     
     var tempDate=new Date(2016,2,4,0,0,0,0); 
     scope.query = "date=" + tempDate + "&hourOfDay=8";
