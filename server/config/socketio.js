@@ -17,6 +17,7 @@ function onConnect(socket) {
   });
 
   // Insert sockets below
+  require('../api/chat/chat.socket').register(socket);
   require('../api/aircraftSch/aircraftSch.socket').register(socket);
   require('../api/pilotSch/pilotSch.socket').register(socket);
   require('../api/travelCode/travelCode.socket').register(socket);

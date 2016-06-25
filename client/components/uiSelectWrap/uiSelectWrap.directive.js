@@ -16,7 +16,7 @@ angular.module('tempApp')
         //set focus at start of edit
         scope.$on(uiGridEditConstants.events.BEGIN_CELL_EDIT, function (evt, args) {
           //whoa, this is ugly
-          scope.$parent.$parent.$parent.$parent.$parent.$parent.$parent.$parent.selectedRow=scope.row;
+          //scope.$parent.$parent.$parent.$parent.$parent.$parent.$parent.$parent.selectedRow=scope.row;
           hideOnCellnav();
         });
     

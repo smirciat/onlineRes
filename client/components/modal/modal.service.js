@@ -1,19 +1,19 @@
 'use strict';
 
 angular.module('tempApp')
-  .factory('Modal', function ($rootScope, $modal) {
+  .factory('Modal', function ($rootScope, $uibModal) {
     /**
      * Opens a modal
      * @param  {Object} scope      - an object to be merged with modal's scope
      * @param  {String} modalClass - (optional) class(es) to be applied to the modal
-     * @return {Object}            - the instance $modal.open() returns
+     * @return {Object}            - the instance $uibModal.open() returns
      */
     function openModal(scope = {}, modalClass = 'modal-default') {
       var modalScope = $rootScope.$new();
 
       angular.extend(modalScope, scope);
 
-      return $modal.open({
+      return $uibModal.open({
         templateUrl: 'components/modal/modal.html',
         windowClass: modalClass,
         scope: modalScope
@@ -76,7 +76,7 @@ angular.module('tempApp')
                 name = args.shift(),
                 formData = {},
                 theModal;
-            theModal = openModal({ //openModal is a function the modal service defines.  It is just a wrapper for $Modal
+            theModal = openModal({ //openModal is a function the modal service defines.  It is just a wrapper for $uibModal
               modal: {
                 formData:formData,
                 dismissable: true,
@@ -112,11 +112,11 @@ angular.module('tempApp')
                 dismissable: true,
                 title: 'Important Message',
                 html: '<p> <strong>' + name + '</strong> </p>',
-                buttons: [ {//this is where you define you buttons and their appearances
+                buttons: [ {
                   classes: 'btn-success',
                   text: 'OK',
                   click: function(event) {
-                    quickModal.dismiss(event);
+                    quickModal.close(event);
                   }
                 }]
               }
@@ -126,7 +126,45 @@ angular.module('tempApp')
               del.apply(event, args);
             });
           };
-        }        
+        } ,
+        choice(del = angular.noop) {
+          /**
+           * Open a delete confirmation modal
+           * @param  {String} name   - name or info to show on modal
+           * @param  {All}           - any additional args are passed straight to del callback
+           */
+          return function() {
+            var args = Array.prototype.slice.call(arguments),
+                name = args.shift(),
+                quickModal;
+
+            quickModal = openModal({
+              modal: {
+                dismissable: true,
+                title: 'Important Message',
+                html: '<p> <strong>' + name + '</strong> </p>',
+                buttons: [ {//this is where you define you buttons and their appearances
+                  classes: 'btn-info',
+                  text: 'OK',
+                  click: function(event) {
+                    quickModal.dismiss(event);
+                  }
+                },
+                {
+                  classes: 'btn-success',
+                  text: 'Inspect',
+                  click: function(event) {
+                    quickModal.close(event);
+                  }
+                }]
+              }
+            }, 'modal-success');
+
+            quickModal.result.then(function(event) {
+              del.apply(event, args);
+            });
+          };
+        }      
         
       }
     };

@@ -11,6 +11,7 @@
 
 import _ from 'lodash';
 var sqldb = require('../../sqldb');
+var sequelize = require('sequelize');
 var Reservation = sqldb.Reservation;
 
 function handleError(res, statusCode) {
@@ -99,6 +100,8 @@ export function daily(req, res) {
 //get all reservations for the specified day and flight time
 export function oneF(req, res) {
   var options = {};
+  if (req.body.smfltnum&&!req.body.hourOfDay) req.body.hourOfDay = req.body.smfltnum.substring(0,2);
+  var order = [['FLIGHT#','ASC'],['Ref#','ASC']];
   if (req.body.date) {
     
     var date = new Date(req.body.date); 
@@ -109,24 +112,74 @@ export function oneF(req, res) {
     };
   }
   else {
-    res.status(500).end();
-    return null;
+    //res.status(500).end();
+    //return null;
   }
   if (req.body.hourOfDay){
-    //var smfltnum2 = req.body.hourOfDay.substring(0,2) + 'B';
-    //if (req.body.hourOfDay.toUpperCase().substring(2)==='B') smfltnum2 = req.body.hourOfDay.substring(0,2) + 'A';
     options['$or'] = [{smfltnum:req.body.hourOfDay+'A'},{smfltnum:req.body.hourOfDay+'B'}];
+  }
+  
+  if (req.body.invoice) {
+    order = [['DATE TO FLY','DESC']];
+    options['INVOICE#'] = req.body.invoice;
+  }
+  Reservation.findAll({where: options, order: order} )
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+
+//get all reservations for the specified day and flight time
+export function name(req, res) {
+  var options = {};
+  if (req.body.first){
+    //var date = new Date(req.body.date); 
+    //date.setDate(date.getDate()-365)
+    //var startDate = (date.getMonth()+1) + '/' + (date.getDate()) + '/' + date.getFullYear();
+    if (req.body.last)
+      var str = 'SELECT * FROM "Reservations" WHERE (LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
+          'AND LEVENSHTEIN(LOWER("LAST"), \'' + req.body.last.toLowerCase()  + '\') < 2) ' +
+          'OR (dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') AND ' +
+          'dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
+          'OR (LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
+          'nickname = \'' + req.body.first.toLowerCase() + '\')) AND dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
+          'ORDER BY "DATE TO FLY" DESC  LIMIT 100';
+    //else str = 'SELECT * FROM "Reservations" WHERE LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
+    //      'OR dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') ' +
+    //      'OR LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
+    //      'nickname = \'' + req.body.first.toLowerCase() + '\')) ' +
+    //      'ORDER BY "DATE TO FLY" DESC  LIMIT 100'; 
+    else {
+      req.body.last=req.body.first;
+      var str = 'SELECT * FROM "Reservations" WHERE (LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
+          'OR LEVENSHTEIN(LOWER("LAST"), \'' + req.body.last.toLowerCase()  + '\') < 2) ' +
+          'OR (dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') OR ' +
+          'dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
+          'OR (LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
+          'nickname = \'' + req.body.first.toLowerCase() + '\')) AND dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
+          'ORDER BY "DATE TO FLY" DESC  LIMIT 100';
+    }
   }
   else {
     res.status(500).end();
     return null;
   }
-  Reservation.findAll({where: options, order:[['FLIGHT#','ASC'],['Ref#','ASC']] } )
+  sqldb.sequelize.query(str, { raw:true, type: sequelize.QueryTypes.SELECT})
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
-
-
+export function last(req, res) {
+  var str = 'SELECT DISTINCT "LAST" FROM "Reservations" ORDER BY "LAST"';
+  sqldb.sequelize.query(str, { raw:true, type: sequelize.QueryTypes.SELECT})
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+export function first(req, res) {
+  var str = 'SELECT DISTINCT "FIRST" FROM "Reservations" ORDER BY "FIRST"';
+  console.log(str)
+  sqldb.sequelize.query(str, { raw:true, type: sequelize.QueryTypes.SELECT})
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
 // Gets a single Reservation from the DB
 export function show(req, res) {
   Reservation.find({

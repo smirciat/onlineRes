@@ -19,7 +19,11 @@ angular.module('tempApp', [
   'ui.grid.edit', 
   'ui.grid.rowEdit',
   'ui.grid.selection', 
-  'AngularPrint'
+  'ui.grid.exporter',
+  'AngularPrint',
+  'luegg.directives',
+  'angular-web-notification',
+  'emoji'
 ])
   .config(function($routeProvider, $locationProvider) {
     $routeProvider

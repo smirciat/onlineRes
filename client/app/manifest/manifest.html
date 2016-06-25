@@ -1,35 +1,31 @@
 <navbar></navbar>
-<div class="container"> 
-  </br>
+<chat></chat>
+<div print-section class="container"> 
+ 
   <div ng-repeat="hour in man.hours" ng-click="man.oneFlight(hour.hour)">
    
    <div class="row">
-     <div class="col-md-2 ">{{hour.hour + ':00 hour'}}</div>
+     <div class="col-xs-4 col-md-4 ">{{hour.hour + ':00 hour'}}</div>
    </div>
    <div ng-repeat="section in hour.sections">
     <div class="row">
-      <div class="col-md-1 "></div>
-      <div class="col-md-2 ">{{section.code + ' ' + section.time}}</div>
-    </div>
-    <div class="row">
-      <div class="col-md-1 "></div>
-      <div class="col-md-11 ">‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾</div>
+      <div class="col-xs-1 col-md-1 "></div>
+      <div class="col-xs-1 col-xs-11 col-md-11 bottom">{{section.code + ' ' + section.time}}</div>
     </div>
     <div ng-repeat="flight in section.flights">
       <div class="row" >
-        
-        <div class="col-md-2 "></div>
-        <div class="col-md-2 "><em>{{flight.flight}}</em></div>
-        <div class="col-md-8 "><em>{{flight.date | date : 'MM/dd/yyyy'}}{{ ' ' + flight.aircraft + ' ' + flight.pilot}}</em></div>
+        <div class="col-xs-2 col-md-2 "></div>
+        <div class="col-xs-2 col-md-2 bottom">{{flight.flight}}</div>
+        <div class="col-xs-2 col-md-2 bottom">{{flight.date | date : 'MM/dd/yyyy'}}</div>
+        <div class="col-xs-6 col-md-6 bottom">{{flight.aircraft + ' ' + flight.pilot}}</div>
       </div>
-      
-      
         <div ng-repeat="res in flight.reservations"> 
          <div class="row">
-            <div class="col-md-3 "></div>
-            <div class="col-md-4 ">{{res.FIRST + ' ' + res.LAST}}</div>
-            <div class="col-md-2 ">{{res.WEIGHT}}</div>
-            <div class="col-md-2 ">{{res.FWeight}}</div>
+            <div class="col-xs-3 col-md-3 "></div>
+            <div class="col-xs-4 col-md-4 ">{{res.FIRST + ' ' + res.LAST}}</div>
+            <div class="col-xs-1 col-md-1 ">{{res.WEIGHT}}</div>
+            <div class="col-xs-1 col-md-1 ">{{res.FWeight}}</div>
+            <div class="col-xs-2 col-md-2 ">{{res['INVOICE#']}}</div>
          </div> 
         </div>
         </br>

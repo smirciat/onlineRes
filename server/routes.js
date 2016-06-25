@@ -9,6 +9,7 @@ import path from 'path';
 
 export default function(app) {
   // Insert routes below
+  app.use('/api/chats', require('./api/chat'));
   app.use('/api/aircraftSchs', require('./api/aircraftSch'));
   app.use('/api/pilotSchs', require('./api/pilotSch'));
   app.use('/api/travelCodes', require('./api/travelCode'));

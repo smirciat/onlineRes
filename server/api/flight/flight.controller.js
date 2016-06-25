@@ -99,6 +99,7 @@ export function oneD(req, res) {
     if (req.body.smfltnum.toUpperCase().substring(2)==='B') smfltnum2 = req.body.smfltnum.substring(0,2) + 'A';
     options['$or'] = [{SmFltNum:req.body.smfltnum},{SmFltNum:smfltnum2}];
   }
+  if (req.body.flight) options['FLIGHT#'] = req.body.flight;
   Flight.findAll({where: options } )
     .then(responseWithResult(res))
     .catch(handleError(res));
@@ -106,6 +107,7 @@ export function oneD(req, res) {
 
 // Creates a new Flight in the DB
 export function create(req, res) {
+  console.log(req.body);
   Flight.create(req.body)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
