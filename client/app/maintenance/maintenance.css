@@ -4,12 +4,18 @@
     height:135px;
     margin:10px;
     padding:10px;
-    border:1px solid #aaaaaa;
-    
+    border-radius:20px;
+    box-shadow: .6em .6em .8em ;
+    background: #ffffff;
 }
+
 .drag {
   opacity: 0.5;
 }
 .over {
   background: #ffe6e6;
+}
+.maintenance{
+  background: #ccffee;
+  padding:20px;
 }
