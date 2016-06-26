@@ -15,22 +15,21 @@
         </div>
         <div class="col-md-1">
             <h3 class="h3-title text-center">Delete</h3>
-            <div class="dayCell" id="edit" bin="7" droppable drop="maintenance.handleDropDelete">
+            <div class="dayCell" id="delete" bin="7" droppable drop="maintenance.handleDropDelete">
                 
             </div>
         </div>
         <div class="col-md-2">
             <h3 class="h3-title text-center">Edit</h3>
-            <div class="dayCell" id="edit" bin="7" droppable drop="maintenance.handleDrop">
+            <div class="dayCell" id="edit" bin="7" droppable drop="maintenance.handleDropEdit">
                 
             </div>
         </div>
         <div class="col-md-3">
             <h3 class="h3-title text-center">Save for Later</h3>
             <div class="dayCell" id="storage" bin="8" droppable drop="maintenance.handleDrop">
-                <div draggable="1" id="drag1">Project 1</div>
             </div>
         </div>
     </div>
-
+    <button class="btn btn-success" ng-click="maintenance.addItem()">Add a Project</button>
 </div>
