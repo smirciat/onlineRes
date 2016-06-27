@@ -2,26 +2,42 @@
 
 angular.module('tempApp')
   .controller('MaintenanceCtrl', function ($scope, $http, $timeout,$compile,Modal) {
+    var projectDate,thisDay;
     var projects=[];
     this.projects=projects;
     var daysDate=[]; 
-    this.days =[];
     var today = new Date(Date.now());
     today=new Date(today.getFullYear(),today.getMonth(),today.getDate(),0,0,0,0);
-    var thisDay=new Date(today);
-    var projectDate=new Date();
-    for (var i=0;i<6;i++){
-      thisDay.setDate(today.getDate() + i);
-      daysDate.push(new Date(thisDay));
-      this.days.push('' + (thisDay.getMonth()+1) + '/' + thisDay.getDate() + '/' + thisDay.getFullYear());
-    };
-    $http.get('/api/projects').then(function(response){
-      var bin, item;
-      $scope.maintenance.projects=projects=response.data;;
-      projects.forEach(function(project){
-        $scope.maintenance.paste(project);
+    var startDay = new Date(today);
+    
+    this.setBins = function(today){
+      daysDate=[]; 
+      this.days=[];
+      thisDay=new Date(today);
+      projectDate=new Date();
+      for (var i=0;i<6;i++){
+        
+        thisDay.setDate(today.getDate() + i);
+        daysDate.push(new Date(thisDay));
+        this.days.push('' + (thisDay.getMonth()+1) + '/' + thisDay.getDate() + '/' + thisDay.getFullYear());
+      };
+      $http.get('/api/projects').then(function(response){
+        projects.forEach(function(project){
+          var item = document.getElementById(project._id);
+          angular.element(item).remove();
+        });
+        
+        $scope.maintenance.projects=projects=response.data;;
+        projects.forEach(function(project){
+          $scope.maintenance.paste(project);
+        });
       });
-    });
+    }
+    
+    this.weekBack = function(days){
+      startDay.setDate(startDay.getDate() + days);
+      this.setBins(startDay);
+    }
     
     this.paste=function(project){
       var bin, item;
@@ -103,4 +119,7 @@ angular.module('tempApp')
         $scope.maintenance.paste(project);
       });
     });
+    
+    this.setBins(today);
+    
   });
