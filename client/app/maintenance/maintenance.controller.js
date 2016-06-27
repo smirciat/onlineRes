@@ -10,17 +10,17 @@ angular.module('tempApp')
     today=new Date(today.getFullYear(),today.getMonth(),today.getDate(),0,0,0,0);
     var startDay = new Date(today);
     
-    this.setBins = function(today){
+    this.setBins = function(t){
       daysDate=[]; 
       this.days=[];
-      thisDay=new Date(today);
+      thisDay = new Date(t);
       projectDate=new Date();
       for (var i=0;i<6;i++){
-        
-        thisDay.setDate(today.getDate() + i);
+        if (i>0) thisDay.setDate(thisDay.getDate() +1);
         daysDate.push(new Date(thisDay));
         this.days.push('' + (thisDay.getMonth()+1) + '/' + thisDay.getDate() + '/' + thisDay.getFullYear());
       };
+      
       $http.get('/api/projects').then(function(response){
         projects.forEach(function(project){
           var item = document.getElementById(project._id);
