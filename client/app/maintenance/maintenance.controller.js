@@ -7,6 +7,7 @@ angular.module('tempApp')
     this.projects=projects;
     var daysDate=[]; 
     var today = new Date(Date.now());
+    var weekDays=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     today=new Date(today.getFullYear(),today.getMonth(),today.getDate(),0,0,0,0);
     var startDay = new Date(today);
     
@@ -16,9 +17,9 @@ angular.module('tempApp')
       thisDay = new Date(t);
       projectDate=new Date();
       for (var i=0;i<6;i++){
-        if (i>0) thisDay.setDate(thisDay.getDate() +1);
+        if (i>0) thisDay.setDate(thisDay.getDate() + 1);
         daysDate.push(new Date(thisDay));
-        this.days.push('' + (thisDay.getMonth()+1) + '/' + thisDay.getDate() + '/' + thisDay.getFullYear());
+        this.days.push(weekDays[thisDay.getDay()] + ' ' + (thisDay.getMonth()+ 1) + '/' + thisDay.getDate() + '/' + thisDay.getFullYear());
       };
       
       $http.get('/api/projects').then(function(response){

@@ -1,3 +1,4 @@
+<navbar></navbar>
 <div class="maintenance">
     <div class="row">
         <div class="col-md-1"><i class="fa fa-angle-double-left fa-3x" aria-hidden="true" ng-click="maintenance.weekBack(-6)"></i></div>
@@ -17,20 +18,15 @@
     </div>
     <br/><br/>
     <div class="row">
-        <div class="col-md-3">
-            
+        <div class="col-md-1"></div>
+        <div class="col-md-2">
+            <button class="btn btn-default" ng-click="maintenance.addItem()">Add a Project</button>
         </div>
         <div class="col-md-1">
-            <h3 class="h3-title text-center">Delete</h3>
-            <div class="dayCell" id="delete" bin="7" droppable drop="maintenance.handleDropDelete">
-                
-            </div>
+            <button class="btn btn-danger" id="delete" bin="7" droppable drop="maintenance.handleDropDelete">Delete</button>
         </div>
         <div class="col-md-1">
-            <h3 class="h3-title text-center">Edit</h3>
-            <div class="dayCell" id="edit" bin="7" droppable drop="maintenance.handleDropEdit">
-                
-            </div>
+            <button class="btn btn-warning" id="edit" bin="7" droppable drop="maintenance.handleDropEdit">Edit</button>
         </div>
         <div class="col-md-4">
             <h3 class="h3-title text-center">Save for Later</h3>
@@ -38,6 +34,7 @@
             </div>
         </div>
     </div>
-    <button class="btn btn-default" ng-click="maintenance.addItem()">Add a Project</button>
+    
     <br/><br/>
 </div>
+<footer></footer>
