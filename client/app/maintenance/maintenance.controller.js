@@ -27,7 +27,6 @@ angular.module('tempApp')
           var item = document.getElementById(project._id);
           angular.element(item).remove();
         });
-        
         $scope.maintenance.projects=projects=response.data;;
         projects.forEach(function(project){
           $scope.maintenance.paste(project);
@@ -48,8 +47,8 @@ angular.module('tempApp')
         projectDate=new Date(project.date);
         for (var i=0;i<6;i++){
           if (projectDate.getTime()==daysDate[i].getTime()){
-            project.bin = 'day' + i;
-            bin = document.getElementById(project.bin);
+            bin = 'day' + i;
+            bin = document.getElementById(bin);
             $(bin).append($compile(item)($scope.maintenance));
           }
         }

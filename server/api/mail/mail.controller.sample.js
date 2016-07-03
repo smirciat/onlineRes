@@ -15,7 +15,12 @@ var Mail = sqldb.Mail;
 var nodemailer = require('nodemailer');
 
 // create reusable transporter object using the default SMTP transport
-var transporter = nodemailer.createTransport('smtps://smokeybayair%40gmail.com:password@smtp.gmail.com');
+var transporter = nodemailer.createTransport({ 
+    host: 'smtp.gmail.com', 
+    port: 465, 
+    auth: { user: 'user@gmail.com', pass: 'password' },
+    secure: true
+});
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;

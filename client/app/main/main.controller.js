@@ -287,6 +287,9 @@ class MainController {
   makeList(sfn){
     //don't do this if one of the fields is blank
     if (!(this.newRes['DATE TO FLY']&&this.code.selected)) return;
+    var endDate=new Date(this.endDate);
+    var thisDate = new Date(this.newRes['DATE TO FLY']);
+    if (thisDate>endDate) return;
     this.setFlights();
     this.smfltnum.selected=undefined;
     this.timeList=[];
