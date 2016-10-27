@@ -46,7 +46,7 @@
       <div class="col-xs-9 col-md-9 lg">
       </div>
       <div class="col-xs-3 col-md-3 lg">
-          ATD______________________
+          ATD________
       </div>
     </div>
     <div ng-repeat="flight in section.flights">
@@ -61,7 +61,7 @@
           <div class="col-xs-4 col-md-4 lg">Total Weight:</div>
         <div class="col-xs-2 col-md-2 lg">{{flight.total}}</div> 
         <div class="col-xs-3 col-md-3 lg">KEB:{{flight.keb}}</div>
-        <div class="col-xs-3 col-md-3 lg">Fuel_____________________</div>
+        <div class="col-xs-3 col-md-3 lg">Fuel________</div>
       </div>
       <div ng-repeat="tc in flight.tcs"> 
         <div class="row bottom top">
@@ -76,7 +76,7 @@
             <div class="col-xs-6 col-md-6 lg">{{res.FIRST + ' ' + res.LAST}}</div>
             <div class="col-xs-1 col-md-1 lg">{{res.WEIGHT}}</div>
             <div class="col-xs-1 col-md-1 lg">{{res.FWeight}}</div>
-            <div class="col-xs-2 col-md-2 ">{{res['INVOICE#']}}</div>
+            <div class="col-xs-2 col-md-2 lgg">{{res['INVOICE#']}}</div>
             <div class="col-xs-1 col-md-1 lg">{{res.time}}</div>
          </div> 
         </div>
@@ -91,7 +91,8 @@
       </div>
       <div ng-repeat="one in one.four">
        <div class="row bottom">
-        <div class="col-xs-4 col-md-4 lg">Seats installed</div>
+        <div ng-if="one>1" class="col-xs-4 col-md-4 lg">Seats changed to</div>
+        <div ng-if="one===1" class="col-xs-4 col-md-4 lg">Seats began at</div>
         <div class="col-xs-3 col-md-3 lg"></div>
         <div class="col-xs-3 col-md-3 lg">{{section.pilotCert}}</div>
         <div class="col-xs-1 col-md-1 lg">SC</div>
@@ -99,6 +100,6 @@
        </div>  
       </div>
     </div>
-  <p class="break"></p>
+    <div class="space"></div>
  </div>  
 </div> 
