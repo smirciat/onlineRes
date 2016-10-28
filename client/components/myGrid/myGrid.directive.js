@@ -422,14 +422,14 @@ angular.module('tempApp')
           data.forEach(function(d){
             d.value=d['Pilot'];
           });
-          scope.gridOptions.columnDefs[12].editDropdownOptionsArray= data;
+          scope.gridOptions.columnDefs[13].editDropdownOptionsArray= data;
         });
         //13 aircraft
         tcFactory.getAircraft(function(data) {
           data.forEach(function(d){
             d.value=d['Aircraft'];
           });
-          scope.gridOptions.columnDefs[13].editDropdownOptionsArray= data;
+          scope.gridOptions.columnDefs[14].editDropdownOptionsArray= data;
         });
       }
       if (scope.myApi==="flights"){
