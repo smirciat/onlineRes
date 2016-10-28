@@ -26,6 +26,7 @@ angular.module('tempApp')
     var sections, pilots, aircrafts, pilotSch, aircraftSch, travelCodes,scheduledFlights;
     scope.firsts=[];
     scope.lasts=[];
+    scope.quickModal=Modal.confirm.quickMessage();
     tcFactory.getAircraft(function(ac){
       aircraftSch = ac;
     });
@@ -375,10 +376,34 @@ angular.module('tempApp')
             rowEntity.FIRST = newValue.split(" ")[0];
           }
         }
-        if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&(colDef.name==="SF#"||colDef.name==="Date")) {
+        if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&(colDef.name==="SF#"||colDef.name==="Date"||colDef.name==="Travel Code")) {
           //for sake of determining if sending an email is appropriate
           rowEntity.dirty=true;
           if (rowEntity._id) rowEntity.UPDATED = new Date(Date.now());
+          //update res time
+          tcFactory.getData(function(data){
+            var tcs=data;
+            rowEntity['Ref#'] = tcs.filter(function(element){
+                return element['Route']===rowEntity.travelCode.value;
+            })[0]['Ref#'];
+            tcFactory.getScheduledFlights(body,function(scheduledFlights){
+              rowEntity.time="";
+              var fltArr = scheduledFlights.filter(function(flight){
+                return parseInt(rowEntity.smfltnum.substring(0,2),10)===flight.smfltnum;
+              });
+              if (fltArr.length>0){
+                var field = "begin";
+                if (rowEntity['Ref#']<6&rowEntity['Ref#']>3) field = 'sovFront';
+                if (rowEntity['Ref#']<12&&rowEntity['Ref#']>5) field = 'pgmKeb';
+                if (rowEntity['Ref#']===12) field = 'sovBack';
+                rowEntity.time = fltArr[0][field];
+              }
+              else {
+                if (rowEntity['Ref#']>12) rowEntity.time = rowEntity.smfltnum.substring(0,2) + ':00';
+              }
+              if (rowEntity.time==="") scope.quickModal("Warning: there may not be a flight scheduled for this time.");
+            });
+          });
         }
       });
     };
@@ -474,6 +499,9 @@ angular.module('tempApp')
                       if (d['Ref#']<12&&d['Ref#']>5) field = 'pgmKeb';
                       if (d['Ref#']===12) field = 'sovBack';
                       d.time=flts[0][field];
+                    }
+                    else {
+                      if (d['Ref#']>12) d.time = scope.smfltnum + ':00';
                     }
                   });
                   return scope.gridOptions.data;

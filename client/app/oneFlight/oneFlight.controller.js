@@ -201,6 +201,10 @@ angular.module('tempApp')
               sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations[sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations.length-1].time = 
                 fltArr[0][field].substring(0,5);
             }
+            else {
+              if (tvlC>12) sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations[sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations.length-1].time = 
+                hr + ':00';
+            }
           });
           
         });
