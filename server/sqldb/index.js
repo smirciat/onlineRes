@@ -14,6 +14,7 @@ var db = {
 };
 
 // Insert models below
+db.ScheduledFlight = db.sequelize.import('../api/scheduledFlight/scheduledFlight.model');
 db.Project = db.sequelize.import('../api/project/project.model');
 db.Chat = db.sequelize.import('../api/chat/chat.model');
 db.AircraftSch = db.sequelize.import('../api/aircraftSch/aircraftSch.model');

@@ -17,9 +17,11 @@ angular.module('tempApp')
     var dt;
     var aircraft;
     var flights;
+    var scheduledFlights;
     var reservations;
     var oldBody = {};
     var oldBody1={};
+    var oldBody2={};
     var name;
     var invoice;
     var sync = function(){
@@ -49,7 +51,7 @@ angular.module('tempApp')
         },
         getFlights: function (body,callback) {
             if (oldBody.date) oldBody.date = new Date(oldBody.date);
-            if (body.date) body.date = new Date(body.date);
+            if (body.date) date = body.date = new Date(body.date);
             if (flights&&oldBody.date&&
                          oldBody.date.getMonth()===body.date.getMonth()&&
                          oldBody.date.getFullYear()===body.date.getFullYear()&&
@@ -96,6 +98,19 @@ angular.module('tempApp')
             } else {
                 $http.get('/api/aircraftSchs').success(function(d) {
                     return callback(aircraft = d);
+                });
+            }
+        },
+        getScheduledFlights: function (body,callback) {
+            if (oldBody2.date) oldBody2.date = new Date(oldBody2.date);
+            if (body.date) body.date = new Date(body.date);
+            if (oldBody2.date&&body.date&&oldBody2.date.getMonth()===body.date.getMonth()&&
+                         oldBody2.date.getFullYear()===body.date.getFullYear()&&
+                         oldBody2.date.getDate()===body.date.getDate()&&scheduledFlights) return callback(scheduledFlights);
+            else {
+                $http.post('/api/scheduledFlights',body).success(function(d) {
+                    oldBody2.date=body.date;
+                    return callback(scheduledFlights = d);
                 });
             }
         },

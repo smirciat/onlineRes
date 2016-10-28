@@ -23,7 +23,7 @@ angular.module('tempApp')
     });
     var flight;
     var reload=true;
-    var sections, pilots, aircrafts, pilotSch, aircraftSch, travelCodes;
+    var sections, pilots, aircrafts, pilotSch, aircraftSch, travelCodes,scheduledFlights;
     scope.firsts=[];
     scope.lasts=[];
     tcFactory.getAircraft(function(ac){
@@ -36,7 +36,7 @@ angular.module('tempApp')
      travelCodes = t;
     });
     tcFactory.getFlights({date:scope.date},function(f){
-     
+      
     });
     $http.post('/api/reservations/first').then(function(res){
       res.data.forEach(function(first){
@@ -462,8 +462,23 @@ angular.module('tempApp')
                     })[0]['Aircraft'];
                   }
                 });
+                return tcFactory.getScheduledFlights({date:scope.date},function(scheduledFlights){
+                  scope.gridOptions.data.forEach(function(d){
+                    flts=scheduledFlights.filter(function(flight){
+                      return parseInt(scope.smfltnum,10)===flight.smfltnum;
+                    }); 
+                    var field;
+                    if (flts.length>0){
+                      field = "begin";
+                      if (d['Ref#']<6&&d['Ref#']>3) field = 'sovFront';
+                      if (d['Ref#']<12&&d['Ref#']>5) field = 'pgmKeb';
+                      if (d['Ref#']===12) field = 'sovBack';
+                      d.time=flts[0][field];
+                    }
+                  });
+                  return scope.gridOptions.data;
+                });
                 
-                return scope.gridOptions.data;
               });
             });
           });  
@@ -626,6 +641,9 @@ angular.module('tempApp')
     }, true);
     scope.$watch('date',function(){
       scope.makeQuery();
+      tcFactory.getScheduledFlights({date:scope.date},function(f){
+        scheduledFlights = f;
+      });
     });
     if (scope.smfltnum) {
       scope.$watch('smfltnum',function(){

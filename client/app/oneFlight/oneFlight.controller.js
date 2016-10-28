@@ -185,12 +185,24 @@ angular.module('tempApp')
           if (res['INVOICE#']) res['INVOICE#'] = res['INVOICE#'].substring(0,9);
           sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations.push(res);
           //reservations[reservations.length-1].time set
-          var hr = body.smfltnum.substring(0,2);
+          var hr = parseInt(body.smfltnum.substring(0,2),10);
           var tvlC= sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations[sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations.length-1]['Ref#'];
-          var after=[":00",":00",":00",":00",":15",":15",":25",":25",":25",":25",":25",":25",":40"];
+          //var after=[":00",":00",":00",":00",":15",":15",":25",":25",":25",":25",":25",":25",":40"];
           if (tvlC>12) tvlC=0;
-          sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations[sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations.length-1].time = 
-              hr+after[tvlC];
+          tcFactory.getScheduledFlights(body,function(scheduledFlights){
+            var fltArr = scheduledFlights.filter(function(flight){
+              return hr===flight.smfltnum;
+            });
+            if (fltArr.length>0){
+              var field = "begin";
+              if (tvlC<6&&tvlC>3) field = 'sovFront';
+              if (tvlC<12&&tvlC>5) field = 'pgmKeb';
+              if (tvlC===12) field = 'sovBack';
+              sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations[sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations.length-1].time = 
+                fltArr[0][field].substring(0,5);
+            }
+          });
+          
         });
         tcFactory.getData(function(tcs){
           for (var i=0;i<sections.length;i++){
