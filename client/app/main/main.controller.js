@@ -4,7 +4,7 @@
 
 class MainController {
 
-  constructor($http, $scope, Auth, Modal, $timeout, $location,email) {
+  constructor($http, $scope, Auth, Modal, $timeout, $location,email,tcFactory) {
     this.$http = $http;
     this.email=email;
     this.Auth = Auth;
@@ -17,6 +17,7 @@ class MainController {
     this.resList=[];
     this.code={};
     this.smfltnum={};
+    this.tcFactory=tcFactory;
     var d = new Date(Date.now());
     this.currDate = new Date(d.getFullYear(),d.getMonth(),d.getDate()).toString();
     this.endDate= new Date(d.getFullYear(),d.getMonth()+7,d.getDate()).toString();
@@ -292,10 +293,10 @@ class MainController {
     if (thisDate>endDate) return;
     this.setFlights();
     this.smfltnum.selected=undefined;
-    this.timeList=[];
     //month starts with 0 for Jan var tempDate="2/18/16";
     var query = "date=" + this.newRes['DATE TO FLY'];
     this.$http.get('/api/reservations?' + query).then(response => {
+      var data=response.data;
       var sm="";
       var sma="B";
       var letter="A";
@@ -309,52 +310,56 @@ class MainController {
       var tomorrow = new Date(d.getFullYear(),d.getMonth(),d.getDate()+1);
       var hour = (d.getTime()-today.getTime())/3600000;
       var maxPax;
-      for (var i=this.firstFlight;i<=this.lastFlight;i++){
-          //initiate the current smfltnum as sm
-          sm=i+letter;
-          sma=i+sma;
-          if (i<10) sm="0"+sm;
-          var resList=response.data.filter(function(res){
-            return res.smfltnum.toUpperCase()===sm.toUpperCase();
-          });
-          var resListAlt = response.data.filter(function(res){
-            return res.smfltnum.toUpperCase()===sma.toUpperCase();
-          });
-          //no more than 8 passengers on any smfltnum to avoid overbooking
-          maxPax=8;
-          if (i===9&&date.getDay()>0&&date.getDay()<6) {
-            maxPax=12;
-          }
-          //keep them from being first pax on 8:00 flight
-          var enough = (i-hour);
-          if (enough<0) enough+=24;
-          if (date>=today && date<=tomorrow && enough<13 && i===8 && resList.length===0 && resListAlt.length===0) maxPax=0;
-          
-          if (resList.length<maxPax){
-            if (date<today) {}
-            else {
-              enough = (i-hour);
-              if (date>=today && date<tomorrow && enough<2) {}
+      var ref=this.code.selected.ref;
+      this.$http.post('/api/scheduledFlights',{date:this.newRes['DATE TO FLY']}).then(response => {
+        var scheduledFlights=response.data;
+        this.timeList=[];
+        //iterate through list of available flights to see if full or still available
+        for (var i=0;i<scheduledFlights.length;i++){
+            //initiate the current smfltnum as sm
+            sm=scheduledFlights[i].smfltnum+letter;
+            sma=scheduledFlights[i].smfltnum+sma;
+            if (scheduledFlights[i].smfltnum<10) sm="0"+sm;
+            var resList=data.filter(function(res){
+              return res.smfltnum.toUpperCase()===sm.toUpperCase();
+            });
+            var resListAlt = data.filter(function(res){
+              return res.smfltnum.toUpperCase()===sma.toUpperCase();
+            });
+            //no more than 8 passengers on any smfltnum to avoid overbooking
+            maxPax=8;
+            if (scheduledFlights[i].smfltnum===9&&date.getDay()>0&&date.getDay()<6) {
+              maxPax=12;
+            }
+            //keep them from being first pax on 8:00 flight
+            var enough = (scheduledFlights[i].smfltnum-hour);
+            if (enough<0) enough+=24;
+            if (date>=today && date<=tomorrow && enough<13 && scheduledFlights[i].smfltnum===8 && resList.length===0 && resListAlt.length===0) maxPax=0;
+            if (resList.length<maxPax){
+              if (date<today) {}
               else {
-                //add a departure time to the array
-                if (i<12) this.timeList.push({time:i+this.code.selected.time+ " AM",smfltnum:sm});
+                enough = (scheduledFlights[i].smfltnum-hour);
+                if (date>=today && date<tomorrow && enough<2) {}
                 else {
-                  if (i===12) this.timeList.push({time:i+this.code.selected.time+ " PM",smfltnum:sm});
-                  else this.timeList.push({time:(i-12)+this.code.selected.time+ " PM",smfltnum:sm});
+                  //add a departure time to the array
+                  var field = "begin";
+                  if (ref<6&ref>3) field = 'sovFront';
+                  if (ref<12&&ref>5) field = 'pgmKeb';
+                  if (ref===12) field = 'sovBack';
+                  var time = scheduledFlights[i][field];
+                  this.timeList.push({time:time,smfltnum:sm});
                 }
               }
             }
-               
-          }
-      }
-      if (sfn){
-        this.smfltnum.selected = this.timeList.filter(function ( tm ) {
-          return tm.smfltnum === sfn;
-        })[0];
-      }
-      this.firstFlight = 9;
-      this.lastFlight = 16;
+        }
+        if (sfn){
+          this.smfltnum.selected = this.timeList.filter(function ( tm ) {
+            return tm.smfltnum === sfn;
+          })[0];
+        }
+      });
     });
+    
   }
 }
 

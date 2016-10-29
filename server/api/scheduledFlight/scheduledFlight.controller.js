@@ -67,7 +67,8 @@ export function index(req, res) {
     options.effectiveDate = {$lte:date};
     options.endDate = {$gte:date};
   }
-  ScheduledFlight.findAll({where: options})
+  var order = order = [['smfltnum','ASC']];
+  ScheduledFlight.findAll({where: options,order:order})
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
