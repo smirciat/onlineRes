@@ -379,15 +379,18 @@ angular.module('tempApp')
         if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&(colDef.name==="SF#"||colDef.name==="Date"||colDef.name==="Travel Code")) {
           //for sake of determining if sending an email is appropriate
           rowEntity.dirty=true;
+          rowEntity.time="";
           if (rowEntity._id) rowEntity.UPDATED = new Date(Date.now());
           //update res time
           tcFactory.getData(function(data){
             var tcs=data;
-            rowEntity['Ref#'] = tcs.filter(function(element){
-                return element['Route']===rowEntity.travelCode.value;
-            })[0]['Ref#'];
+            var tempArr= tcs.filter(function(element){
+                if (rowEntity.travelCode&&rowEntity.travelCode.value) return element['Route']===rowEntity.travelCode.value;
+                return false;
+            });
+            if (tempArr.length>0) rowEntity['Ref#'] = tempArr[0]['Ref#'];
+            else return;
             tcFactory.getScheduledFlights(body,function(scheduledFlights){
-              rowEntity.time="";
               var fltArr = scheduledFlights.filter(function(flight){
                 return parseInt(rowEntity.smfltnum.substring(0,2),10)===flight.smfltnum;
               });
