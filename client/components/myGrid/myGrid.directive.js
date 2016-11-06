@@ -404,7 +404,7 @@ angular.module('tempApp')
               else {
                 if (rowEntity['Ref#']>12) rowEntity.time = rowEntity.smfltnum.substring(0,2) + ':00';
               }
-              if (rowEntity.time==="") scope.quickModal("Warning: there may not be a flight scheduled for this time.");
+              if (rowEntity.time===""&&rowEntity['Ref#']<=12) scope.quickModal("Warning: there may not be a flight scheduled for this time.");
             });
           });
         }

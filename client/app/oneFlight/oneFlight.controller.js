@@ -193,7 +193,7 @@ angular.module('tempApp')
             var fltArr = scheduledFlights.filter(function(flight){
               return hr===flight.smfltnum;
             });
-            if (fltArr.length>0){
+            if (fltArr.length>0&&tvlC>0){
               var field = "begin";
               if (tvlC<6&&tvlC>3) field = 'sovFront';
               if (tvlC<12&&tvlC>5) field = 'pgmKeb';
@@ -202,7 +202,7 @@ angular.module('tempApp')
                 fltArr[0][field].substring(0,5);
             }
             else {
-              if (tvlC>12) sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations[sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations.length-1].time = 
+              if (tvlC===0) sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations[sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations.length-1].time = 
                 hr + ':00';
             }
           });
