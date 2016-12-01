@@ -53,7 +53,7 @@ export default function(app) {
       csrf: {
         angular: true
       },
-      xframe: 'ALLOW-FROM flysmokeybay.xyz',
+      xframe: 'SAMEORIGIN',
       hsts: {
         maxAge: 31536000, //1 year, in seconds
         includeSubDomains: true,

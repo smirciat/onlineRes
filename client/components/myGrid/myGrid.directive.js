@@ -688,9 +688,10 @@ angular.module('tempApp')
           return tc.ref === res['Ref#'];
         })[0];
         res.FROM = code.name;
-        if (parseInt(res.smfltnum.substring(0,2),10)<12) res.TIME=parseInt(res.smfltnum.substring(0,2),10) + code.time + ' AM';
-        else if (parseInt(res.smfltnum.substring(0,2),10)===12) res.TIME="12" + code.time + ' PM';
-             else res.TIME=(parseInt(res.smfltnum.substring(0,2),10)-12) + code.time + ' PM';
+        //if (parseInt(res.smfltnum.substring(0,2),10)<12) res.TIME=parseInt(res.smfltnum.substring(0,2),10) + code.time + ' AM';
+        //else if (parseInt(res.smfltnum.substring(0,2),10)===12) res.TIME="12" + code.time + ' PM';
+             //else res.TIME=(parseInt(res.smfltnum.substring(0,2),10)-12) + code.time + ' PM';
+        res.TIME=res.time;     
         var d = new Date(res["DATE TO FLY"]);
         res.DATE = (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getFullYear();
         var resEntry = res.FIRST + ' ' + res.LAST + ' has a reservation at ' +  res.TIME + ' on ' + res.DATE + ' from ' + res.FROM + '.';
