@@ -30,23 +30,24 @@ angular.module('tempApp')
       if (i!==15) this.times.push({ref:i, time: i + ':00'});
     }
     tcFactory.getScheduledFlights({date:this.date},function(scheduledFlights){
-      if ($scope.one) {
-        $scope.one.schFlights=scheduledFlights;
-        $scope.one.times.forEach(function(d){
+      $timeout(function(){
+        if ($scope.one) {
+          $scope.one.schFlights=scheduledFlights;
+          $scope.one.times.forEach(function(d){
+            var flts=scheduledFlights.filter(function(flight){
+              return parseInt(d.ref,10)===flight.smfltnum;
+            }); 
+            if (flts.length>0){
+              var field = "begin";
+              d.time=flts[0][field];
+            }
+          });
           var flts=scheduledFlights.filter(function(flight){
-            return parseInt(d.ref,10)===flight.smfltnum;
+              return parseInt($scope.one.smfltnum,10)===flight.smfltnum;
           }); 
-          if (flts.length>0){
-            var field = "begin";
-            d.time=flts[0][field];
-          }
-        });
-        var flts=scheduledFlights.filter(function(flight){
-            return parseInt($scope.one.smfltnum,10)===flight.smfltnum;
-        }); 
-        if (flts.length>0) $scope.one.time.selected = {ref:parseInt($scope.one.smfltnum,10),time:flts[0]["begin"]};
-      }    
-        
+          if (flts.length>0) $scope.one.time.selected = {ref:parseInt($scope.one.smfltnum,10),time:flts[0]["begin"]};
+        }    
+      },100);  
     });
 
     var sections, section, flight, tc, sectionIndex, flightIndex, tcIndex;
