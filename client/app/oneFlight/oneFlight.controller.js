@@ -30,6 +30,7 @@ angular.module('tempApp')
       if (i!==15) this.times.push({ref:i, time: i + ':00'});
     }
     tcFactory.getScheduledFlights({date:this.date},function(scheduledFlights){
+      if ($scope.one) {
         $scope.one.schFlights=scheduledFlights;
         $scope.one.times.forEach(function(d){
           var flts=scheduledFlights.filter(function(flight){
@@ -44,6 +45,8 @@ angular.module('tempApp')
             return parseInt($scope.one.smfltnum,10)===flight.smfltnum;
         }); 
         if (flts.length>0) $scope.one.time.selected = {ref:parseInt($scope.one.smfltnum,10),time:flts[0]["begin"]};
+      }    
+        
     });
 
     var sections, section, flight, tc, sectionIndex, flightIndex, tcIndex;
