@@ -3,6 +3,7 @@
 angular.module('tempApp')
   .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, tcFactory,Modal,$window,$timeout) {
     var aircraftSch, pilotSch, tcs;
+    this.schFlights=[];
     this.arr=[];
     tcFactory.getAircraft(function(ac){
       aircraftSch = ac;
@@ -26,8 +27,25 @@ angular.module('tempApp')
     this.time={};
     this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
     for (var i=7;i<=19;i++){
-      this.times.push({ref:i, time: i + ':00'});
+      if (i!==15) this.times.push({ref:i, time: i + ':00'});
     }
+    tcFactory.getScheduledFlights({date:this.date},function(scheduledFlights){
+        $scope.one.schFlights=scheduledFlights;
+        $scope.one.times.forEach(function(d){
+          var flts=scheduledFlights.filter(function(flight){
+            return parseInt(d.ref,10)===flight.smfltnum;
+          }); 
+          if (flts.length>0){
+            var field = "begin";
+            d.time=flts[0][field];
+          }
+        });
+        var flts=scheduledFlights.filter(function(flight){
+            return parseInt($scope.one.smfltnum,10)===flight.smfltnum;
+        }); 
+        if (flts.length>0) $scope.one.time.selected = {ref:parseInt($scope.one.smfltnum,10),time:flts[0]["begin"]};
+    });
+
     var sections, section, flight, tc, sectionIndex, flightIndex, tcIndex;
     var body;
     this.four = [1,2,3,4];
@@ -44,19 +62,35 @@ angular.module('tempApp')
       else smfltnum = smfltnum + 'A';
       tcFactory.setSmfltnum(smfltnum);
       this.smfltnum=smfltnum.substring(0,2);
-      this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
+      var flts=this.schFlights.filter(function(flight){
+        return parseInt($scope.one.smfltnum,10)===flight.smfltnum;
+      }); 
+      if (flts.length>0) this.time.selected = {ref:parseInt(this.smfltnum,10),time:flts[0]["begin"]};
+      else this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
       //tcFactory.refreshFlights();
     };
     
     this.plus = function(){
-      this.smfltnum = (parseInt(this.smfltnum,10)+1).toString();
-      this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
+      var smfltnum = parseInt(this.smfltnum,10)+1;
+      if (smfltnum===15) smfltnum++;
+      this.smfltnum = smfltnum.toString();
+      var flts=this.schFlights.filter(function(flight){
+        return parseInt($scope.one.smfltnum,10)===flight.smfltnum;
+      }); 
+      if (flts.length>0) this.time.selected = {ref:parseInt(this.smfltnum,10),time:flts[0]["begin"]};
+      else this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
       this.makeSm();
     };
     
     this.minus = function(){
-      this.smfltnum = (parseInt(this.smfltnum,10)-1).toString();
-      this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
+      var smfltnum = parseInt(this.smfltnum,10)-1;
+      if (smfltnum===15) smfltnum--;
+      this.smfltnum = smfltnum.toString();
+      var flts=this.schFlights.filter(function(flight){
+        return parseInt($scope.one.smfltnum,10)===flight.smfltnum;
+      }); 
+      if (flts.length>0) this.time.selected = {ref:parseInt(this.smfltnum,10),time:flts[0]["begin"]};
+      else this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
       this.makeSm();
     };
     
