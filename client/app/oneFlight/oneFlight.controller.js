@@ -42,12 +42,9 @@ angular.module('tempApp')
               d.time=flts[0][field];
             }
           });
-          var flts=scheduledFlights.filter(function(flight){
-              return parseInt($scope.one.smfltnum,10)===flight.smfltnum;
-          }); 
-          if (flts.length>0) $scope.one.time.selected = {ref:parseInt($scope.one.smfltnum,10),time:flts[0]["begin"]};
+          $scope.one.today();
         }    
-      },100);  
+      },0);  
     });
 
     var sections, section, flight, tc, sectionIndex, flightIndex, tcIndex;
@@ -56,12 +53,19 @@ angular.module('tempApp')
       
     this.today = function(){
       d=new Date(Date.now());
+      var e=new Date();
       tcFactory.setDate(d);
       this.date=tcFactory.getDate();
-      var smfltnum = (d.getHours()+1);
-      if (smfltnum===24) smfltnum=19;
-      if (smfltnum<7) smfltnum=7;
-      if (smfltnum>19) smfltnum =19;
+      e.setTime(d.getTime()+(60*60*1000));
+      var smfltnum=9;
+      this.schFlights.forEach(function(flight){
+        var t= new Date((1 + d.getMonth()) + "/" + d.getDate() + "/" + d.getFullYear() + " " + flight.begin);
+        console.log(new Date(e.getTime()).toString());
+        console.log(new Date(t.getTime()).toString());
+        if (e.getTime()>t.getTime()){
+          smfltnum = flight.smfltnum;
+        }
+      });
       if (smfltnum<10) smfltnum = '0' + smfltnum + 'A';
       else smfltnum = smfltnum + 'A';
       tcFactory.setSmfltnum(smfltnum);
