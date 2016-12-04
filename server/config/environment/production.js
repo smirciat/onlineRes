@@ -14,7 +14,7 @@ module.exports = {
           8080,
 
   sequelize: {
-    uri:  process.env.HEROKU_POSTGRESQL_CYAN_URL || process.env.SEQUELIZE_URI ||
+    uri:  process.env.DATABASE_URL || process.env.SEQUELIZE_URI ||
           'sqlite://',
     options: {
       logging: false,

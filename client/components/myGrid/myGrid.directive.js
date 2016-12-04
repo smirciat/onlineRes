@@ -672,14 +672,15 @@ angular.module('tempApp')
     }, true);
     scope.$watch('date',function(){
       //don't need two makeQUery's on page reload!
-      if (!reload) scope.makeQuery();
+      //if (!reload) 
+      scope.makeQuery();
       tcFactory.getScheduledFlights({date:scope.date},function(f){
         scheduledFlights = f;
       });
     });
     if (scope.smfltnum) {
       scope.$watch('smfltnum',function(){
-        scope.makeQuery();
+        if (scope.smfltnum!==".") scope.makeQuery();
       });
     }
     var sendEmail = function(res){
