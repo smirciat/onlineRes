@@ -18,7 +18,7 @@ angular.module('tempApp')
     this.nameTrue=false;
     this.res = [];
     this.date = tcFactory.getDate();
-    this.smfltnum=tcFactory.getSmfltnum().substring(0,2);
+    this.smfltnum=".";
     this.times = [];
     var date; 
     var smfltnum;
@@ -60,8 +60,6 @@ angular.module('tempApp')
       var smfltnum=9;
       this.schFlights.forEach(function(flight){
         var t= new Date((1 + d.getMonth()) + "/" + d.getDate() + "/" + d.getFullYear() + " " + flight.begin);
-        console.log(new Date(e.getTime()).toString());
-        console.log(new Date(t.getTime()).toString());
         if (e.getTime()>t.getTime()){
           smfltnum = flight.smfltnum;
         }
@@ -75,7 +73,6 @@ angular.module('tempApp')
       }); 
       if (flts.length>0) this.time.selected = {ref:parseInt(this.smfltnum,10),time:flts[0]["begin"]};
       else this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
-      //tcFactory.refreshFlights();
     };
     
     this.plus = function(){
@@ -110,7 +107,6 @@ angular.module('tempApp')
       if (this.time.selected.ref<10) this.smfltnum="0" + this.time.selected.ref;
       else this.smfltnum=this.time.selected.ref.toString();
       tcFactory.setSmfltnum(this.smfltnum+'A');
-      //this.print();
     };
     
     var quick=Modal.confirm.quickMessage();
@@ -129,7 +125,6 @@ angular.module('tempApp')
         pilots.push(p.Pilot);
       });
       
-        
       body = {date:date, smfltnum:smfltnum+'A'};
       tcFactory.getFlights(body,function(flights){
         flights=flights.filter(function(flight){
@@ -226,10 +221,8 @@ angular.module('tempApp')
           }
           if (res['INVOICE#']) res['INVOICE#'] = res['INVOICE#'].substring(0,9);
           sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations.push(res);
-          //reservations[reservations.length-1].time set
           var hr = parseInt(body.smfltnum.substring(0,2),10);
           var tvlC= sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations[sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations.length-1]['Ref#'];
-          //var after=[":00",":00",":00",":00",":15",":15",":25",":25",":25",":25",":25",":25",":40"];
           if (tvlC>12) tvlC=0;
           tcFactory.getScheduledFlights(body,function(scheduledFlights){
             var fltArr = scheduledFlights.filter(function(flight){
@@ -280,12 +273,12 @@ angular.module('tempApp')
                sections[i].flights[j].total=180;//30 gallons fuel as base amount
                ac = aircraftSch.filter(function(a){
                  return a.Aircraft===flight.AIRCRAFT;
-               })
+               });
                if (ac.length>0) sections[i].flights[j].total += ac[0]['Max Load'];
                else sections[i].flights[j].total=-9999;
                p = pilotSch.filter(function(a){
                  return a.Pilot===flight.PILOT;
-               })
+               });
                if (p.length>0) sections[i].flights[j].total += p[0]['Weight'];
                else sections[i].flights[j].total=-9999;
                sections[i].flights[j].keb=sections[i].flights[j].total;
