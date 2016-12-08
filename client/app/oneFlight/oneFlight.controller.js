@@ -327,7 +327,7 @@ angular.module('tempApp')
     var enterTimes = function(reservations){
       var possibilities = tcFactory.getPossibility();
       var covered = tcFactory.getCovered();
-      var success,sectionRes,route,sections,otherFlight,otherFlightUsed,start,end,flightDate,thisCovered, hours,minutes;
+      var success,sectionRes,route,sections,otherFlight,otherFlightUsed,start,end,flightDate,thisCovered, hours,minutes,empty;
       //enter pilot times into each flight for this smfltnum
       tcFactory.getFlights(body,function(f){
         var allFlights=f.filter(function(flight){
@@ -366,15 +366,18 @@ angular.module('tempApp')
         });
         //each section (just the 'A' sides for now)
         flights.forEach(function(flight){
-          
           //loop possibilities, if true, this possibility is the routing
+          empty=false;
           for (var i=0;i<possibilities.length;i++){
             success=true;
             //within each possibility, loop reservations for current section to prove true or false
             sectionRes=reservations.filter(function(res){
               return res['FLIGHT#'].substring(0,1)===flight['FLIGHT#'].substring(0,1);
             });
-            if (sectionRes.length===0) success=false;
+            if (sectionRes.length===0) {
+              success=false;
+              empty=true;
+            }
             else sectionRes.forEach(function(res){
               if (res['Ref#']>12) return success=false;
               route=covered.filter(function(c){
@@ -431,6 +434,15 @@ angular.module('tempApp')
               if (otherFlightUsed) $http.put('/api/flights/'+ otherFlight._id,otherFlight);
               i=possibilities.length;
             }
+          }
+          if (empty){
+            otherFlight = allFlights.filter(function(f){
+              return f['FLIGHT#'].toUpperCase()===flight['FLIGHT#'].substring(0,3) + 'B';
+            });
+            if (otherFlight.length>0) otherFlight=otherFlight[0];
+            else otherFlight=undefined;
+            $http.put('/api/flights/'+ flight._id,flight);
+            if (otherFlight) $http.put('/api/flights/'+ otherFlight._id,otherFlight);
           }
         });
       });
