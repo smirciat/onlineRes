@@ -490,32 +490,34 @@ angular.module('tempApp')
                     })[0]['Aircraft'];
                   }
                 });
-                return tcFactory.getScheduledFlights({date:scope.date},function(scheduledFlights){
-                  scope.gridOptions.data.forEach(function(d){
-                    flts=scheduledFlights.filter(function(flight){
-                      return parseInt(scope.smfltnum,10)===flight.smfltnum;
-                    }); 
-                    var field;
-                    if (flts.length>0){
-                      field = "begin";
-                      if (d['Ref#']<6&&d['Ref#']>3) field = 'sovFront';
-                      if (d['Ref#']<12&&d['Ref#']>5) field = 'pgmKeb';
-                      if (d['Ref#']===12) field = 'sovBack';
-                      d.time=flts[0][field];
-                    }
-                    else {
-                      if (d['Ref#']>12) d.time = scope.smfltnum + ':00';
-                    }
-                  });
-                  return scope.gridOptions.data;
-                });
-                
+                return scope.populateTimes();
               });
             });
           });  
         }
     };    
-      
+    
+    scope.populateTimes = function(){
+      tcFactory.getScheduledFlights({date:scope.date},function(scheduledFlights){
+        scope.gridOptions.data.forEach(function(d){
+          var flts=scheduledFlights.filter(function(flight){
+            return parseInt(d.smfltnum.substring(0,2),10)===flight.smfltnum;
+          }); 
+          var field;
+          if (flts.length>0){
+            field = "begin";
+            if (d['Ref#']<6&&d['Ref#']>3) field = 'sovFront';
+            if (d['Ref#']<12&&d['Ref#']>5) field = 'pgmKeb';
+            if (d['Ref#']===12) field = 'sovBack';
+            d.time=flts[0][field];
+          }
+          else {
+            if (d['Ref#']>12) d.time = parseInt(d.smfltnum.substring(0,2),10) + ':00';
+          }
+        });
+      });
+    };  
+    
     scope.getData = function(query){
       var ext = '/o';
       if (scope.nameTrue==="true") {
@@ -528,6 +530,7 @@ angular.module('tempApp')
         if (data) scope.tempData=data.slice();
         scope.addData();
         if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') scope.setPlanePilot();
+        if (scope.myApi==='reservations'&&($location.path()==='/oneName'||$location.path()==='/searchName')) scope.populateTimes();
         scope.shortApi = scope.myApi.substr(0,scope.myApi.length-1);
         scope.sortData();
         socket.unsyncUpdates(scope.shortApi);
@@ -575,9 +578,8 @@ angular.module('tempApp')
           }
           if ($location.path()!=='/oneFlight') scope.gridOptions.data=scope.tempData.slice();
           scope.gridOptions.data = gridSettings.getFun(scope.myApi,scope.gridOptions.data);
-          if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') {
-            scope.setPlanePilot();
-          }
+          if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') scope.setPlanePilot();
+          if (scope.myApi==='reservations'&&($location.path()==='/oneName'||$location.path()==='/searchName')) scope.populateTimes();
           scope.sortData();
         });
       });  
