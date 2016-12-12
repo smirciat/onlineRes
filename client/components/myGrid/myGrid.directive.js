@@ -256,7 +256,6 @@ angular.module('tempApp')
               }
             }
             if (rowEntity._id) {
-              console.log(rowEntity)
               return ($http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity));
             }
             else {
@@ -320,6 +319,7 @@ angular.module('tempApp')
             scope.flushRows();
           }
           if (newRowcol.row.entity.return) newRowcol.row.entity.return=false;
+
       });
       scope.gridApi.edit.on.afterCellEdit(scope,function(rowEntity, colDef, newValue, oldValue){
         var body = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].toUpperCase()};
@@ -410,7 +410,11 @@ angular.module('tempApp')
         }
       });
     };
-
+    
+    scope.setDirty = function(rowEntity){
+      scope.gridApi.rowEdit.setRowsDirty([rowEntity]);
+    };
+    
     scope.refreshOptions = function(){
       if (scope.myApi==="reservations"){
         //$http.get('/api/travelCodes').success(function(data){
