@@ -256,7 +256,7 @@ angular.module('tempApp')
               }
             }
             if (rowEntity._id) {
-              
+              console.log(rowEntity)
               return ($http.patch('/api/' + scope.myApi + '/'+rowEntity._id, rowEntity));
             }
             else {
