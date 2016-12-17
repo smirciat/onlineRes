@@ -319,7 +319,6 @@ angular.module('tempApp')
             scope.flushRows();
           }
           if (newRowcol.row.entity.return) newRowcol.row.entity.return=false;
-
       });
       scope.gridApi.edit.on.afterCellEdit(scope,function(rowEntity, colDef, newValue, oldValue){
         var body = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].toUpperCase()};
@@ -477,9 +476,10 @@ angular.module('tempApp')
                 });
                 d.pilot={};
                 if (flts.length>0){ 
-                  d.pilot.value = pilots.filter(function(element){
+                  var pilotArr =  pilots.filter(function(element){
                     return element['Pilot']===flts[0]['PILOT'];
-                  })[0]['Pilot'];
+                  });
+                  if (pilotArr.length>0) d.pilot.value = pilotArr[0]['Pilot'];
                 }
               });
               return tcFactory.getAircraft(function(aircraft){
@@ -489,9 +489,10 @@ angular.module('tempApp')
                   });
                   d.aircraft={};
                   if (flts.length>0){
-                    d.aircraft.value = aircraft.filter(function(element){
+                    var aircraftArr = aircraft.filter(function(element){
                       return element['Aircraft']===flts[0]['AIRCRAFT'];
-                    })[0]['Aircraft'];
+                    });
+                    if (aircraftArr.length>0) d.aircraft.value = aircraftArr[0]['Aircraft'];
                   }
                 });
                 return scope.populateTimes();
