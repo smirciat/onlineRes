@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, tcFactory,Modal,$window,$timeout) {
+  .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, tcFactory,Modal,$window,$timeout,$location) {
     var aircraftSch, pilotSch, tcs;
     this.schFlights=[];
     this.arr=[];
@@ -320,7 +320,13 @@ angular.module('tempApp')
         });
         this.sections=sections;
         enterTimes(response.data); 
-        $timeout($window.print,0);
+        tcFactory.setSections(sections);
+        $timeout(function(){
+          //$window.print
+          $location.path('/print');
+          
+        },0);
+        
       });
     };//end of this.print
     

@@ -24,6 +24,7 @@ angular.module('tempApp')
     var oldBody2={};
     var name;
     var invoice;
+    var sections=[];
     var sync = function(){
       socket.unsyncUpdates('flight');
       socket.syncUpdates('flight', flights, function(event, item, array){
@@ -126,8 +127,14 @@ angular.module('tempApp')
         getName: function(){
             return name;
         },
+        setSections: function(sec){
+            sections=sec;
+        },
+        getSections: function(){
+            return sections;
+        },
         setDate: function(dt){
-            dt = new Date(dt)
+            dt = new Date(dt);
             date=days[dt.getDay()] + ' ' + months[dt.getMonth()] + ' ' + dt.getDate() + ', ' + dt.getFullYear();
         },
         getDate: function(){
