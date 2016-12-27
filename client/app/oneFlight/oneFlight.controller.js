@@ -219,7 +219,10 @@ angular.module('tempApp')
             }
             
           }
-          if (res['INVOICE#']) res['INVOICE#'] = res['INVOICE#'].substring(0,9);
+          if (res['INVOICE#']) {
+            if (Number.isInteger(parseInt(res['INVOICE#'].substring(0,1),10))) res['INVOICE#'] = res['INVOICE#'].substring(0,9);
+            else res['INVOICE#'] = res['INVOICE#'].substring(0,7);
+          }
           sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations.push(res);
           var hr = parseInt(body.smfltnum.substring(0,2),10);
           var tvlC= sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations[sections[sectionIndex].flights[flightIndex].tcs[tcIndex].reservations.length-1]['Ref#'];
@@ -315,18 +318,14 @@ angular.module('tempApp')
               });
               if (p.length>0) sections[i].pilotCert = p[0].lic;
             }  
-            
           });
         });
         this.sections=sections;
         enterTimes(response.data); 
         tcFactory.setSections(sections);
         $timeout(function(){
-          //$window.print
           $location.path('/print');
-          
         },0);
-        
       });
     };//end of this.print
     

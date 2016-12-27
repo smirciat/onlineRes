@@ -3,6 +3,9 @@
     margin-left:33em;
     margin-right:33em;
   }
+  .footer{
+    height: 3in;
+  }
 }
 @media screen,print {
   
@@ -28,32 +31,11 @@
   
 }
 @media print {
-  body, div, html, .page, .footer{
-    display:block;
-    -webkit-region-break-inside: avoid;
-    position: relative;
-    float:none;
-  }
   .seven{
-    display:block;
-     -webkit-region-break-inside: avoid;
-     -webkit-page-break-after: avoid;
     height:6.9in;
-    position: relative;
-    float:none;
   }
-  .space{
-    display:block;
+  .footer{
     page-break-after: always;
-    -webkit-page-break-after: always;
-    -webkit-region-break-inside: avoid;
-    height: 2px;
-    float: none;
-    position: relative;
-  }
-  .break{
-    page-break-after: always;
-    height:2.9in;
   }
   @page { margin:1cm }
     @page :first {
