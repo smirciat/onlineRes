@@ -13,25 +13,39 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
       <!-- bower:css -->
-      <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
       <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css" />
       <link rel="stylesheet" href="bower_components/ui-select/dist/select.css" />
       <link rel="stylesheet" href="bower_components/selectize/dist/css/selectize.css" />
       <link rel="stylesheet" href="bower_components/angularjs-datepicker/dist/angular-datepicker.min.css" />
+      <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
+      <link rel="stylesheet" href="bower_components/angularPrint/angularPrint.css" />
       <!-- endbower -->
     <!-- endbuild -->
-    <link rel="stylesheet" href="bower_components/bootswatch-dist/css/bootstrap.css" />
+    <link rel="stylesheet" media="all" href="bower_components/bootswatch-dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/bootstrap-social/bootstrap-social.css" />
+    
+    <link rel="stylesheet" href="bower_components/angular-emoji/dist/emoji.min.css" />
     <!-- build:css({.tmp,client}) app/app.css -->
       <link rel="stylesheet" href="app/app.css">
       <!-- injector:css -->
       <link rel="stylesheet" href="app/admin/admin.css">
       <link rel="stylesheet" href="app/app.css">
+      <link rel="stylesheet" href="app/invoice/invoice.css">
       <link rel="stylesheet" href="app/main/main.css">
+      <link rel="stylesheet" href="app/maintenance/maintenance.css">
+      <link rel="stylesheet" href="app/manifest/manifest.css">
       <link rel="stylesheet" href="app/oFail/oFail.css">
+      <link rel="stylesheet" href="app/oneFlight/oneFlight.css">
+      <link rel="stylesheet" href="app/oneName/oneName.css">
+      <link rel="stylesheet" href="app/print/print.css">
+      <link rel="stylesheet" href="app/searchName/searchName.css">
+      <link rel="stylesheet" href="app/todaysFlights/todaysFlights.css">
+      <link rel="stylesheet" href="components/chat/chat.css">
       <link rel="stylesheet" href="components/footer/footer.css">
       <link rel="stylesheet" href="components/modal/modal.css">
+      <link rel="stylesheet" href="components/myGrid/myGrid.css">
       <link rel="stylesheet" href="components/oauth-buttons/oauth-buttons.css">
+      <link rel="stylesheet" href="components/uiSelectWrap/uiSelectWrap.css">
       <!-- endinjector -->
     <!-- endbuild -->
   </head>
@@ -76,37 +90,82 @@
       <script src="bower_components/microplugin/src/microplugin.js"></script>
       <script src="bower_components/selectize/dist/js/selectize.js"></script>
       <script src="bower_components/angularjs-datepicker/dist/angular-datepicker.min.js"></script>
+      <script src="bower_components/angular-touch/angular-touch.js"></script>
+      <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+      <script src="bower_components/angularPrint/angularPrint.js"></script>
+      <script src="bower_components/angular-scroll-glue/src/scrollglue.js"></script>
+      <script src="bower_components/HTML5-Desktop-Notifications2/desktop-notify.js"></script>
+      <script src="bower_components/angular-web-notification/angular-web-notification.js"></script>
+      <script src="bower_components/angular-emoji/dist/emoji.min.js"></script>
       <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- build:js(.tmp) app/app.js -->
       <script src="app/app.js"></script>
       <!-- injector:js -->
       <script src="app/admin/admin.module.js"></script>
       <script src="components/auth/auth.module.js"></script>
       <script src="components/util/util.module.js"></script>
+<<<<<<< HEAD
       <script src="components/auth/auth.service.js"></script>
+=======
+      <script src="app/searchName/searchName.js"></script>
+      <script src="app/admin/admin.controller.1.js"></script>
+>>>>>>> newest
       <script src="app/admin/admin.controller.js"></script>
       <script src="app/account/account.js"></script>
       <script src="app/admin/admin.router.js"></script>
       <script src="app/app.constant.js"></script>
+      <script src="app/invoice/invoice.controller.js"></script>
+      <script src="app/invoice/invoice.js"></script>
       <script src="app/main/main.controller.js"></script>
       <script src="app/main/main.js"></script>
+<<<<<<< HEAD
       <script src="app/oFail/oFail.controller.js"></script>
       <script src="app/oFail/oFail.js"></script>
       <script src="app/account/settings/settings.controller.js"></script>
       <script src="app/account/login/login.controller.js"></script>
+=======
+      <script src="app/maintenance/maintenance.controller.js"></script>
+      <script src="app/maintenance/maintenance.js"></script>
+      <script src="app/manifest/manifest.controller.js"></script>
+      <script src="app/manifest/manifest.js"></script>
+      <script src="app/oFail/oFail.controller.js"></script>
+      <script src="app/oFail/oFail.js"></script>
+      <script src="app/oneFlight/oneFlight.controller.js"></script>
+      <script src="app/oneFlight/oneFlight.js"></script>
+      <script src="app/oneName/oneName.controller.js"></script>
+      <script src="app/oneName/oneName.js"></script>
+      <script src="app/print/print.controller.js"></script>
+      <script src="app/print/print.js"></script>
+      <script src="app/searchName/searchName.controller.js"></script>
+      <script src="app/account/login/login.controller.js"></script>
+      <script src="app/todaysFlights/todaysFlights.controller.js"></script>
+      <script src="app/todaysFlights/todaysFlights.js"></script>
+      <script src="app/account/settings/settings.controller.js"></script>
+      <script src="components/auth/auth.service.js"></script>
+>>>>>>> newest
       <script src="components/auth/interceptor.service.js"></script>
       <script src="components/auth/router.decorator.js"></script>
       <script src="components/auth/user.service.js"></script>
+      <script src="components/chat/chat.controller.js"></script>
+      <script src="components/chat/chat.directive.js"></script>
+      <script src="components/draggable/draggable.directive.js"></script>
+      <script src="components/email/email.service.js"></script>
       <script src="components/footer/footer.directive.js"></script>
+      <script src="components/gridSettings/gridSettings.service.js"></script>
       <script src="components/modal/modal.service.js"></script>
       <script src="components/mongoose-error/mongoose-error.directive.js"></script>
+      <script src="components/myGrid/myGrid.directive.js"></script>
       <script src="components/navbar/navbar.controller.js"></script>
       <script src="components/navbar/navbar.directive.js"></script>
+      <script src="components/ngPrint/ngPrint.directive.js"></script>
       <script src="components/oauth-buttons/oauth-buttons.controller.js"></script>
       <script src="components/oauth-buttons/oauth-buttons.directive.js"></script>
       <script src="components/socket/socket.service.js"></script>
+      <script src="components/tcFactory/tcFactory.service.js"></script>
+      <script src="components/uiSelectWrap/uiSelectWrap.directive.js"></script>
       <script src="app/account/signup/signup.controller.js"></script>
       <script src="components/util/util.service.js"></script>
       <!-- endinjector -->

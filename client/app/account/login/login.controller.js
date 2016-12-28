@@ -6,11 +6,10 @@ class LoginController {
   errors = {};
   submitted = false;
   //end-non-standard
-
+  
   constructor(Auth, $location) {
     this.Auth = Auth;
     this.$location = $location;
-    console.log("???");
   }
 
   login(form) {
@@ -23,7 +22,8 @@ class LoginController {
       })
       .then(() => {
         // Logged in, redirect to home
-        this.$location.path('/');
+        if (this.Auth.hasRole('admin')) this.$location.path('/oneFlight');
+        else this.$location.path('/');
       })
       .catch(err => {
         this.errors.other = err.message;

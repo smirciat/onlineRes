@@ -44,7 +44,6 @@ angular.module('tempApp')
           } else {
             array.push(item);
           }
-
           cb(event, item, array);
         });
 
@@ -66,6 +65,11 @@ angular.module('tempApp')
       unsyncUpdates(modelName) {
         socket.removeAllListeners(modelName + ':save');
         socket.removeAllListeners(modelName + ':remove');
+      },
+      connected(){
+        var c = socket.connect().connected;
+        console.log(c)
+        return true;
       }
     };
   });

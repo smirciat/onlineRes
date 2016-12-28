@@ -14,7 +14,6 @@ router
   }))
   .get('/callback', passport.authenticate('facebook', {
     failureRedirect: '/oFail',
-    
     session: false
   }), setTokenCookie);
 

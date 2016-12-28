@@ -374,6 +374,13 @@ module.exports = function (grunt) {
           cwd: '.tmp/images',
           dest: '<%= yeoman.dist %>/<%= yeoman.client %>/assets/images',
           src: ['generated/*']
+        }, 
+        //ui-grid ttf and woff
+        {
+            cwd: '<%= yeoman.client %>/bower_components/angular-ui-grid',
+            src: ['ui-grid.woff','ui-grid.ttf','ui-grid.eot','ui-grid.svg'],
+            dest: '<%= yeoman.dist %>/client/app',
+            expand: true
         }, {
           expand: true,
           dest: '<%= yeoman.dist %>',

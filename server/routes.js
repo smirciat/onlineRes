@@ -9,6 +9,13 @@ import path from 'path';
 
 export default function(app) {
   // Insert routes below
+  app.use('/api/scheduledFlights', require('./api/scheduledFlight'));
+  app.use('/api/projects', require('./api/project'));
+  app.use('/api/chats', require('./api/chat'));
+  app.use('/api/aircraftSchs', require('./api/aircraftSch'));
+  app.use('/api/pilotSchs', require('./api/pilotSch'));
+  app.use('/api/travelCodes', require('./api/travelCode'));
+  app.use('/api/flights', require('./api/flight'));
   app.use('/api/mails', require('./api/mail'));
   app.use('/api/userAttributes', require('./api/userAttribute'));
   app.use('/api/reservations', require('./api/reservation'));

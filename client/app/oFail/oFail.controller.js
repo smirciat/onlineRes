@@ -1,8 +1,12 @@
 'use strict';
 
 angular.module('tempApp')
-  .controller('OFailCtrl', function ($timeout, $window) {
-    $timeout(function(){
-      $window.location.href = '/signup';
-    },8000);
-  });
+  
+  
+  .controller('OFailCtrl', function ($timeout, $location) {
+     $timeout(function(){
+       $location.path('/signup');
+     },8000);
+  })
+  ;
+  

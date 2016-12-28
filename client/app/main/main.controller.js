@@ -4,8 +4,9 @@
 
 class MainController {
 
-  constructor($http, $scope, Auth, Modal, $timeout, $location) {
+  constructor($http, $scope, Auth, Modal, $timeout, $location,email,tcFactory) {
     this.$http = $http;
+    this.email=email;
     this.Auth = Auth;
     this.$location = $location;
     this.awesomeThings = [];
@@ -16,6 +17,7 @@ class MainController {
     this.resList=[];
     this.code={};
     this.smfltnum={};
+    this.tcFactory=tcFactory;
     var d = new Date(Date.now());
     this.currDate = new Date(d.getFullYear(),d.getMonth(),d.getDate()).toString();
     this.endDate= new Date(d.getFullYear(),d.getMonth()+7,d.getDate()).toString();
@@ -26,24 +28,11 @@ class MainController {
     this.firstFlight = 9;
     this.lastFlight = 16;
     this.flightMatrix = [{flight:17, start:"2/3/2016", end:"11/4/2016"},
-    {flight:18, start:"5/1/2016", end:"10/1/2016"},
-    {flight:8, start:"5/1/2016", end:"9/15/2016"}
+    {flight:18, start:"5/2/2016", end:"10/1/2016"},
+    {flight:8, start:"5/2/2016", end:"9/15/2016"}
     ];
     
-    this.travelCodes = [
-      {name:"Homer to Seldovia",ref:1,time:":00"},
-      {name:"Homer to Port Graham",ref:2,time:":00"},
-      {name:"Homer to Nanwalek",ref:3,time:":00"},
-      {name:"Seldovia to Nanwalek",ref:4,time:":15"},
-      {name:"Seldovia to Port Graham",ref:5,time:":15"},
-      {name:"Nanwalek to Port Graham",ref:6,time:":25"},
-      {name:"Port Graham to Nanwalek",ref:7,time:":25"},
-      {name:"Port Graham to Seldovia",ref:8,time:":25"},
-      {name:"Nanwalek to Seldovia",ref:9,time:":25"},
-      {name:"Nanwalek to Homer",ref:10,time:":25"},
-      {name:"Port Graham to Homer",ref:11,time:":25"},
-      {name:"Seldovia to Homer",ref:12,time:":40"}  
-    ];
+    this.travelCodes = this.email.travelCodes;
     
     this.quickModal=Modal.confirm.quickMessage();
     
@@ -147,7 +136,6 @@ class MainController {
         if (this.newRes._id){
           // has an _id field, its an edited reservation
           this.resEntry = 'UPDATED RESERVATION: ' + this.resEntry;
-          this.newRes.UPDATED = Date.now();
           this.newRes['FLIGHT#']="1" + this.newRes.smfltnum;
           //put
           this.update("Update",this.resEntry,this.newRes);
@@ -213,34 +201,34 @@ class MainController {
     }
     var newRes = Object.assign({},res);
     this.newRes = newRes;
+    this.newRes.UPDATED = d;
     this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
-    this.code.selected = this.travelCodes.filter(function ( tc ) {
+    this.code.selected = this.email.travelCodes.filter(function ( tc ) {
       return tc.ref === newRes['Ref#'];
     })[0];
     this.makeList(this.newRes.smfltnum);
-    
-  }
-  
-  reverseRes(res){
-    var date = new Date(res['DATE TO FLY']);
-    var d = new Date(Date.now());
-    var today = new Date(d.getFullYear(),d.getMonth(),d.getDate());
-    var tomorrow = new Date(d.getFullYear(),d.getMonth(),d.getDate()+1);
-    var newRes = Object.assign({},res);
-    this.newRes = newRes;
-    this.newRes._id=undefined;
-    this.newRes['INVOICE#']=undefined;
-    this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
-    if (date<today) this.newRes['DATE TO FLY']=(d.getMonth()+1) + "/" + d.getDate() + "/" + d.getFullYear();
-    this.newRes['Ref#'] = 13-res['Ref#'];
-    console.log(this.newRes['Ref#']);
-    var hour = (d.getTime()-today.getTime())/3600000;
-    var enough = (parseInt(res.smfltnum.substring(0,2))-hour);
-    this.code.selected = this.travelCodes.filter(function ( tc ) {
-      return tc.ref === newRes['Ref#'];
-    })[0];
-    this.makeList(this.newRes.smfltnum);
-    
+     
+   }
+   
+   reverseRes(res){
+     var date = new Date(res['DATE TO FLY']);
+     var d = new Date(Date.now());
+     var today = new Date(d.getFullYear(),d.getMonth(),d.getDate());
+     var tomorrow = new Date(d.getFullYear(),d.getMonth(),d.getDate()+1);
+     var newRes = Object.assign({},res);
+     this.newRes = newRes;
+     this.newRes._id=undefined;
+     this.newRes['INVOICE#']=undefined;
+     this.newRes['DATE TO FLY']=(date.getMonth()+1) + "/" + date.getDate() + "/" + date.getFullYear();
+     if (date<today) this.newRes['DATE TO FLY']=(d.getMonth()+1) + "/" + d.getDate() + "/" + d.getFullYear();
+     this.newRes['DATE RESERVED']=(d.getMonth()+1) + "/" + d.getDate() + "/" + d.getFullYear();
+     this.newRes['Ref#'] = 13-res['Ref#'];
+     var hour = (d.getTime()-today.getTime())/3600000;
+     var enough = (parseInt(res.smfltnum.substring(0,2))-hour);
+     this.code.selected = this.email.travelCodes.filter(function ( tc ) {
+       return tc.ref === newRes['Ref#'];
+     })[0];
+     this.makeList(this.newRes.smfltnum);
   }
   
   refresh(){
@@ -267,28 +255,14 @@ class MainController {
   }
   
   convert(refnum){
-    var obj = this.travelCodes.filter(function ( tc ) {
+    var obj = this.email.travelCodes.filter(function ( tc ) {
       return tc.ref === refnum;
     })[0];
     return obj.name;
   }
   
   sendEmail(res){
-    var mailOptions = {
-      to: this.user().email, // list of receivers
-      subject: 'Reservation with Smokey Bay Air', // Subject line
-      text: this.resEntry, // plaintext body
-      html: this.template(res) // html body
-    };
-    this.$http.post('/api/mails', mailOptions).then(response => {
-      //res.status = 500 for fail, 200 for success
-      
-    },response => {
-      //this is a failure
-      this.$http.put('/api/mails/' + this.user()._id, {res:this.resEntry}).then(response => {
-        //log an email failure
-      });
-    });
+    this.email.sendEmail(res, this.resEntry,this.user());
   }
   
   showHelp(){
@@ -314,173 +288,78 @@ class MainController {
   makeList(sfn){
     //don't do this if one of the fields is blank
     if (!(this.newRes['DATE TO FLY']&&this.code.selected)) return;
+    var endDate=new Date(this.endDate);
+    var thisDate = new Date(this.newRes['DATE TO FLY']);
+    if (thisDate>endDate) return;
     this.setFlights();
     this.smfltnum.selected=undefined;
-    this.timeList=[];
     //month starts with 0 for Jan var tempDate="2/18/16";
     var query = "date=" + this.newRes['DATE TO FLY'];
     this.$http.get('/api/reservations?' + query).then(response => {
-      var letter="A";
-      if (this.code.selected.ref>6) letter="B";
+      var data=response.data;
       var sm="";
+      var sma="B";
+      var letter="A";
+      if (this.code.selected.ref>6) {
+        letter="B";
+        sma="A";
+      }
       var date = new Date(this.newRes['DATE TO FLY']);
       var d = new Date(Date.now());
       var today = new Date(d.getFullYear(),d.getMonth(),d.getDate());
       var tomorrow = new Date(d.getFullYear(),d.getMonth(),d.getDate()+1);
       var hour = (d.getTime()-today.getTime())/3600000;
       var maxPax;
-      for (var i=this.firstFlight;i<=this.lastFlight;i++){
-          //initiate the current smfltnum as sm
-          sm=i+letter;
-          if (i<10) sm="0"+sm;
-          var resList=response.data.filter(function(res){
-            return res.smfltnum.toUpperCase()===sm.toUpperCase();
-          });
-          //no more than 8 passengers on any smfltnum to avoid overbooking
-          maxPax=8;
-          if (i===9&&date.getDay()>0&&date.getDay()<6) {
-            maxPax=12;
-          }
-          if (resList.length<maxPax){  
-            var enough = (i-hour);
-            if (date<today) {}
-            else {
-              if (date>=today && date<tomorrow && enough<2) {}
+      var ref=this.code.selected.ref;
+      this.$http.post('/api/scheduledFlights',{date:this.newRes['DATE TO FLY']}).then(response => {
+        var scheduledFlights=response.data;
+        this.timeList=[];
+        //iterate through list of available flights to see if full or still available
+        for (var i=0;i<scheduledFlights.length;i++){
+            //initiate the current smfltnum as sm
+            sm=scheduledFlights[i].smfltnum+letter;
+            sma=scheduledFlights[i].smfltnum+sma;
+            if (scheduledFlights[i].smfltnum<10) sm="0"+sm;
+            var resList=data.filter(function(res){
+              return res.smfltnum.toUpperCase()===sm.toUpperCase();
+            });
+            var resListAlt = data.filter(function(res){
+              return res.smfltnum.toUpperCase()===sma.toUpperCase();
+            });
+            //no more than 8 passengers on any smfltnum to avoid overbooking
+            maxPax=8;
+            if (scheduledFlights[i].smfltnum===9&&date.getDay()>0&&date.getDay()<6) {
+              maxPax=12;
+            }
+            //keep them from being first pax on 8:00 flight
+            var enough = (scheduledFlights[i].smfltnum-hour);
+            if (enough<0) enough+=24;
+            if (date>=today && date<=tomorrow && enough<13 && scheduledFlights[i].smfltnum===8 && resList.length===0 && resListAlt.length===0) maxPax=0;
+            if (resList.length<maxPax){
+              if (date<today) {}
               else {
-                //add a departure time to the array
-                if (i<12) this.timeList.push({time:i+this.code.selected.time+ " AM",smfltnum:sm});
+                enough = (scheduledFlights[i].smfltnum-hour);
+                if (date>=today && date<tomorrow && enough<2) {}
                 else {
-                  if (i===12) this.timeList.push({time:i+this.code.selected.time+ " PM",smfltnum:sm});
-                  else this.timeList.push({time:(i-12)+this.code.selected.time+ " PM",smfltnum:sm});
+                  //add a departure time to the array
+                  var field = "begin";
+                  if (ref<6&ref>3) field = 'sovFront';
+                  if (ref<12&&ref>5) field = 'pgmKeb';
+                  if (ref===12) field = 'sovBack';
+                  var time = scheduledFlights[i][field];
+                  this.timeList.push({time:time,smfltnum:sm});
                 }
               }
             }
-               
-          }
-      }
-      if (sfn){
-        this.smfltnum.selected = this.timeList.filter(function ( tm ) {
-          return tm.smfltnum === sfn;
-        })[0];
-      }
-      this.firstFlight = 9;
-      this.lastFlight = 16;
+        }
+        if (sfn){
+          this.smfltnum.selected = this.timeList.filter(function ( tm ) {
+            return tm.smfltnum === sfn;
+          })[0];
+        }
+      });
     });
-  }
-  
-  template(res) {
-    return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">' +
-'<html xmlns="http://www.w3.org/1999/xhtml" style="font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">' +
-'<head>'+
-'<meta name="viewport" content="width=device-width" />' +
-'<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' +
-'<title>Alerts e.g. approaching your limit</title>' +
-'<style type="text/css">' +
-'img {'+
-'max-width: 100%;' +
-'}' +
-'body {' +
-'-webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em;' +
-'}' +
-'body {' +
-'background-color: #f6f6f6;' +
-'}' +
-'@media only screen and (max-width: 640px) {' +
-  'body {' +
-    'padding: 0 !important;'+
-  '}'+
-  'h1 {' +
-    'font-weight: 800 !important; margin: 20px 0 5px !important;' +
-  '}' +
-  'h2 {' +
-    'font-weight: 800 !important; margin: 20px 0 5px !important;' +
-  '}'+
-  'h3 {' +
-    'font-weight: 800 !important; margin: 20px 0 5px !important;' +
-  '}' +
-  'h4 {' +
-    'font-weight: 800 !important; margin: 20px 0 5px !important;' +
-  '}' +
-  'h1 {' +
-    'font-size: 22px !important;' +
-  '}' +
-  'h2 {' +
-    'font-size: 18px !important;' +
-  '}' +
-  'h3 {' +
-    'font-size: 16px !important;'+
-  '}'+
-  '.container {'+
-    'padding: 0 !important; width: 100% !important;'+
-  '}'+
-  '.content {'+
-    'padding: 0 !important;'+
-  '}'+
-  '.content-wrap {'+
-    'padding: 10px !important;'+
-  '}'+
-  '.invoice {'+
-    'width: 100% !important;'+
-  '}'+
-'}'+
-'</style>'+
-'</head>'+
-'<body itemscope itemtype="http://schema.org/EmailMessage" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6">'+
-'<table class="body-wrap" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6"><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>'+
-		'<td class="container" width="600" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; display: block !important; max-width: 600px !important; clear: both !important; margin: 0 auto;" valign="top">'+
-			'<div class="content" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; max-width: 600px; display: block; margin: 0 auto; padding: 20px;">'+
-				  '<table class="main" width="100%" cellpadding="0" cellspacing="0" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; border: 1px solid #e9e9e9;" bgcolor="#fff"><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="alert alert-success" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 16px; vertical-align: top; color: #fff; font-weight: 500; text-align: center; border-radius: 3px 3px 0 0; background-color: SteelBlue; margin: 0; padding: 20px;" align="center" bgcolor="SteelBlue" valign="top">'+
-							'Smokey Bay Air'+
-						'</td>'+
-					'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-wrap" style="text-align:center;font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 20px;" valign="top">'+
-							'<table width="100%" cellpadding="0" cellspacing="0" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><tr style="text-align:center;font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="text-align:center;font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
-										'<img src="http://s18.postimg.org/7vaiwz4hl/Bear_Paw.jpg" height=150">'+
-										'<p>This email is a confirmation of the reservation you just made with us.  Please double check the reservations details below and edit your reservation if anything is not correct.  Please call us if you have any problems.</p>'+
-									'</td>'+
-								'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
-									
-									'<table border="0" align="center" cellpadding="5" cellspacing="0" style="border-collapse:collapse;background-color:Wheat;color:black;font-family:arial,helvetica,sans-serif;">' +
-									  '<tbody>'+
-									    '<tr>'+
-									      '<td colspan="3" style="padding:5px;background-color:SteelBlue;color:Wheat;font-size:200%;border:5px solid SteelBlue;text-align:center;">Reservation</td>'+
-									    '</tr>'+
-									    '<tr>'+
-									      '<td style="text-align:center;border:5px solid SteelBlue;white-space:nowrap;">First Name</td>'+
-									      '<td style="border:5px solid SteelBlue;white-space:nowrap;text-align:left;font-size:125%;">'+ res.FIRST  +'</td>'+
-									    '</tr>'+
-									    '<tr>'+
-									      '<td style="text-align:center;border:5px solid SteelBlue;white-space:nowrap;">Last Name</td>'+
-									      '<td style="border:5px solid SteelBlue;white-space:nowrap;text-align:left;font-size:125%;">'+ res.LAST  +'</td>'+
-									    '</tr>'+
-									    '<tr>'+
-									      '<td style="text-align:center;border:5px solid SteelBlue;white-space:nowrap;">From</td>'+
-									      '<td style="border:5px solid SteelBlue;white-space:nowrap;text-align:left;font-size:125%;">'+ res.FROM  +'</td>'+
-									    '</tr>'+
-									    '<tr>'+
-									      '<td style="text-align:center;border:5px solid SteelBlue;white-space:nowrap;">Date</td>'+
-									      '<td style="border:5px solid SteelBlue;white-space:nowrap;text-align:left;font-size:125%;">'+ res.DATE  +'</td>'+
-									    '</tr>'+
-									    '<tr>'+
-									      '<td style="text-align:center;border:5px solid SteelBlue;white-space:nowrap;">Time</td>'+
-									      '<td style="border:5px solid SteelBlue;white-space:nowrap;text-align:left;font-size:125%;">'+ res.TIME  +'</td>'+
-									    '</tr>'+
-									  '</tbody>'+
-								  '</table>'+
-									
-										
-									'</td>'+
-								'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
-								  '</td>'+
-								'</tr><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="text-align:center;font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">'+
-										'<p>Thanks for choosing Smokey Bay Air!</p><p>2100 Kachemak Dr Ste 1, Homer, AK 99603</p><p>(907) 235-1511 or (888) 482-1511</p>'+
-									'</td>'+
-								'</tr></table></td>'+
-					'</tr></table><div class="footer" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; clear: both; color: #999; margin: 0; padding: 20px;">'+
-					'<table width="100%" style="font-family: \'Helvetica Neue\,Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><tr style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="aligncenter content-block" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; vertical-align: top; color: #999; text-align: center; margin: 0; padding: 0 0 20px;" align="center" valign="top"><a href="http://www.mailgun.com" style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 12px; color: #999; text-decoration: underline; margin: 0;"></td>'+
-						'</tr></table></div></div>'+
-		'</td><td style="font-family: \'Helvetica Neue\',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>'+
-	'</tr></table></body>'+
-'</html>';
+    
   }
 }
 

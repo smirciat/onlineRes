@@ -1,21 +1,17 @@
 /**
  * Using Rails-like standard naming convention for endpoints.
- * GET     /api/mails              ->  index
- * POST    /api/mails              ->  create
- * GET     /api/mails/:id          ->  show
- * PUT     /api/mails/:id          ->  update
- * DELETE  /api/mails/:id          ->  destroy
+ * GET     /api/inventorys              ->  index
+ * POST    /api/inventorys              ->  create
+ * GET     /api/inventorys/:id          ->  show
+ * PUT     /api/inventorys/:id          ->  update
+ * DELETE  /api/inventorys/:id          ->  destroy
  */
 
 'use strict';
 
 import _ from 'lodash';
 var sqldb = require('../../sqldb');
-var Mail = sqldb.Mail;
-var nodemailer = require('nodemailer');
-
-// create reusable transporter object using the default SMTP transport
-var transporter = nodemailer.createTransport('smtps://smokeybayair%40gmail.com:password@smtp.gmail.com');
+var Inventory = sqldb.Inventory;
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
@@ -63,16 +59,16 @@ function removeEntity(res) {
   };
 }
 
-// Gets a list of Mails
+// Gets a list of Inventorys
 export function index(req, res) {
-  Mail.findAll()
+  Inventory.findAll()
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
 
-// Gets a single Mail from the DB
+// Gets a single Inventory from the DB
 export function show(req, res) {
-  Mail.find({
+  Inventory.find({
     where: {
       _id: req.params.id
     }
@@ -82,43 +78,32 @@ export function show(req, res) {
     .catch(handleError(res));
 }
 
-// Creates a new Mail in the DB
+// Creates a new Inventory in the DB
 export function create(req, res) {
-  //req.body is attachmet of api call
-  //req.body contains from, to, subjet, text
-  if (!req.body||Object.keys(req.body).length===0||!req.body.to||!req.body.text) {
-    res.sendStatus(500);
-    return;
-  }
-  var mailOptions = req.body;
-  mailOptions.from = '"Smokey Bay Air" <smokeybayair@gmail.com>';
-  // send mail with defined transport object
-  transporter.sendMail(mailOptions, function(error, info){
-    if(error){
-        handleError(res);
-        return console.log(error);
-        
-    }
-    console.log('Message sent: ' + info.response);
-    res.sendStatus(200);
-    return info.response;
-  });
-  //Mail.create(req.body)
-    //.then(responseWithResult(res, 201))
-    //.catch(handleError(res));
-}
-
-// Updates an existing Mail in the DB
-export function update(req, res) {
-  var obj = {uid:req.params._id, res: req.body.res};
-  Mail.create(obj)
+  Inventory.create(req.body)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 }
 
-// Deletes a Mail from the DB
+// Updates an existing Inventory in the DB
+export function update(req, res) {
+  if (req.body._id) {
+    delete req.body._id;
+  }
+  Inventory.find({
+    where: {
+      _id: req.params.id
+    }
+  })
+    .then(handleEntityNotFound(res))
+    .then(saveUpdates(req.body))
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+
+// Deletes a Inventory from the DB
 export function destroy(req, res) {
-  Mail.find({
+  Inventory.find({
     where: {
       _id: req.params.id
     }

@@ -21,6 +21,7 @@ export default function(sequelize, DataTypes) {
     "DATE RESERVED":	DataTypes.DATE,
     dinit:	DataTypes.STRING(50),
     dpaxy:	DataTypes.CHAR(1),
+    checkedIn: DataTypes.BOOLEAN,
     PILOT:	DataTypes.STRING(50),
     AIRCRAFT:	DataTypes.STRING(50),
     Comment:	DataTypes.STRING(255),

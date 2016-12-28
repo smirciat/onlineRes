@@ -63,6 +63,23 @@ export function create(req, res, next) {
     .catch(validationError(res));
 }
 
+export function email(req, res, next) {
+ 
+   User.findAll({
+     attributes: [
+       
+       'email'
+     ]
+   })
+     .then(user => { // don't ever give out the password or salt
+       if (!user) {
+         return res.status(401).end();
+       }
+       res.json(user);
+     })
+     .catch(err => next(err));
+ }
+
 /**
  * Get a single user
  */
@@ -88,7 +105,7 @@ export function show(req, res, next) {
  * restriction: 'admin'
  */
 export function destroy(req, res) {
-  User.destroy({ _id: req.params.id })
+  User.destroy({where:{_id: req.params.id} })
     .then(function() {
       res.status(204).end();
     })

@@ -19,12 +19,12 @@ function UserResource($resource) {
       }
     },
     getEmails: {
-      method: 'GET',
-      params: {
-        id:'email'
-      },
-      isArray:true
-    },
+       method: 'GET',
+       params: {
+         id:'email'
+       },
+       isArray:true
+     },
     changeEmail: {
       method: 'PUT',
       params: {

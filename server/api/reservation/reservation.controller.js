@@ -11,6 +11,7 @@
 
 import _ from 'lodash';
 var sqldb = require('../../sqldb');
+var sequelize = require('sequelize');
 var Reservation = sqldb.Reservation;
 
 function handleError(res, statusCode) {
@@ -84,13 +85,105 @@ export function batch(req, res) {
 
 //get all reservations for the specified day
 export function daily(req, res) {
-  var date = new Date(req.query.date); 
+  var options = {};
+  if (req.body.smfltnum) {
+    var smfltnum = req.body.smfltnum;
+    var smfltnum2 = smfltnum.substring(0,2) + 'A';
+    if (smfltnum.substring(2).toUpperCase()==='A') smfltnum2 = smfltnum.substring(0,2) + 'B';
+    options['$or'] =  [{smfltnum:smfltnum},{smfltnum:smfltnum2}];
+  }
+  var date = new Date(req.body.date); 
   var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59); 
-  Reservation.findAll({attributes:  ["_id","DATE TO FLY", "smfltnum"],where: {"DATE TO FLY":{$gte:date,$lt:endDate} } } )
+  options['DATE TO FLY'] = {$gte:date,$lt:endDate};
+  //Reservation.findAll({where: {"DATE TO FLY":{$gte:date,$lt:endDate},'$or':[{smfltnum:smfltnum},{smfltnum:smfltnum2}] } } )
+  Reservation.findAll({where: options} )
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
 
+//get all reservations for the specified day and flight time
+export function oneF(req, res) {
+  var options = {};
+  if (req.body.smfltnum&&!req.body.hourOfDay) req.body.hourOfDay = req.body.smfltnum.substring(0,2);
+  var order = [['FLIGHT#','ASC'],['Ref#','ASC']];
+  if (req.body.date) {
+    
+    var date = new Date(req.body.date); 
+    var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59); 
+    options['DATE TO FLY'] = {
+      $lte: endDate,
+      $gte: date 
+    };
+  }
+  else {
+    //res.status(500).end();
+    //return null;
+  }
+  if (req.body.hourOfDay){
+    options['$or'] = [{smfltnum:req.body.hourOfDay+'A'},{smfltnum:req.body.hourOfDay+'B'}];
+  }
+  
+  if (req.body.invoice) {
+    order = [['DATE TO FLY','DESC']];
+    options['INVOICE#'] = req.body.invoice;
+  }
+  Reservation.findAll({where: options, order: order} )
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+
+//get all reservations for the specified day and flight time
+export function name(req, res) {
+  var options = {};
+  if (req.body.first){
+    //var date = new Date(req.body.date); 
+    //date.setDate(date.getDate()-365)
+    //var startDate = (date.getMonth()+1) + '/' + (date.getDate()) + '/' + date.getFullYear();
+    if (req.body.last)
+      var str = 'SELECT * FROM "Reservations" WHERE (LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
+          'AND LEVENSHTEIN(LOWER("LAST"), \'' + req.body.last.toLowerCase()  + '\') < 2) ' +
+          'OR (dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') AND ' +
+          'dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
+          'OR (LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
+          'nickname = \'' + req.body.first.toLowerCase() + '\')) AND dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
+          'ORDER BY "DATE TO FLY" DESC  LIMIT 100';
+    //else str = 'SELECT * FROM "Reservations" WHERE LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
+    //      'OR dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') ' +
+    //      'OR LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
+    //      'nickname = \'' + req.body.first.toLowerCase() + '\')) ' +
+    //      'ORDER BY "DATE TO FLY" DESC  LIMIT 100'; 
+    else {
+      req.body.last=req.body.first;
+      var str = 'SELECT * FROM "Reservations" WHERE (LEVENSHTEIN(LOWER("FIRST"), \'' + req.body.first.toLowerCase()  + '\') < 2 ' +
+          'OR LEVENSHTEIN(LOWER("LAST"), \'' + req.body.last.toLowerCase()  + '\') < 2) ' +
+          'OR (dmetaphone("FIRST") =  dmetaphone(\'' + req.body.first + '\') OR ' +
+          'dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
+          'OR (LOWER("FIRST") IN (SELECT nickname from nicknames WHERE name_id IN (SELECT name_id FROM nicknames WHERE ' +
+          'nickname = \'' + req.body.first.toLowerCase() + '\')) AND dmetaphone("LAST") =  dmetaphone(\'' + req.body.last + '\')) ' +
+          'ORDER BY "DATE TO FLY" DESC  LIMIT 100';
+    }
+  }
+  else {
+    res.status(500).end();
+    return null;
+  }
+  sqldb.sequelize.query(str, { raw:true, type: sequelize.QueryTypes.SELECT})
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+export function last(req, res) {
+  var str = 'SELECT DISTINCT "LAST" FROM "Reservations" ORDER BY "LAST"';
+  sqldb.sequelize.query(str, { raw:true, type: sequelize.QueryTypes.SELECT})
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+export function first(req, res) {
+  var str = 'SELECT DISTINCT "FIRST" FROM "Reservations" ORDER BY "FIRST"';
+  console.log(str)
+  sqldb.sequelize.query(str, { raw:true, type: sequelize.QueryTypes.SELECT})
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
 // Gets a single Reservation from the DB
 export function show(req, res) {
   Reservation.find({
@@ -105,6 +198,7 @@ export function show(req, res) {
 
 // Creates a new Reservation in the DB
 export function create(req, res) {
+  console.log(req.body);
   Reservation.create(req.body)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
@@ -112,6 +206,7 @@ export function create(req, res) {
 
 // Updates an existing Reservation in the DB
 export function update(req, res) {
+  
   if (!req.body.reservation||!req.body.user||parseInt(req.body.reservation.uid,10)!==req.body.user._id) {
     res.status(500).end();
     return null;
@@ -130,12 +225,41 @@ export function update(req, res) {
     .catch(handleError(res));
 }
 
+// Updates an existing Reservation in the DB (superuser)
+export function superUpdate(req, res) {
+  
+  if (req.body._id) {
+    delete req.body._id;
+  }
+  Reservation.find({
+    where: {
+      _id: req.params.id
+    }
+  })
+    .then(handleEntityNotFound(res))
+    .then(saveUpdates(req.body))
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+
 // Deletes a Reservation from the DB
 export function destroy(req, res) {
   if (!req.body.reservation||!req.body.user||parseInt(req.body.reservation.uid,10)!==req.body.user._id) {
     res.status(500).end();
     return null;
   }
+  Reservation.find({
+    where: {
+      _id: req.params.id
+    }
+  })
+    .then(handleEntityNotFound(res))
+    .then(removeEntity(res))
+    .catch(handleError(res));
+}
+
+export function superDestroy(req, res) {
+
   Reservation.find({
     where: {
       _id: req.params.id

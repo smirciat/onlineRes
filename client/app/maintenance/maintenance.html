@@ -1,0 +1,40 @@
+<navbar></navbar>
+<div class="maintenance">
+    <div class="row">
+        <div class="col-md-1"><i class="fa fa-angle-double-left fa-3x" aria-hidden="true" ng-click="maintenance.weekBack(-6)"></i></div>
+        <div class="col-md-1"><i class="fa fa-angle-left fa-3x" aria-hidden="true" ng-click="maintenance.weekBack(-1)"></i></div>
+        <div class="col-md-8"></div>
+        <div class="col-md-1"><i class="fa fa-angle-right fa-3x" aria-hidden="true" ng-click="maintenance.weekBack(1)"></i></div>
+        <div class="col-md-1"><i class="fa fa-angle-double-right fa-3x" aria-hidden="true" ng-click="maintenance.weekBack(6)"></i></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2" ng-repeat="bin in [0,1, 2, 3,4,5]" >
+            <h3 class="h3-title text-center">{{maintenance.days[bin]}}</h3>
+            <div class="dayCell" droppable drop="maintenance.handleDrop" bin="bin" id="day{{ bin }}">
+                
+            </div>
+        </div>
+        
+    </div>
+    <br/><br/>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-2">
+            <button class="btn btn-default" ng-click="maintenance.addItem()">Add a Project</button>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-danger" id="delete" bin="7" droppable drop="maintenance.handleDropDelete">Delete</button>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-warning" id="edit" bin="7" droppable drop="maintenance.handleDropEdit">Edit</button>
+        </div>
+        <div class="col-md-4">
+            <h3 class="h3-title text-center">Save for Later</h3>
+            <div class="dayCell" id="storage" bin="8" droppable drop="maintenance.handleDrop">
+            </div>
+        </div>
+    </div>
+    
+    <br/><br/>
+</div>
+<footer></footer>

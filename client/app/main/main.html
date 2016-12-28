@@ -1,6 +1,6 @@
 <navbar></navbar>
 <div class="container" ng-hide="main.isLoggedIn()">
- <header class="hero-unit" id="banner">
+ <header class="jumbotron" id="banner">
   <div class="container">
     <h1>Smokey Bay Air Online Reservations for Seldovia, Port Graham, or Nanwalek</h1>
     <h1>Please <a href="/login" class="login">login</a> or <a href="/signup" class="login">signup</a> to use this App</h1>
@@ -48,7 +48,7 @@
             </form>
           </td>
           <td>
-            <ui-select ng-model="main.code.selected" theme="selectize" ng-disabled="disabled" ng-change="main.makeList()">
+            <ui-select class="mainselectize" ng-model="main.code.selected" theme="selectize" ng-disabled="disabled" ng-change="main.makeList()">
               <ui-select-match placeholder="Choose...">{{$select.selected.name}}</ui-select-match>
               <ui-select-choices repeat="tc in main.travelCodes" >
                 <div ng-bind-html="tc.name | highlight: $select.search"></div>
@@ -56,12 +56,12 @@
             </ui-select>
           </td>
           <td>
-            <div class="datepicker" date-format="MMM d, yyyy" date-min-limit="{{main.currDate}}" date-max-limit="{{main.endDate}}"date-disabled-dates="{{main.disabledDates}}">
-              <input ng-model="main.newRes['DATE TO FLY']" ng-change="main.makeList()" type="text"/>
-            </div>
+            <datepicker date-format="EEEE MMM d, yyyy" date-min-limit="{{main.currDate}}" date-disabled-dates="{{main.disabledDates}}">
+              <input class="form-control" ng-model="main.newRes['DATE TO FLY']" ng-change="main.makeList()" type="text"/>
+            </datepicker>
           </td>
           <td>
-            <ui-select ng-model="main.smfltnum.selected" theme="selectize" ng-disabled="disabled" >
+            <ui-select class="mainselectize" ng-model="main.smfltnum.selected" theme="selectize" ng-disabled="disabled" >
               <ui-select-match placeholder="Choose...">{{$select.selected.time}}</ui-select-match>
               <ui-select-choices repeat="tm in main.timeList" >
                 <div ng-bind-html="tm.time | highlight: $select.search"></div>
@@ -87,5 +87,4 @@
       </tbody>  
     </table>
 </div>
-
 <footer></footer>

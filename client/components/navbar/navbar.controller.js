@@ -13,12 +13,18 @@ class NavbarController {
   isCollapsed = true;
   //end-non-standard
 
-  constructor($location, Auth) {
+  constructor($location, Auth, $window) {
     this.$location = $location;
     this.isLoggedIn = Auth.isLoggedIn;
     this.isAdmin = Auth.isAdmin;
     this.getCurrentUser = Auth.getCurrentUser;
+    this.window= $window;
   }
+  
+  search = function(){
+    if (this.$location.path()==='/searchName') this.window.location.href = "/searchName";
+    else this.$location.path('/searchName');
+  };
 
   isActive(route) {
     return route === this.$location.path();
@@ -27,3 +33,4 @@ class NavbarController {
 
 angular.module('tempApp')
   .controller('NavbarController', NavbarController);
+  

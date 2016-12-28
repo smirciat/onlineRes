@@ -68,7 +68,7 @@ export function hasRole(roleRequired) {
  */
 export function signToken(id, role) {
   return jwt.sign({ _id: id, role: role }, config.secrets.session, {
-    expiresIn: 60 * 60 * 5
+    expiresIn: 60 * 60 * 12
   });
 }
 
@@ -81,5 +81,7 @@ export function setTokenCookie(req, res) {
   }
   var token = signToken(req.user._id, req.user.role);
   res.cookie('token', token);
-  res.redirect('/');
+  if (req.user.dataValues.role==='admin'||req.user.dataValues.role==='superadmin') res.redirect('/oneFlight');
+  
+  else res.redirect('/');
 }
