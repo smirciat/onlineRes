@@ -41,7 +41,10 @@ export default function(sequelize, DataTypes) {
     section:	DataTypes.INTEGER,
     email:	DataTypes.STRING(50),
     mailed:	DataTypes.CHAR(1),
-    Revenue:  DataTypes.DECIMAL,	
+    Revenue: {
+      type: DataTypes.DECIMAL,
+      defaultValue: -1
+    },	
     Count:	DataTypes.INTEGER,
     Index1:	DataTypes.INTEGER,
     ArrTime:	DataTypes.DATE,
