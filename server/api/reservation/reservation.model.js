@@ -43,7 +43,7 @@ export default function(sequelize, DataTypes) {
     mailed:	DataTypes.CHAR(1),
     Revenue: {
       type: DataTypes.DECIMAL,
-      defaultValue: -1
+      defaultValue: 1
     },	
     Count:	DataTypes.INTEGER,
     Index1:	DataTypes.INTEGER,
