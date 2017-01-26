@@ -5,13 +5,9 @@ angular.module('tempApp')
     var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     var d = new Date(Date.now());
-    var date =date||days[d.getDay()] + ' ' + months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
-    var smfltnum = (d.getHours()+1);
-    if (smfltnum===24) smfltnum=19;
-    if (smfltnum<7) smfltnum=7;
-    if (smfltnum>19) smfltnum =19;
-    if (smfltnum<10) smfltnum = '0' + smfltnum + 'A';
-    else smfltnum = smfltnum + 'A';
+    var date = d;
+    var dateTime=d;
+    var smfltnum = undefined;
     var travelCodes;
     var pilots;
     var dt;
@@ -134,12 +130,16 @@ angular.module('tempApp')
             return sections;
         },
         setDate: function(dt){
-            dt = new Date(dt);
+            dt=new Date(dt);
             date=days[dt.getDay()] + ' ' + months[dt.getMonth()] + ' ' + dt.getDate() + ', ' + dt.getFullYear();
+            dateTime=dt;
         },
         getDate: function(){
-            dt = new Date(date);
-            return days[dt.getDay()] + ' ' + months[dt.getMonth()] + ' ' + dt.getDate() + ', ' + dt.getFullYear();
+                dt = new Date(date);
+                return days[dt.getDay()] + ' ' + months[dt.getMonth()] + ' ' + dt.getDate() + ', ' + dt.getFullYear();
+        },
+        getDateTime: function(){
+          return dateTime;  
         },
         setSmfltnum: function(sm){
            smfltnum=sm.toUpperCase();

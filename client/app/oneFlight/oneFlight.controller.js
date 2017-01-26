@@ -29,7 +29,7 @@ angular.module('tempApp')
     for (var i=7;i<=19;i++){
       if (i!==15) this.times.push({ref:i, time: i + ':00'});
     }
-    tcFactory.getScheduledFlights({date:this.date},function(scheduledFlights){
+    tcFactory.getScheduledFlights({date:tcFactory.getDate()},function(scheduledFlights){
       $timeout(function(){
         if ($scope.one) {
           $scope.one.schFlights=scheduledFlights;
@@ -42,7 +42,7 @@ angular.module('tempApp')
               d.time=flts[0][field];
             }
           });
-          $scope.one.today();
+          $scope.one.reset();
         }    
       },0);  
     });
@@ -51,11 +51,10 @@ angular.module('tempApp')
     var body;
     this.four = [1,2,3,4];
       
-    this.today = function(){
+    this.today= function(){
       d=new Date(Date.now());
-      var e=new Date();
       tcFactory.setDate(d);
-      this.date=tcFactory.getDate();
+      var e = new Date();
       e.setTime(d.getTime()+(60*60*1000));
       var smfltnum=9;
       this.schFlights.forEach(function(flight){
@@ -67,7 +66,28 @@ angular.module('tempApp')
       if (smfltnum<10) smfltnum = '0' + smfltnum + 'A';
       else smfltnum = smfltnum + 'A';
       tcFactory.setSmfltnum(smfltnum);
-      this.smfltnum=smfltnum.substring(0,2);
+      
+      this.reset();
+    };
+    
+    this.reset = function(){
+      this.date=tcFactory.getDate();
+      if (!tcFactory.getSmfltnum()) {
+        d = new Date(tcFactory.getDateTime());
+        var e = new Date();
+        e.setTime(d.getTime()+(60*60*1000));
+        var smfltnum=9;
+        this.schFlights.forEach(function(flight){
+          var t= new Date((1 + d.getMonth()) + "/" + d.getDate() + "/" + d.getFullYear() + " " + flight.begin);
+          if (e.getTime()>t.getTime()){
+            smfltnum = flight.smfltnum;
+          }
+        });
+        if (smfltnum<10) smfltnum = '0' + smfltnum + 'A';
+        else smfltnum = smfltnum + 'A';
+        tcFactory.setSmfltnum(smfltnum);
+      }
+      this.smfltnum=tcFactory.getSmfltnum().substring(0,2);
       var flts=this.schFlights.filter(function(flight){
         return parseInt($scope.one.smfltnum,10)===flight.smfltnum;
       }); 
