@@ -70,7 +70,7 @@ angular.module('tempApp')
             var user = Auth.getCurrentUser();
             row.entity.Comment = user._id;
             row.entity.UPDATED = Date.now();
-            $http.post('api/deletes',row.entity);
+            $http.post('api/dels',row.entity);
           }
           $http.put('/api/' + scope.myApi + '/superdelete/' + row.entity._id);
           //grab other half of flight if deleting a flight

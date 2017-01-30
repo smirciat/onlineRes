@@ -14,6 +14,7 @@ var db = {
 };
 
 // Insert models below
+db.Del = db.sequelize.import('../api/del/del.model');
 db.Delete = db.sequelize.import('../api/delete/delete.model');
 db.ScheduledFlight = db.sequelize.import('../api/scheduledFlight/scheduledFlight.model');
 db.Project = db.sequelize.import('../api/project/project.model');

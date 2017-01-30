@@ -40,7 +40,7 @@ class MainController {
       var user=this.user();
       reservation.Comment = user._id;
       reservation.UPDATED = Date.now();
-      this.$http.post('api/deletes',reservation);
+      this.$http.post('api/dels',reservation);
       this.$http.put('/api/reservations/delete/' + reservation._id,{user:user, reservation:reservation}).then(response => {
         this.refresh();
       });
