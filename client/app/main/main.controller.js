@@ -37,7 +37,11 @@ class MainController {
     this.quickModal=Modal.confirm.quickMessage();
     
     this.delete = Modal.confirm.check(reservation => {
-      this.$http.put('/api/reservations/delete/' + reservation._id,{user:this.user(), reservation:reservation}).then(response => {
+      var user=this.user();
+      reservation.Comment = user._id;
+      reservation.UPDATED = Date.now();
+      this.$http.post('api/deletes',reservation);
+      this.$http.put('/api/reservations/delete/' + reservation._id,{user:user, reservation:reservation}).then(response => {
         this.refresh();
       });
     });

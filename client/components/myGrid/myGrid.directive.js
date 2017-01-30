@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .directive('myGrid', function ($http, uiGridConstants, gridSettings, socket, $q, tcFactory, $location, $timeout, Modal,email,User) {
+  .directive('myGrid', function ($http, uiGridConstants, gridSettings, socket, $q, tcFactory, $location, $timeout, Modal,email,User,Auth) {
   return {
     templateUrl: 'components/myGrid/myGrid.html',
     restrict: 'E',
@@ -66,7 +66,14 @@ angular.module('tempApp')
         //put a modal in here?
         row.entity.travelCode=undefined;
         if (row.entity._id) { 
+          if (scope.myApi==='reservations') {
+            var user = Auth.getCurrentUser();
+            row.entity.Comment = user._id;
+            row.entity.UPDATED = Date.now();
+            $http.post('api/deletes',row.entity);
+          }
           $http.put('/api/' + scope.myApi + '/superdelete/' + row.entity._id);
+          //grab other half of flight if deleting a flight
           if (scope.myApi==='flights') {
             //tcFactory.refreshFlights();
             var newFlight = row.entity['FLIGHT#'].substring(0,3) + 'B';
