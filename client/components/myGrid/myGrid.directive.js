@@ -68,7 +68,7 @@ angular.module('tempApp')
         if (row.entity._id) { 
           if (scope.myApi==='reservations') {
             var user = Auth.getCurrentUser();
-            row.entity.Comment = user._id;
+            row.entity.Comment = user._id + ' ' + user.name;
             row.entity.UPDATED = Date.now();
             $http.post('api/dels',row.entity);
           }
