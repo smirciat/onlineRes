@@ -48,7 +48,7 @@ angular.module('tempApp')
         },
         getFlights: function (body,callback) {
             if (oldBody.date) oldBody.date = new Date(oldBody.date);
-            if (body.date) date = body.date = new Date(body.date);
+            if (body.date) body.date = new Date(body.date);
             if (flights&&oldBody.date&&
                          oldBody.date.getMonth()===body.date.getMonth()&&
                          oldBody.date.getFullYear()===body.date.getFullYear()&&
