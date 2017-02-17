@@ -240,6 +240,7 @@ angular.module('tempApp')
             
           }
           if (res['INVOICE#']) {
+            res['INVOICE#'] = res['INVOICE#'].replace(/\s/g, "");
             if (Number.isInteger(parseInt(res['INVOICE#'].substring(0,1),10))) res['INVOICE#'] = res['INVOICE#'].substring(0,9);
             else res['INVOICE#'] = res['INVOICE#'].substring(0,7);
           }
