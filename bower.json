@@ -27,7 +27,7 @@
     "sifter": "~0.4.5",
     "angularPrint": "angular-print#~0.3.8",
     "angular-scroll-glue": "~2.0.6",
-    "angular-web-notification": "~0.0.68",
+    "angular-web-notification": "~1.2.10",
     "angular-emoji": "angular-emoji-filter#~0.0.2"
   },
   "devDependencies": {

@@ -1,0 +1,34 @@
+<div class="navbar navbar-default navbar-static-top" ng-controller="NavbarController">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" ng-click="nav.isCollapsed = !nav.isCollapsed">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div uib-collapse="nav.isCollapsed" class="navbar-collapse collapse" id="navbar-main">
+         
+         <ul class="nav navbar-nav">
+           <li ng-hide="nav.isAdmin()" ng-repeat="item in nav.menu" ng-class="{active: nav.isActive(item.link)}">
+              <a ng-href="{{item.link}}">{{item.title}}</a>
+           </li>
+           <li ng-show="nav.isAdmin()" ng-class="{active: nav.isActive('/admin')}"><a href="/oneFlight">One Flight</a></li>
+           <li ng-show="nav.isAdmin()" ng-class="{active: nav.isActive('/admin')}"><a href="/todaysFlights">Today's Flights</a></li>
+           <li ng-show="nav.isAdmin()" ng-class="{active: nav.isActive('/admin')}"><a href="/manifest">All Day</a></li>
+           <li ng-show="nav.isAdmin()" ng-class="{active: nav.isActive('/admin')}" ng-click="nav.search()"><a href="#">Search</a></li>
+           <li ng-show="nav.isAdmin()" ng-class="{active: nav.isActive('/admin')}"><a href="/maintenance">Mx</a></li>
+        </ul>
+       
+        <ul class="nav navbar-nav navbar-right">
+          <li ng-hide="nav.isLoggedIn()" ng-class="{active: nav.isActive('/signup')}"><a href="/signup">Sign up</a></li>
+          <li ng-hide="nav.isLoggedIn()" ng-class="{active: nav.isActive('/login')}"><a href="/login">Login</a></li>
+          <li ng-show="nav.isLoggedIn()"><a href='#'>Hello {{ nav.getCurrentUser().name }}</a> </li>
+          <li ng-show="nav.isLoggedIn()" ng-class="{active: nav.isActive('/settings')}"><a href="/settings"><span class="glyphicon glyphicon-cog"></span></a></li>
+          <li ng-show="nav.isLoggedIn()"><a href="/logout">Logout</a></li>
+        </ul>
+       
+    </div>    
+  </div>
+</div>
