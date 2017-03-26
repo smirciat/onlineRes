@@ -57,15 +57,12 @@ angular.module('tempApp')
               if (!scope.shown) scope.classes = "button-flashing";
               webNotification.showNotification('New Chat Message in Reservations', {
                   body: item.content + '\nfrom: ' + item.username,
-                  //icon: '../bower_components/HTML5-Desktop-Notifications2/alert.ico',
                   icon: '../assets/images/Bear Paw.jpg',
                   requireInteraction: true,
                   tag: 'require-interaction',
                   onClick: function onNotificationClicked() {
-                    //var NewWin = window.open('/admin');
                     window.focus();
                     $timeout(function(){
-                      //NewWin.focus();
                       scope.classes = "btn btn-warning";
                       window.focus();
                       scope.toggleVisible();

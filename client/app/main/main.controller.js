@@ -255,6 +255,11 @@ class MainController {
         var today = new Date(year,month,day-5);
         return today<=date;
       });
+      this.resList.forEach(res=>{
+        this.timeConvert(res.smfltnum,res['Ref#'],res['DATE TO FLY']).then(response=>{
+          res.time = response;
+        });
+      });
     });
   }
   
@@ -263,6 +268,26 @@ class MainController {
       return tc.ref === refnum;
     })[0];
     return obj.name;
+  }
+  
+  timeConvert(smfltnum,ref,date){
+    return this.$http.post('/api/scheduledFlights',{date:date}).then(response => {
+      var scheduledFlights=response.data;
+      var fltArray = scheduledFlights.filter(function(flight){
+        return parseInt(smfltnum.substring(0,2),10)===flight.smfltnum;
+      });
+      if (fltArray.length>0){
+        var field = "begin";
+        if (ref<6&ref>3) field = 'sovFront';
+        if (ref<12&&ref>5) field = 'pgmKeb';
+        if (ref===12) field = 'sovBack';
+        return fltArray[0][field];
+      }
+      else {
+        if (ref>12) return smfltnum.substring(0,2) + ':00';
+      }
+  
+    });
   }
   
   sendEmail(res){
