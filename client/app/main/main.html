@@ -116,7 +116,7 @@
       <button class="btn btn-danger" ng-click="main.remRes(res)">Remove</button>
       <button class="btn btn-success" ng-click="main.editRes(res)">Edit</button>
       <button class="btn btn-warning" ng-click="main.reverseRes(res)"><i class="fa fa-refresh"></i></button>
-      {{res.FIRST + " " + res.LAST + " on " + (res['DATE TO FLY']| date:'MMM d, yyyy') + " from " + main.convert(res['Ref#']) + " at " + res.time}}
+      {{res.FIRST + " " + res.LAST + " on " + (res['DATE TO FLY']| date:'EEE MMM d, yyyy') + " from " + main.convert(res['Ref#']) + " at " + res.time}}
     </div>
 </div>
 <footer></footer>

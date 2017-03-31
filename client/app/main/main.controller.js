@@ -22,7 +22,7 @@ class MainController {
     this.currDate = new Date(d.getFullYear(),d.getMonth(),d.getDate()).toString();
     this.endDate= new Date(d.getFullYear(),d.getMonth()+7,d.getDate()).toString();
     this.disabledDates = [
-      "1/1/2017","12/25/2016","11/24/2016"
+      "1/1/2018","12/25/2017","11/23/2017"
     ];
     this.timeList = [];
     this.firstFlight = 9;
