@@ -368,7 +368,7 @@ class MainController {
               if (date<today) {}
               else {
                 enough = (scheduledFlights[i].smfltnum-hour);
-                if (date>=today && date<tomorrow && enough<2) {}
+                if (date>=today && date<tomorrow && enough<1) {}
                 else {
                   //add a departure time to the array
                   var field = "begin";

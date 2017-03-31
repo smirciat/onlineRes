@@ -141,6 +141,29 @@ export function changePassword(req, res, next) {
     });
 }
 
+export function adminChangePassword(req, res, next) {
+  var userId = req.user._id;
+  var newPass = "password";
+
+  User.find({
+    where: {
+      _id: userId
+    }
+  })
+    .then(user => {
+      if (true) {
+        user.password = newPass;
+        return user.save()
+          .then(() => {
+            res.status(204).end();
+          })
+          .catch(validationError(res));
+      } else {
+        return res.status(403).end();
+      }
+    });
+}
+
 export function changeEmail(req, res, next) {
   var userId = req.user._id;
   var email = String(req.body.email);
