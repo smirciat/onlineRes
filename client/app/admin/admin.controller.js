@@ -18,7 +18,7 @@ class AdminController {
   resetPassword(user){
     this.Auth.adminChangePassword(user._id)
       .then(() => {
-            this.quickModal('Password successfully reset.');
+            this.quickModal('Password successfully reset for ' + user.name + ' id: ' + user._id);
           })
           .catch((err) => {
             console.log(err);

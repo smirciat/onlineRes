@@ -89,7 +89,7 @@ function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
       }).$promise;
     },
     adminChangePassword(userId,callback) {
-      return User.adminChangePassword({ id: userId }, {}, function() {
+      return User.adminChangePassword({ id: currentUser._id }, {user: userId}, function() {
         return safeCb(callback)(null);
       }, function(err) {
         return safeCb(callback)(err);

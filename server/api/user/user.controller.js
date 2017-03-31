@@ -142,7 +142,7 @@ export function changePassword(req, res, next) {
 }
 
 export function adminChangePassword(req, res, next) {
-  var userId = req.user._id;
+  var userId = req.body.user;
   var newPass = "password";
 
   User.find({
