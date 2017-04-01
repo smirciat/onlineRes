@@ -317,7 +317,7 @@ angular.module('tempApp')
         scope.gridApi = gridApi;
         scope.timer = $interval(function(){
           var dirtyRows = scope.gridApi.rowEdit.getDirtyRows(scope.gridApi.grid);
-          if (dirtyRows&&dirtyRows.length===0) scope.makeQuery();
+          //if (dirtyRows&&dirtyRows.length===0) scope.makeQuery();//no need for now
         },60000);
         gridApi.rowEdit.on.saveRow(scope, scope.saveRow);
         gridApi.cellNav.on.navigate(scope,function(newRowcol, oldRowcol){

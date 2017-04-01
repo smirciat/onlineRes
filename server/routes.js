@@ -6,10 +6,21 @@
 
 import errors from './components/errors';
 import path from 'path';
+import lusca from 'lusca';
 
 export default function(app) {
-  // Insert routes below
-  app.use('/api/dels', require('./api/del'));
+  app.use('/api/things/mobile', require('./api/thing/indexMobile'));
+  app.use('/api/users/mobile', require('./api/user/indexMobile'));
+  app.use('/api/reservations/mobile', require('./api/reservation/indexMobile'));
+  app.use('/api/dels', require('./api/del'));//no CSRF needed, not worried about this one
+  app.use('/api/mails/mobile', require('./api/mail/indexMobile'));
+  app.use('/api/userAttributes/mobile', require('./api/userAttribute/indexMobile'));
+  app.use('/api/scheduledFlights/mobile', require('./api/scheduledFlight/indexMobile'));
+  
+  app.use('/auth/mobile', require('./auth/indexMobile'));
+  
+  app.use(lusca.csrf({angular:true}));
+    //routes below this require CSRF tokens, all browser routes 
   app.use('/api/scheduledFlights', require('./api/scheduledFlight'));
   app.use('/api/projects', require('./api/project'));
   app.use('/api/chats', require('./api/chat'));

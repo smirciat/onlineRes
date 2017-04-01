@@ -103,7 +103,6 @@ export function create(req, res) {
     if(error){
         handleError(res);
         return console.log(error);
-        
     }
     console.log('Message sent: ' + info.response);
     res.sendStatus(200);
