@@ -6,9 +6,11 @@
 
 import errors from './components/errors';
 import path from 'path';
+import lusca from 'lusca';
 
 export default function(app) {
   // Insert routes below
+  app.use('/api/mobileThings', require('./api/mobileThing'));
   app.use('/api/dels', require('./api/del'));
   app.use('/api/scheduledFlights', require('./api/scheduledFlight'));
   app.use('/api/mails', require('./api/mail'));
@@ -18,7 +20,7 @@ export default function(app) {
   app.use('/api/users', require('./api/user'));
 
   app.use('/auth', require('./auth'));
-
+  app.use(lusca.csrf({angular:true}));
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth|components|app|bower_components|assets)/*')
    .get(errors[404]);
