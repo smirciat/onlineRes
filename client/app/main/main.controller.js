@@ -174,7 +174,7 @@ class MainController {
     }
     var hour = (d.getTime()-today.getTime())/3600000;
     var enough = (parseInt(res.smfltnum.substring(0,2))-hour);
-    if (date>=today && date<tomorrow && enough<2) {
+    if (date>=today && date<tomorrow && enough<1) {
       this.quickModal("Sorry, you cannot edit a reservation this close to flight time. Please call our office at (907) 235-1511 or (888) 482-1511.");
       return;
     }
@@ -199,7 +199,7 @@ class MainController {
     }
     var hour = (d.getTime()-today.getTime())/3600000;
     var enough = (parseInt(res.smfltnum.substring(0,2))-hour);
-    if (date>=today && date<tomorrow && enough<2) {
+    if (date>=today && date<tomorrow && enough<1) {
       this.quickModal("Sorry, you cannot edit a reservation this close to flight time. Please call our office at (907) 235-1511 or (888) 482-1511.");
       return;
     }
