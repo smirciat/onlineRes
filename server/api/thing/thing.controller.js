@@ -66,13 +66,6 @@ export function index(req, res) {
     .catch(handleError(res));
 }
 
-// Gets a list of Things
-export function indexMobile(req, res) {
-  Thing.findOne()
-    .then(responseWithResult(res))
-    .catch(handleError(res));
-}
-
 // Gets a single Thing from the DB
 export function show(req, res) {
   Thing.find({

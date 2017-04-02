@@ -5,6 +5,6 @@ var controller = require('./thing.controller');
 
 var router = express.Router();
 
-router.get('/', controller.indexMobile);
+router.get('/', controller.index);
 
 module.exports = router;
