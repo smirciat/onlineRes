@@ -6,8 +6,9 @@ class SettingsController {
   submitted = false;
   //end-non-standard
 
-  constructor(Auth, $http, $location) {
+  constructor(Auth, $http, $location,Modal) {
     this.Auth = Auth;
+    this.quickMessage = Modal.confirm.quickMessage();
     this.$http = $http;
     this.$location = $location;
     this.user = Auth.getCurrentUser();
@@ -51,6 +52,22 @@ class SettingsController {
           form.password.$setValidity('mongoose', false);
           this.errors.other = 'Incorrect password';
           this.message = '';
+        });
+    }
+  }
+  
+  changeEmail(form) {
+    this.submitted = true;
+
+    if (form.$valid) {
+      this.Auth.changeEmail(this.user.newEmail)
+        .then(() => {
+          this.emailMessage = 'Email successfully changed.';
+        })
+        .catch((err) => {
+          form.newEmail.$setValidity('mongoose', false);
+          this.quickMessage(err.data.errors[0].message);
+          this.emailMessage = '';
         });
     }
   }

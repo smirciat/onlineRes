@@ -167,7 +167,7 @@ export function adminChangePassword(req, res, next) {
 export function changeEmail(req, res, next) {
   var userId = req.user._id;
   var email = String(req.body.email);
-
+  console.log(email)
   User.find({
     where: {
       _id: userId
