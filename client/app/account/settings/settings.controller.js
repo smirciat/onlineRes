@@ -34,7 +34,6 @@ class SettingsController {
   }
 
   changePhone() {
-    console.log(this.userAtt);
     this.$http.put('/api/userAttributes/' + this.userAtt._id, this.userAtt).then(response => {
       this.$location.path( "/" );
     });
