@@ -7,6 +7,7 @@
 import errors from './components/errors';
 import path from 'path';
 import lusca from 'lusca';
+import * as auth from './auth/auth.service';
 
 export default function(app) {
   app.use('/api/things/mobile', require('./api/thing/indexMobile'));
@@ -21,6 +22,14 @@ export default function(app) {
   
   app.use(lusca.csrf({angular:true}));
     //routes below this require CSRF tokens, all browser routes 
+  app.get('/pdf', auth.hasRole('applicant'),function(req, res){
+    if (req.query) {
+      var filename = req.query.filename;
+      var tempFile="./pdfs/" + filename;
+      res.sendFile(tempFile, {root: __dirname});
+    }
+    else res.status(500);
+  });
   app.use('/api/scheduledFlights', require('./api/scheduledFlight'));
   app.use('/api/projects', require('./api/project'));
   app.use('/api/chats', require('./api/chat'));

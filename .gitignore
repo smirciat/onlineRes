@@ -3,8 +3,8 @@ public
 .tmp
 .idea
 client/bower_components
-client/assets/pdfs/*
-!client/assets/pdfs/.gitkeep 
+server/pdfs/*
+!server/pdfs/.gitkeep 
 dist
 /server/config/local.env.js
 npm-debug.log

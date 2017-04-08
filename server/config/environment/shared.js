@@ -1,6 +1,10 @@
 'use strict';
+const fs = require('fs');
+var files =fs.readdirSync('./server/pdfs');
+if (files&&files.length>0) files.splice(0,1);
 
 exports = module.exports = {
   // List of user roles
-  userRoles: ['guest', 'user', 'admin','superadmin']
+  userRoles: ['guest', 'user','applicant', 'admin','superadmin'],
+  pdfFiles: files
 };

@@ -23,7 +23,8 @@ angular.module('tempApp', [
   'AngularPrint',
   'luegg.directives',
   'angular-web-notification',
-  'emoji'
+  'emoji',
+  'pdfjsViewer'
 ])
   .config(function($routeProvider, $locationProvider) {
     $routeProvider

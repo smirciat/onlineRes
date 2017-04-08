@@ -13,12 +13,16 @@ class NavbarController {
   isCollapsed = true;
   //end-non-standard
 
-  constructor($location, Auth, $window) {
+  constructor($location, Auth, $window,$scope,appConfig,$http) {
     this.$location = $location;
     this.isLoggedIn = Auth.isLoggedIn;
     this.isAdmin = Auth.isAdmin;
+    this.hasRole = Auth.hasRole;
     this.getCurrentUser = Auth.getCurrentUser;
     this.window= $window;
+    this.scope=$scope;
+    this.pdfMenu = appConfig.pdfFiles;
+    this.http=$http
   }
   
   search = function(){
@@ -26,8 +30,20 @@ class NavbarController {
     else this.$location.path('/searchName');
   };
 
-  isActive(route) {
+  isActive = function(route){
     return route === this.$location.path();
+  };
+  
+  isPdf = function(){
+    return this.$location.path()==='/viewPdf';
+  }
+  
+  setPdf = function(pdfName){
+    this.http.get("/pdf?filename=" + pdfName, {
+        responseType: 'arraybuffer'
+    }).then(response=> {
+        this.scope.pdf.data = new Uint8Array(response.data);
+    });
   }
 }
 

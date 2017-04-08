@@ -21,6 +21,8 @@
       <link rel="stylesheet" href="bower_components/angularPrint/angularPrint.css" />
       <!-- endbower -->
     <!-- endbuild -->
+    <script src="bower_components/pdf.js-viewer/pdf.js"></script>
+    <link rel="stylesheet" href="bower_components/pdf.js-viewer/viewer.css" />
     <link rel="stylesheet" media="all" href="bower_components/bootswatch-dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/bootstrap-social/bootstrap-social.css" />
     
@@ -40,6 +42,7 @@
       <link rel="stylesheet" href="app/print/print.css">
       <link rel="stylesheet" href="app/searchName/searchName.css">
       <link rel="stylesheet" href="app/todaysFlights/todaysFlights.css">
+      <link rel="stylesheet" href="app/viewPdf/viewPdf.css">
       <link rel="stylesheet" href="components/chat/chat.css">
       <link rel="stylesheet" href="components/footer/footer.css">
       <link rel="stylesheet" href="components/modal/modal.css">
@@ -97,6 +100,7 @@
       <script src="bower_components/HTML5-Desktop-Notifications2/desktop-notify.js"></script>
       <script src="bower_components/angular-web-notification/angular-web-notification.js"></script>
       <script src="bower_components/angular-emoji/dist/emoji.min.js"></script>
+      <script src="bower_components/angular-pdfjs-viewer/dist/angular-pdfjs-viewer.js"></script>
       <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
@@ -107,7 +111,7 @@
       <script src="app/admin/admin.module.js"></script>
       <script src="components/auth/auth.module.js"></script>
       <script src="components/util/util.module.js"></script>
-      <script src="app/searchName/searchName.js"></script>
+      <script src="app/todaysFlights/todaysFlights.controller.js"></script>
       <script src="app/admin/admin.controller.js"></script>
       <script src="app/account/account.js"></script>
       <script src="app/admin/admin.router.js"></script>
@@ -129,9 +133,11 @@
       <script src="app/print/print.controller.js"></script>
       <script src="app/print/print.js"></script>
       <script src="app/searchName/searchName.controller.js"></script>
+      <script src="app/searchName/searchName.js"></script>
       <script src="app/account/login/login.controller.js"></script>
-      <script src="app/todaysFlights/todaysFlights.controller.js"></script>
       <script src="app/todaysFlights/todaysFlights.js"></script>
+      <script src="app/viewPdf/viewPdf.controller.js"></script>
+      <script src="app/viewPdf/viewPdf.js"></script>
       <script src="app/account/settings/settings.controller.js"></script>
       <script src="components/auth/auth.service.js"></script>
       <script src="components/auth/interceptor.service.js"></script>
