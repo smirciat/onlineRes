@@ -23,11 +23,7 @@ export default function(app) {
   app.use(lusca.csrf({angular:true}));
     //routes below this require CSRF tokens, all browser routes 
   app.get('/pdf', auth.hasRole('applicant'),function(req, res){
-    if (req.query) {
-      var filename = req.query.filename;
-      var tempFile="./pdfs/" + filename;
-      res.sendFile(tempFile, {root: __dirname});
-    }
+    if (req.query) res.sendFile("./pdfs/" + req.query.filename, {root: __dirname});
     else res.status(500);
   });
   app.use('/api/scheduledFlights', require('./api/scheduledFlight'));
