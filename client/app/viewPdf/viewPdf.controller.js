@@ -3,8 +3,6 @@
 angular.module('tempApp')
   .controller('ViewPdfCtrl', function ($scope,$http,appConfig,$sce) {
     this.loading=true;
-    this.data = null; // this is loaded async
-
     if (appConfig.pdfFiles.length>0){
       $http({ url: "/pdf?filename=" + appConfig.pdfFiles[0], 
         method: "GET", 

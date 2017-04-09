@@ -7,9 +7,19 @@ class LoginController {
   submitted = false;
   //end-non-standard
   
-  constructor(Auth, $location) {
+  constructor(Auth, $location,email,Modal) {
     this.Auth = Auth;
     this.$location = $location;
+    this.email=email;
+    this.quickMessage=Modal.confirm.quickMessage();
+  }
+
+  lostPassword() {
+    if (this.user.email&&this.user.email!==""){
+        this.email.lostPassword(this.user);
+        this.quickMessage("Password reset requested.  You should receive an email with password reset information at the address you entered above.");
+    }
+    else this.quickMessage("Please enter an email address above first.");
   }
 
   login(form) {
