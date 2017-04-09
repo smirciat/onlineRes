@@ -52,4 +52,5 @@ th{
 }
 .navbar{
   z-index: 9999999999 !important;
+  margin-bottom: 0;
 }

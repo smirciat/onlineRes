@@ -13,7 +13,7 @@ angular.module('tempApp')
       .then(response=> {
         var result = new Uint8Array(response.data);
         var currentBlob = new Blob([result], {type: 'application/pdf'});
-        var url = URL.createObjectURL(currentBlob) + '#toolbar=0';
+        var url = URL.createObjectURL(currentBlob);// + '#toolbar=0';
         this.pdfUrl = $sce.trustAsResourceUrl(url);
       });
     }
