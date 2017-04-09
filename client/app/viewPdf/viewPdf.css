@@ -10,3 +10,8 @@
   right:0px;
   bottom:0px;
 }
+.mySpinner{
+  position:absolute;
+  top:75px;
+  left:200px;
+}

@@ -2,7 +2,7 @@
 
 angular.module('tempApp')
   .controller('ViewPdfCtrl', function ($scope,$http,appConfig,$sce) {
-    
+    this.loading=true;
     this.data = null; // this is loaded async
 
     if (appConfig.pdfFiles.length>0){
@@ -15,6 +15,7 @@ angular.module('tempApp')
         var currentBlob = new Blob([result], {type: 'application/pdf'});
         var url = URL.createObjectURL(currentBlob);// + '#toolbar=0';
         this.pdfUrl = $sce.trustAsResourceUrl(url);
+        this.loading=false;
       });
     }
   })

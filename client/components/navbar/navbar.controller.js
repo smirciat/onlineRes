@@ -40,6 +40,7 @@ class NavbarController {
   }
   
   setPdf = function(pdfName){
+    this.scope.pdf.loading=true;
     this.http({ url: "/pdf?filename=" + pdfName, 
       method: "GET", 
       headers: { 'Accept': 'application/pdf' }, 
@@ -49,6 +50,7 @@ class NavbarController {
       var currentBlob = new Blob([result], {type: 'application/pdf'});
       var url = URL.createObjectURL(currentBlob);// + '#toolbar=0';
       this.scope.pdf.pdfUrl = this.sce.trustAsResourceUrl(url);
+      this.scope.pdf.loading=false;
     });
   }
 }
