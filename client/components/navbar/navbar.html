@@ -27,11 +27,19 @@
                     <li><a href="#">Time Clock</a></li>
                 </ul>
             </li>
-           <li ng-show="nav.isPdf()" class="dropdown">
+           <li ng-show="nav.isRoute('viewPdf')" class="dropdown">
                 <a href="#" data-toggle="dropdown" class="dropdown-toggle">Choose PDF <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li ng-repeat="pdf in nav.pdfMenu">
                       <a ng-click="nav.setPdf(pdf)" href="#">{{pdf}}</a>
+                    </li>
+                </ul>
+            </li>
+            <li ng-show="nav.isRoute('tests')" class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Choose Test <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="test in nav.testMenu">
+                      <a ng-click="nav.setTest(test)" href="#">{{test.name}}</a>
                     </li>
                 </ul>
             </li>

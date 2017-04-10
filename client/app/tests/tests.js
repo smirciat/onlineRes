@@ -6,6 +6,7 @@ angular.module('tempApp')
       .when('/tests', {
         templateUrl: 'app/tests/tests.html',
         controller: 'TestsCtrl',
+        controllerAs: 'test',
         authenticate: 'applicant'
       });
   });

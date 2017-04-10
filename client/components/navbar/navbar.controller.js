@@ -22,6 +22,7 @@ class NavbarController {
     this.window= $window;
     this.scope=$scope;
     this.pdfMenu = appConfig.pdfFiles;
+    this.testMenu = appConfig.tests;
     this.http=$http
     this.sce=$sce;
   }
@@ -35,8 +36,19 @@ class NavbarController {
     return route === this.$location.path();
   };
   
-  isPdf = function(){
-    return this.$location.path()==='/viewPdf';
+  isRoute = function(route){
+    return this.$location.path()===('/' + route);
+  }
+  
+  setTest = function(test){
+    var user = this.Auth.getCurrentUser;
+    var url = "https://www.classmarker.com/online-test/start/?quiz=" 
+      + test.id
+      + "&cm_fn=" + user().name.split(" ")[0] 
+      + "&cm_ln=" + user().name.split(" ")[1]
+      + "&cm_e=" + user().email
+      + "&cm_user_id=" + user()._id;
+    this.scope.test.iframeSrc=this.sce.trustAsResourceUrl(url);
   }
   
   setPdf = function(pdfName){

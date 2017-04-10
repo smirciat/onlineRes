@@ -6,5 +6,6 @@ if (files&&files.length>0) files.splice(0,1);
 exports = module.exports = {
   // List of user roles
   userRoles: ['guest', 'user','applicant', 'admin','superadmin'],
-  pdfFiles: files
+  pdfFiles: files,
+  tests: [{id:'b3y58e5273a2fc98',name:'Secured Aircraft Check'}]
 };

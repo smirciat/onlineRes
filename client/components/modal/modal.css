@@ -21,3 +21,6 @@
 .modal-danger .modal-header {
   background: #d9534f;
 }
+.modal{
+  z-index: 99999999999 !important;
+}
