@@ -2,14 +2,25 @@
 <p></p>
 <div class="container">
   <p>The delete user and user index api routes are restricted to users with the 'admin' role.</p>
-  <div>
-    <label>Role to change user to</label>
-    <ui-select class="mainselectize adminselect" ng-model="admin.role.selected" theme="selectize" ng-disabled="disabled" >
-      <ui-select-match placeholder="Choose a Role">{{$select.selected}}</ui-select-match>
-      <ui-select-choices repeat="role in admin.roles" >
-        <div ng-bind-html="role | highlight: $select.search"></div>
-      </ui-select-choices>
-    </ui-select>
+  <div class="admin-container">
+    <div class="admin-flex-item">
+      <label>Role to change user to:</label>
+      <ui-select class="mainselectize adminselect" ng-model="admin.role.selected" theme="selectize" ng-disabled="disabled" >
+        <ui-select-match placeholder="Choose a Role">{{$select.selected}}</ui-select-match>
+        <ui-select-choices repeat="role in admin.roles" >
+          <div ng-bind-html="role | highlight: $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
+    </div>
+    <div class="admin-flex-item">
+      <label>Users sorted by:</label>
+      <ui-select class="mainselectize adminselect" ng-model="admin.sort.selected" theme="selectize" ng-disabled="disabled" ng-change="admin.newSort()">
+        <ui-select-match placeholder="Choose a Sort Order">{{$select.selected}}</ui-select-match>
+        <ui-select-choices repeat="sort in admin.sortBy" >
+          <div ng-bind-html="sort | highlight: $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
+    </div>
   </div>
   </br>
   <ul class="list-group user-list">

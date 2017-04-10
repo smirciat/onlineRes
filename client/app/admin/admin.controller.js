@@ -3,7 +3,7 @@
 (function() {
 
 class AdminController {
-  constructor(User,Modal,Auth,appConfig) {
+  constructor($scope,User,Modal,Auth,appConfig) {
     // Use the User $resource to fetch all users
     this.users = User.query();
     this.quickModal = Modal.confirm.quickMessage();
@@ -11,8 +11,20 @@ class AdminController {
     this.roles = appConfig.userRoles;
     this.role={};
     this.role.selected = "user";
+    this.sort={};
+    this.sort.selected = "email";
+    this.sortBy = ["_id","email","name"];
   }
 
+  newSort() {
+    console.log(this.users[0][this.sort.selected]);
+    this.users=this.users.sort((a,b)=>{
+      if (this.sort.selected==="_id") return a[this.sort.selected]-b[this.sort.selected];
+      else return a[this.sort.selected].localeCompare( b[this.sort.selected]);
+    });
+    console.log(this.users);
+  }
+  
   delete(user) {
     user.$remove();
     this.users.splice(this.users.indexOf(user), 1);

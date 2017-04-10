@@ -67,3 +67,9 @@
 .adminselect{
   width:150px;
 }
+.admin-container{
+    display: flex;
+}
+.admin-flex-item{
+    flex-grow: 1;
+}

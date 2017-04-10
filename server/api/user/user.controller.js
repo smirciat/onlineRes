@@ -39,7 +39,7 @@ export function index(req, res) {
       'role',
       'provider'
     ],
-    order:[['_id','ASC']]
+    order:[['email','ASC']]
   })
     .then(users => {
       res.status(200).json(users);
