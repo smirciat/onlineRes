@@ -7,5 +7,6 @@ exports = module.exports = {
   // List of user roles
   userRoles: ['guest', 'user','applicant', 'admin','superadmin'],
   pdfFiles: files,
-  tests: [{id:'b3y58e5273a2fc98',name:'Secured Aircraft Check'}]
+  tests: [{id:'b3y58e5273a2fc98',name:'Secured Aircraft Check'},
+          {id:'asdkjhjasdh',name:'Dummy Test'}]
 };

@@ -41,7 +41,7 @@ class NavbarController {
   }
   
   setTest = function(test){
-    var user = this.Auth.getCurrentUser;
+    var user = this.getCurrentUser;
     var url = "https://www.classmarker.com/online-test/start/?quiz=" 
       + test.id
       + "&cm_fn=" + user().name.split(" ")[0] 

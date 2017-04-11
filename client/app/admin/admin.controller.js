@@ -17,12 +17,10 @@ class AdminController {
   }
 
   newSort() {
-    console.log(this.users[0][this.sort.selected]);
     this.users=this.users.sort((a,b)=>{
       if (this.sort.selected==="_id") return a[this.sort.selected]-b[this.sort.selected];
       else return a[this.sort.selected].localeCompare( b[this.sort.selected]);
     });
-    console.log(this.users);
   }
   
   delete(user) {
