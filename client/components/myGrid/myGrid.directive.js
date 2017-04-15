@@ -91,6 +91,18 @@ angular.module('tempApp')
               });
             }
           }
+          else{
+            var index=scope.gridOptions.data.findIndex((element)=>{
+              return row.entity===element;
+            });
+            var r=false;
+            if (row.entity.return){
+              r=true;
+            }
+            scope.gridApi.rowEdit.setRowsClean([row.entity]);
+            scope.gridOptions.data.splice(index,1);
+            if (!r) scope.addData();
+          }
       };
       
       scope.return = function(row){
