@@ -22,6 +22,7 @@ export default function(sequelize, DataTypes) {
     dinit:	DataTypes.STRING(50),
     dpaxy:	DataTypes.CHAR(1),
     checkedIn: DataTypes.BOOLEAN,
+    checkedReturn: DataTypes.BOOLEAN,
     PILOT:	DataTypes.STRING(50),
     AIRCRAFT:	DataTypes.STRING(50),
     Comment:	DataTypes.STRING(255),

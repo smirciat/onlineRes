@@ -100,6 +100,8 @@ angular.module('tempApp')
              editDropdownOptionsArray: [], editableCellTemplate: selectTemplate},
           { name: 'In?', field: 'checkedIn', width:50, cellClass: cellColor,type: 'boolean',
              cellTemplate: '<input type="checkbox" ng-model="row.entity.checkedIn" ng-change="grid.appScope.setDirty(row.entity)">'}, 
+          { name: 'Rtn?', field: 'checkedIn', width:60, cellClass: cellColor,type: 'boolean',
+             cellTemplate: '<input type="checkbox" ng-model="row.entity.checkedReturn" ng-change="grid.appScope.setDirty(row.entity)">'}, 
           { name: 'Email', field:'email', visible:false,cellClass: cellColor,minWidth:100},
           { name: 'RESERVED', enableCellEdit:false, field:'DATE RESERVED', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:100, visible:false,cellClass: cellColor},
           { name: 'UPDATED', enableCellEdit:false, type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:100, visible:false,cellClass: cellColor},
