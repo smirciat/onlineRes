@@ -8,5 +8,8 @@ exports = module.exports = {
   userRoles: ['guest', 'user','applicant', 'admin','superadmin'],
   pdfFiles: files,
   tests: [{id:'b3y58e5273a2fc98',name:'Secured Aircraft Check'},
-          {id:'vcg58e52936a8a93',name:'Fuel Verification'}]
+          {id:'vcg58e52936a8a93',name:'Fuel Verification'},
+          {id:'ntv58efae259e78e', name:'Vehicle Operations'},
+          {id:'vxv58f66f1875cd1', name:'Bay Procedures'},
+          {id:'gbm58e5cd0915bdd', name:'Operational Control'}]
 };

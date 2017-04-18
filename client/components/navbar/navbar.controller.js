@@ -13,7 +13,7 @@ class NavbarController {
   isCollapsed = true;
   //end-non-standard
 
-  constructor($location, Auth, $window,$scope,appConfig,$http,$sce) {
+  constructor($location, Auth, $window,$scope,appConfig,$http,$sce,$timeout) {
     this.$location = $location;
     this.isLoggedIn = Auth.isLoggedIn;
     this.isAdmin = Auth.isAdmin;
@@ -22,9 +22,12 @@ class NavbarController {
     this.window= $window;
     this.scope=$scope;
     this.pdfMenu = appConfig.pdfFiles;
-    this.testMenu = appConfig.tests;
-    this.http=$http
+    this.testMenu = appConfig.tests.sort((a,b)=>{
+      return a.name.localeCompare(b.name);
+    });
+    this.http=$http;
     this.sce=$sce;
+    this.timeout=$timeout;
   }
   
   search = function(){
@@ -48,7 +51,10 @@ class NavbarController {
       + "&cm_ln=" + user().name.split(" ")[1]
       + "&cm_e=" + user().email
       + "&cm_user_id=" + user()._id;
-    this.scope.test.iframeSrc=this.sce.trustAsResourceUrl(url);
+    var dummyUrl = "https://www.classmarker.com/online-test/start/?quiz=asdfasdf";
+    this.scope.test.iframeSrc=this.sce.trustAsResourceUrl(dummyUrl);
+    this.timeout(()=>{this.scope.test.iframeSrc=this.sce.trustAsResourceUrl(url)},350);
+    this.scope.test.new=false;
   }
   
   setPdf = function(pdfName){

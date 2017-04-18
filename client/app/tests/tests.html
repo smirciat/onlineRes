@@ -1,4 +1,19 @@
 <navbar></navbar>
-<div class="test-container">
+<div ng-show="test.new" class="test-container">
+  </br>
+  <h1>Smokey Bay Air Company Tests</h1></br>
+  <h3>Please choose a test to take</h3></br>
+  <ul class="nav navbar-nav">    
+    <li ng-show="nav.hasRole('applicant')" class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Choose Test <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li ng-repeat="test in nav.testMenu">
+              <a ng-click="nav.setTest(test)" href="#">{{test.name}}</a>
+            </li>
+        </ul>
+    </li>
+  </ul>
+</div>
+<div ng-hide="test.new" class="test-container">
     <iframe embed-src="{{test.iframeSrc}}" src="{{test.iframeSrc}}" frameborder="0" style="width:100%;max-width:700px;" height="1200"></iframe>
 </div>
