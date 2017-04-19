@@ -1,21 +1,9 @@
 'use strict';
 
 angular.module('tempApp')
-  .controller('ViewPdfCtrl', function ($scope,$http,appConfig,$sce) {
-    this.loading=true;
-    if (appConfig.pdfFiles.length>0){
-      $http({ url: "/pdf?filename=" + appConfig.pdfFiles[0], 
-        method: "GET", 
-        headers: { 'Accept': 'application/pdf' }, 
-        responseType: 'arraybuffer' })
-      .then(response=> {
-        var result = new Uint8Array(response.data);
-        var currentBlob = new Blob([result], {type: 'application/pdf'});
-        var url = URL.createObjectURL(currentBlob);// + '#toolbar=0';
-        this.pdfUrl = $sce.trustAsResourceUrl(url);
-        this.loading=false;
-      });
-    }
+  .controller('ViewPdfCtrl', function () {
+    this.loading=false;
+    this.new=true;
   })
   .directive('embedSrc', function () {
   return {

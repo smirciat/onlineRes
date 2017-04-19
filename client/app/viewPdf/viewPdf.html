@@ -1,3 +1,20 @@
 <navbar></navbar>
-<iframe class="pdf-viewer" embed-src="{{pdf.pdfUrl}}" src="{{pdf.pdfUrl}} " type="application/pdf" ></iframe>
-<img class="mySpinner" src="assets/images/spiffygif_30x30.gif" ng-show="pdf.loading" />
+<div ng-show="pdf.new" class="test-container">
+  </br>
+  <h1>Smokey Bay Air Company Documents</h1></br>
+  <h3>Please choose a document to view</h3></br>
+  <ul class="nav navbar-nav">    
+    <li class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Choose PDF <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li ng-repeat="pdf in nav.pdfMenu">
+              <a ng-click="nav.setPdf(pdf)" href="#">{{pdf}}</a>
+            </li>
+        </ul>
+    </li>
+  </ul>
+</div>
+<div ng-hide="pdf.new">
+    <iframe class="pdf-viewer" embed-src="{{pdf.pdfUrl}}" src="{{pdf.pdfUrl}} " type="application/pdf" ></iframe>
+    <img class="mySpinner" src="assets/images/spiffygif_30x30.gif" ng-show="pdf.loading" />
+</div>

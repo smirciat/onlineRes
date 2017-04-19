@@ -59,6 +59,7 @@ class NavbarController {
   
   setPdf = function(pdfName){
     this.scope.pdf.loading=true;
+    this.scope.pdf.new=false;
     this.scope.pdf.pdfUrl=undefined;
     this.http({ url: "/pdf?filename=" + pdfName, 
       method: "GET", 
