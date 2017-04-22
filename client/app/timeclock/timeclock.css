@@ -1,0 +1,10 @@
+.alt-container{
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content: center;
+}
+.space{
+    margin-left:15px;
+    margin-right:15px;
+}

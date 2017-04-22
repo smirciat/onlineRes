@@ -9,6 +9,7 @@ class AdminController {
     this.quickModal = Modal.confirm.quickMessage();
     this.Auth=Auth;
     this.roles = appConfig.userRoles;
+    if (!Auth.hasRole('superadmin')) 
     this.role={};
     this.role.selected = "user";
     this.sort={};

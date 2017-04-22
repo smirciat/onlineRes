@@ -38,6 +38,7 @@ export default function(app) {
   app.use('/api/reservations', require('./api/reservation'));
   app.use('/api/things', require('./api/thing'));
   app.use('/api/users', require('./api/user'));
+  app.use('/api/timesheets', require('./api/timesheet'));
 
   app.use('/auth', require('./auth'));
 

@@ -92,14 +92,16 @@ angular.module('tempApp')
             }
           }
           else{
-            var isReturn=false;
-            if (row.entity.return) isReturn=true;
-            scope.gridApi.rowEdit.setRowsClean([row.entity]);
             var index=scope.gridOptions.data.findIndex((element)=>{
               return row.entity===element;
             });
+            var r=false;
+            if (row.entity.return){
+              r=true;
+            }
+            scope.gridApi.rowEdit.setRowsClean([row.entity]);
             scope.gridOptions.data.splice(index,1);
-            if (!isReturn) scope.addData();
+            if (!r) scope.addData();
           }
       };
       

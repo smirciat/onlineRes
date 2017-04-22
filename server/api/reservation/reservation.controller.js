@@ -66,7 +66,6 @@ export function index(req, res) {
   var date = new Date(req.query.date); 
   var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate()+1); 
   Reservation.findAll({attributes:  ["_id","DATE TO FLY", "smfltnum"],where: {"DATE TO FLY":{$gte:date,$lt:endDate} } } )
-  //Reservation.findAll({where: {"DATE TO FLY":{$gte:date}}})
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
