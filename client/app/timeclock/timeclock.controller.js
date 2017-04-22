@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('tempApp')
-  .controller('TimeclockCtrl', function ($scope,Auth,$http,moment,$timeout) {
+  .controller('TimeclockCtrl', function ($scope,Auth,User,$http,moment,$timeout) {
     this.timesheets=[];
     this.hours=0;
     this.in=false;
     this.newRecord = {};
+    this.users = User.query();
     var user = Auth.getCurrentUser;
     var now = moment();
     var current;
@@ -83,51 +84,78 @@ angular.module('tempApp')
     
     this.clockOut = function(){
       if (current){
-        current = this.setHours(current);
+        current.timeOut = moment();
+        current = this.update(current);
+      }  
         
-        $http.put('/api/timesheets/' + current._id,current).then((response)=>{
-          this.getCurrent();
-          this.getRecords();
-        });
-      }
       else this.in=false;
     };
     
-    this.setHours = function(timesheet){//decide how much of this timesheet record is regular and overtime
-      var timeOut= moment();
+    this.update = function(timesheet){//decide how much of this timesheet record is regular and overtime
+      var timeOut;
       if (timesheet.timeOut) {
         timeOut = moment(timesheet.timeOut);
+        timesheet.regularHours =  moment.duration(timeOut.diff(moment(timesheet.timeIn))).asHours();
+        timesheet.otHours = 0;
+        if (timesheet.regularHours>10){
+          timesheet.otHours = timesheet.regularHours-10;
+          timesheet.regularHours = 10;
+        }
+        timesheet.timeOut = timeOut.toDate();
+        var timeIn = moment(timesheet.timeIn);
+        var startDate = moment(timeIn).startOf('week');
+        var endDate = moment(timeIn).endOf('week');
+        $http.post('/api/timesheets/user',{uid:timesheet.uid,date:startDate.toDate(),endDate:endDate.toDate()}).then(response=>{
+          var timesheets = response.data.reverse();
+          var index;
+          var todaysHours = 0;
+          var totalHours = 0;
+          if (timesheet._id) index = timesheets.findIndex(function(element){
+                      return element._id===timesheet._id;
+                    });
+          if (index) timesheets.splice(index,1);
+          timesheets.forEach(function(ts){
+            totalHours += ts.regularHours;
+            if (moment(ts.timeIn).day()===moment(timesheet.timeIn).day()){
+              todaysHours +- ts.regularHours;
+            }
+          });
+          if ((todaysHours + timesheet.regularHours)>10){
+            timesheet.otHours = timesheet.regularHours - 10;
+            timesheet.regularHours = 10 - todaysHours;
+          }
+          var over = totalHours + timesheet.regularHours-40;
+          if (over>0) {
+            if (totalHours>40) {
+              timesheet.otHours += timesheet.regularHours;
+              timesheet.regularHours = 0 ;
+            }
+            else{
+              timesheet.otHours += over;
+              timesheet.regularHours -= over;
+            }
+          }
+          this.commit(timesheet);
+        });
       }
-      var regularHours=  moment.duration(timeOut.diff(moment(timesheet.timeIn))).asHours();
-      var otHours=0;
-      if (regularHours>10){
-        otHours = regularHours-10;
-        regularHours=10;
-      }
-      timesheet.timeOut = timeOut.toDate();
-      timesheet.regularHours = regularHours;
-      timesheet.otHours = otHours;
-      //will need promise chain to search the whole week
-      return timesheet;
+      else this.commit(timesheet);
     };
     
-    this.add = function(){
-      this.newRecord = this.setHours(this.newRecord);
-      if (this.newRecord._id){
-        $http.put('/api/timesheets/' + this.newRecord._id,this.newRecord).then(()=>{
+    this.commit = function(timesheet){
+      if (timesheet._id){
+        $http.put('/api/timesheets/' + timesheet._id,timesheet).then(()=>{
           this.getCurrent();
           this.getRecords();
           this.newRecord={};
         });
       }
       else {
-        $http.post('/api/timesheets',this.newRecord).then(()=>{
+        $http.post('/api/timesheets',timesheet).then(()=>{
           this.getCurrent();
           this.getRecords();
           this.newRecord={};
         });
       }
-      
     };
     
     this.cancel = function(){
@@ -147,8 +175,19 @@ angular.module('tempApp')
       });
     };
     
+    this.nameLookup = function(uid){
+      var index = this.users.findIndex((element)=>{
+        return element._id===uid;
+      });
+      if (index>-1&&(this.users[index].role==='admin'||this.users[index].role==='superadmin')){
+        this.newRecord.name = this.users[index].name;
+      }
+    };
+    
+    
     this.setApi();
     this.getCurrent();
     this.setPayrollPeriod();
     this.getRecords();
+    
   });
