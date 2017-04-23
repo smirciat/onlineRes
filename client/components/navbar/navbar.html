@@ -43,6 +43,14 @@
                     </li>
                 </ul>
             </li>
+            <li ng-show="nav.isRoute('timeclock')" class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Who's Clocked In? <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="ts in timeclock.whosClockedIn">
+                      <a href="#">{{ts.name + ' in at ' + (ts.timeIn|date:'medium')}}</a>
+                    </li>
+                </ul>
+            </li>
         </ul>
        
         <ul class="nav navbar-nav navbar-right">

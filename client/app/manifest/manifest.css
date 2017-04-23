@@ -21,11 +21,11 @@
   .lgg {
     font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
     font-weight:bold; 
-    font-size:110%;
+    font-size:100%;
   }
   .lg {
     font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-    font-size:130%;
+    font-size:120%;
   }
   em { text-decoration:underline; }
   
@@ -33,24 +33,22 @@
 @media print {
   .seven{
     height:6.9in;
+    margin-left:1.35in;
+    margin-right:1.35in;
   }
   .footer{
     page-break-after: always;
+    margin-left:1.35in;
+    margin-right:1.35in;
   }
   @page { margin:1cm }
     @page :first {
       margin-top:1cm;
     }
     @page :left {
-      margin-top:1cm;
-      margin-left:1.70in;
-      margin-right:1.705in;
-      margin-bottom:1cm;
+      margin:1cm;
     }
     @page :right {
-      margin-top:1cm;
-      margin-left:1.70in;
-      margin-right:1.70in;
-      margin-bottom:1cm;
+      margin:1cm;
     }
 }

@@ -1,15 +1,19 @@
 'use strict';
 
 angular.module('tempApp')
-  .controller('TimeclockCtrl', function ($scope,Auth,User,$http,moment,$timeout) {
+  .controller('TimeclockCtrl', function ($scope,Auth,User,$http,moment,$timeout,Modal,$window) {
     this.timesheets=[];
+    this.employees=[];
+    this.whosClockedIn=[];
     this.hours=0;
     this.in=false;
+    var user = Auth.getCurrentUser;
     this.newRecord = {};
     this.users = User.query();
-    var user = Auth.getCurrentUser;
     var now = moment();
     var current;
+    
+    this.quickMessage = Modal.confirm.quickMessage();
     
     this.setApi = function(){
       if (Auth.hasRole('superadmin')){
@@ -72,6 +76,38 @@ angular.module('tempApp')
     this.getRecords = function(){
       $http.post(this.api,{uid:user()._id,date:this.startDate.toDate(),endDate:this.endDate.toDate()}).then(response=>{
         this.timesheets=response.data;
+        var employeeIndex,weekIndex,timesheetIndex;
+        if (Auth.hasRole('admin')){
+           this.employees=[];
+           this.timesheets.forEach((timesheet)=>{
+             employeeIndex=-1;
+             weekIndex=-1;
+             timesheetIndex=-1;
+             for (var i=0;i<this.employees.length;i++) {
+               for (var j=0;j<this.employees[i].length;j++) {
+                 for (var k=0;k<this.employees[i][j].length;k++) {
+                   if (this.employees[i][j][k].uid===timesheet.uid) employeeIndex=i;
+                   if (moment(this.employees[i][j][k].timeIn).week()===moment(timesheet.timeIn).week()) weekIndex=j;
+                 }  
+               }
+             }
+            if (employeeIndex<0) {
+              this.employees.push([[timesheet]]);
+            }
+            else {
+              if (weekIndex<0) this.employees[employeeIndex].push([timesheet]);
+              else this.employees[employeeIndex][weekIndex].push(timesheet);
+            }
+           });
+           console.log(this.employees)
+           this.whosClockedIn=[];
+           this.employees.forEach((employee)=>{
+             employee.forEach((ts)=>{
+               if (!ts.timeOut) this.whosClockedIn.push(ts);
+             });
+             employee.reverse();
+           });
+        }
       });
     };
     
@@ -121,7 +157,7 @@ angular.module('tempApp')
             }
           });
           if ((todaysHours + timesheet.regularHours)>10){
-            timesheet.otHours = timesheet.regularHours - 10;
+            timesheet.otHours = todaysHours + timesheet.regularHours - 10;
             timesheet.regularHours = 10 - todaysHours;
           }
           var over = totalHours + timesheet.regularHours-40;
@@ -142,6 +178,12 @@ angular.module('tempApp')
     };
     
     this.commit = function(timesheet){
+      if (timesheet.otHours+timesheet.regularHours<0) {
+        return this.quickMessage('Error in Times, total hours cannot be negative');
+      }
+      if (timesheet.regularHours+timesheet.otHours>18) {
+        this.quickMessage('Possible failure to clock out, please double check times!');
+      }
       if (timesheet._id){
         $http.put('/api/timesheets/' + timesheet._id,timesheet).then(()=>{
           this.getCurrent();
@@ -176,12 +218,17 @@ angular.module('tempApp')
     };
     
     this.nameLookup = function(uid){
+      this.newRecord.name = "";
       var index = this.users.findIndex((element)=>{
         return element._id===uid;
       });
       if (index>-1&&(this.users[index].role==='admin'||this.users[index].role==='superadmin')){
         this.newRecord.name = this.users[index].name;
       }
+    };
+    
+    this.print = function(){
+      $timeout($window.print,500);
     };
     
     
