@@ -8,8 +8,20 @@
         </h1>
         <div>
             <a href='#' ng-click="timeclock.minus()"><i class="fa fa-minus-circle fa-fw fa-2x" aria-hidden="true"></i></a>
-            <a href='#' ng-click="timeclock.plus()"><i class="fa fa-plus-circle fa-fw fa-2x" aria-hidden="true"></i></a>
+            <a href='#' ng-click="timeclock.plus()"><i class="fa fa-plus-circle fa-fw fa-2x space" aria-hidden="true"></i></a>
             <button print-btn ng-show="nav.hasRole('superadmin')" class="btn btn-primary space">Print Timesheets</button>
+            <button class="btn btn-link space">
+              <ul ng-show="nav.hasRole('superadmin')" class="nav navbar-nav">    
+                <li class="dropdown">
+                    <a href="#" data-toggle="dropdown" class="dropdown-toggle">Filter by Employee <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="employee in timeclock.payrollList">
+                          <a ng-click="timeclock.setEmployee(employee)" href="#">{{employee.employee}}</a>
+                        </li>
+                    </ul>
+                </li>
+              </ul>
+            </button>
         </div>
     </div>
     </br>
@@ -83,9 +95,9 @@
   </div> 
   <div print-only ng-show="nav.hasRole('superadmin')" >
     <div class="full-sheet" ng-repeat="employee in timeclock.employees">
-      <div class="test-container">
-        <h2>{{employee.employee}}</h2>
-        <h3>{{' Payroll Period: ' + timeclock.startDate.format("MMM DD, YYYY") + ' through ' + timeclock.lastDate.format("MMM DD, YYYY")}}</h3>
+      <div class="alt-container">
+        <h4 class="space">{{employee.employee}}</h4>
+        <h5 class="space">{{'Payroll Period: ' + timeclock.startDate.format("MMM DD, YYYY") + ' through ' + timeclock.lastDate.format("MMM DD, YYYY")}}</h5>
       </div>
       </br>
       <div> 
@@ -111,14 +123,20 @@
             </tr>
           </tfoot>
           <tbody ng-repeat="week in employee.weeks">
-            <tr><td></td><td></td><td>Week {{week.week}}</td></tr>
             <tr ng-repeat="timesheet in week.timesheets">
-              <td ng-show="nav.hasRole('superadmin')">{{timesheet.uid}}</td>
+              <td>{{timesheet.uid}}</td>
               <td>{{timesheet.name}}</td>
               <td>{{timesheet.timeIn|date:'medium'}}</td>
               <td>{{timesheet.timeOut|date:'medium'}}</td>
               <td>{{timesheet.regularHours|number:1}}</td>
               <td>{{timesheet.otHours|number:1}}</td>
+            </tr>
+            <tr>
+              <td></td><td></td>
+              <td>Week Ending {{week.weekEnd|date:'MMM d, yyyy'}}</td>
+              <td></td>
+              <td style="text-align:right">{{week.totalRegular|number:1}}</td>
+              <td style="text-align:right">{{week.totalOT|number:1}}</td>
             </tr>
           </tbody>  
           <tr><td></td></tr>

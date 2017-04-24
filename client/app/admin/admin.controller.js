@@ -8,7 +8,7 @@ class AdminController {
     this.users = User.query();
     this.quickModal = Modal.confirm.quickMessage();
     this.Auth=Auth;
-    this.roles = appConfig.userRoles;
+    this.roles = appConfig.userRoles.slice(0);
     if (!Auth.hasRole('superadmin')) this.roles.pop();
     this.role={};
     this.role.selected = "user";

@@ -7,6 +7,7 @@ angular.module('tempApp')
     this.whosClockedIn=[];
     this.hours=0;
     this.in=false;
+    var uid=0;
     var user = Auth.getCurrentUser;
     this.newRecord = {};
     this.users = User.query();
@@ -44,19 +45,19 @@ angular.module('tempApp')
       else {
         $timeout(()=>{
           this.getCurrent();
-          this.getRecords();
+          this.getRecords(uid);
         },100);
       }
     };
     
     this.setPayrollPeriod = function(){
       if (now.date()<=15) {
-        this.startDate=moment(now).startOf('month');
-        this.endDate=moment(now).date(16);
+        this.startDate=moment(now).startOf('month').startOf('day');
+        this.endDate=moment(now).date(16).startOf('day');
       }
       else {
-        this.startDate=moment(now).date(16);
-        this.endDate=moment(now).add(1,'month').startOf('month');
+        this.startDate=moment(now).date(16).startOf('day');
+        this.endDate=moment(now).add(1,'month').startOf('month').startOf('day');
       }
       this.lastDate=moment(this.endDate).subtract(1,'day');
     };
@@ -64,19 +65,22 @@ angular.module('tempApp')
     this.plus = function(){
       now.add(15,'days');
       this.setPayrollPeriod();
-      this.getRecords();
+      this.getRecords(uid);
     };
     
     this.minus = function(){
       now.subtract(15,'days');
       this.setPayrollPeriod();
-      this.getRecords();
+      this.getRecords(uid);
     };
     
-    this.getRecords = function(){
+    this.getRecords = function(uid){
       $http.post(this.api,{uid:user()._id,date:this.startDate.toDate(),endDate:this.endDate.toDate()}).then(response=>{
         this.timesheets=response.data;
-        var employeeIndex,weekIndex,timesheetIndex,totalRegular,totalOT;
+        if (uid>0) this.timesheets = this.timesheets.filter((ts)=>{
+          return ts.uid===uid;
+        });
+        var employeeIndex,weekIndex,timesheetIndex;
         if (Auth.hasRole('admin')){
            this.employees=[];
            this.timesheets.forEach((timesheet)=>{
@@ -95,29 +99,31 @@ angular.module('tempApp')
                }
              }
             if (employeeIndex<0) {
-              this.employees.push({employee:timesheet.name,totalRegular:0,totalOT:0,weeks:[{week:moment(timesheet.timeIn).week(),timesheets:[timesheet]}]});
+              this.employees.push({employee:timesheet.name,uid:timesheet.uid,totalRegular:0,totalOT:0,weeks:[{week:moment(timesheet.timeIn).week(),weekEnd:moment(timesheet.timeIn).endOf('week').startOf('day').toDate(),totalRegular:0,totalOT:0,timesheets:[timesheet]}]});
             }
             else {
-              if (weekIndex<0) this.employees[employeeIndex].weeks.push({week:moment(timesheet.timeIn).week(),timesheets:[timesheet]});
+              if (weekIndex<0) this.employees[employeeIndex].weeks.push({week:moment(timesheet.timeIn).week(),weekEnd:moment(timesheet.timeIn).endOf('week').startOf('day').toDate(),totalRegular:0,totalOT:0,timesheets:[timesheet]});
               else {
                 this.employees[employeeIndex].weeks[weekIndex].timesheets.push(timesheet);
               }
             }
            });
            this.whosClockedIn=[];
-           totalRegular=0;
-           totalOT=0;
            this.employees.forEach((employee)=>{
              employee.weeks.forEach((week)=>{
                week.timesheets.forEach((ts)=>{
                  if (!ts.timeOut) this.whosClockedIn.push(ts);
                  employee.totalRegular+=ts.regularHours;
                  employee.totalOT+=ts.otHours;
+                 week.totalRegular+=ts.regularHours;
+                 week.totalOT+=ts.otHours;
                });
                week.timesheets.reverse();
              });
              employee.weeks.reverse();
            });
+           this.payrollList = this.employees.slice(0);
+           this.payrollList.splice(0,0,{employee:"All",uid:0})
         }
       });
     };
@@ -125,7 +131,7 @@ angular.module('tempApp')
     this.clockIn = function(){
       $http.post('/api/timesheets/',{name:user().name,timeIn:moment().toDate(),uid:user()._id}).then((response)=>{
         this.getCurrent();
-        this.getRecords();
+        this.getRecords(uid);
       });
     };
     
@@ -140,36 +146,38 @@ angular.module('tempApp')
     
     this.update = function(timesheet){//decide how much of this timesheet record is regular and overtime
       var timeOut;
+      var dayLength = 10;
+      //if (!timesheet.fourTens) dayLength=8;
       if (timesheet.timeOut) {
         timeOut = moment(timesheet.timeOut);
         timesheet.regularHours =  moment.duration(timeOut.diff(moment(timesheet.timeIn))).asHours();
         timesheet.otHours = 0;
-        if (timesheet.regularHours>10){
-          timesheet.otHours = timesheet.regularHours-10;
-          timesheet.regularHours = 10;
+        if (timesheet.regularHours>dayLength){
+          timesheet.otHours = timesheet.regularHours-dayLength;
+          timesheet.regularHours = dayLength;
         }
         timesheet.timeOut = timeOut.toDate();
         var timeIn = moment(timesheet.timeIn);
-        var startDate = moment(timeIn).startOf('week');
-        var endDate = moment(timeIn).endOf('week');
+        var startDate = moment(timeIn).startOf('week').startOf('day');
+        var endDate = moment(timeIn).endOf('week').endOf('day');
         $http.post('/api/timesheets/user',{uid:timesheet.uid,date:startDate.toDate(),endDate:endDate.toDate()}).then(response=>{
           var timesheets = response.data.reverse();
-          var index;
+          var index=-1;
           var todaysHours = 0;
           var totalHours = 0;
           if (timesheet._id) index = timesheets.findIndex(function(element){
                       return element._id===timesheet._id;
                     });
-          if (index) timesheets.splice(index,1);
+          if (index>-1) timesheets.splice(index,1);
           timesheets.forEach(function(ts){
             totalHours += ts.regularHours;
             if (moment(ts.timeIn).day()===moment(timesheet.timeIn).day()){
               todaysHours +- ts.regularHours;
             }
           });
-          if ((todaysHours + timesheet.regularHours)>10){
-            timesheet.otHours = todaysHours + timesheet.regularHours - 10;
-            timesheet.regularHours = 10 - todaysHours;
+          if ((todaysHours + timesheet.regularHours)>dayLength){
+            timesheet.otHours = todaysHours + timesheet.regularHours - dayLength;
+            timesheet.regularHours = dayLength - todaysHours;
           }
           var over = totalHours + timesheet.regularHours-40;
           if (over>0) {
@@ -198,14 +206,14 @@ angular.module('tempApp')
       if (timesheet._id){
         $http.put('/api/timesheets/' + timesheet._id,timesheet).then(()=>{
           this.getCurrent();
-          this.getRecords();
+          this.getRecords(uid);
           this.newRecord={};
         });
       }
       else {
         $http.post('/api/timesheets',timesheet).then(()=>{
           this.getCurrent();
-          this.getRecords();
+          this.getRecords(uid);
           this.newRecord={};
         });
       }
@@ -224,7 +232,7 @@ angular.module('tempApp')
     this.delete = function(timesheet){
       $http.delete('/api/timesheets/' + timesheet._id).then(()=>{
         this.getCurrent();
-        this.getRecords();
+        this.getRecords(uid);
       });
     };
     
@@ -242,10 +250,14 @@ angular.module('tempApp')
       $timeout($window.print,500);
     };
     
+    this.setEmployee = function(employee){
+      uid=employee.uid;
+      this.getRecords(uid);
+    };
     
     this.setApi();
     this.getCurrent();
     this.setPayrollPeriod();
-    this.getRecords();
+    this.getRecords(uid);
     
   });

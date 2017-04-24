@@ -12,5 +12,6 @@ exports = module.exports = {
           {id:'vcg58e52936a8a93',name:'Fuel Verification'},
           {id:'ntv58efae259e78e', name:'Vehicle Operations'},
           {id:'vxv58f66f1875cd1', name:'Bay Procedures'},
-          {id:'gbm58e5cd0915bdd', name:'Operational Control'}]
+          {id:'gbm58e5cd0915bdd', name:'Operational Control'},
+          {id:'npe58edbca5cbfed',name:'Weatherhawk'}]
 };
