@@ -76,7 +76,7 @@ angular.module('tempApp')
     this.getRecords = function(){
       $http.post(this.api,{uid:user()._id,date:this.startDate.toDate(),endDate:this.endDate.toDate()}).then(response=>{
         this.timesheets=response.data;
-        var employeeIndex,weekIndex,timesheetIndex;
+        var employeeIndex,weekIndex,timesheetIndex,totalRegular,totalOT;
         if (Auth.hasRole('admin')){
            this.employees=[];
            this.timesheets.forEach((timesheet)=>{
@@ -84,28 +84,39 @@ angular.module('tempApp')
              weekIndex=-1;
              timesheetIndex=-1;
              for (var i=0;i<this.employees.length;i++) {
-               for (var j=0;j<this.employees[i].length;j++) {
-                 for (var k=0;k<this.employees[i][j].length;k++) {
-                   if (this.employees[i][j][k].uid===timesheet.uid) employeeIndex=i;
-                   if (moment(this.employees[i][j][k].timeIn).week()===moment(timesheet.timeIn).week()) weekIndex=j;
+               for (var j=0;j<this.employees[i].weeks.length;j++) {
+                 for (var k=0;k<this.employees[i].weeks[j].timesheets.length;k++) {
+                   if (this.employees[i].weeks[j].timesheets[k].uid===timesheet.uid) {
+                     employeeIndex=i;
+                     if (moment(this.employees[i].weeks[j].timesheets[k].timeIn).week()===moment(timesheet.timeIn).week()) weekIndex=j;
+                   }
+                   
                  }  
                }
              }
             if (employeeIndex<0) {
-              this.employees.push([[timesheet]]);
+              this.employees.push({employee:timesheet.name,totalRegular:0,totalOT:0,weeks:[{week:moment(timesheet.timeIn).week(),timesheets:[timesheet]}]});
             }
             else {
-              if (weekIndex<0) this.employees[employeeIndex].push([timesheet]);
-              else this.employees[employeeIndex][weekIndex].push(timesheet);
+              if (weekIndex<0) this.employees[employeeIndex].weeks.push({week:moment(timesheet.timeIn).week(),timesheets:[timesheet]});
+              else {
+                this.employees[employeeIndex].weeks[weekIndex].timesheets.push(timesheet);
+              }
             }
            });
-           console.log(this.employees)
            this.whosClockedIn=[];
+           totalRegular=0;
+           totalOT=0;
            this.employees.forEach((employee)=>{
-             employee.forEach((ts)=>{
-               if (!ts.timeOut) this.whosClockedIn.push(ts);
+             employee.weeks.forEach((week)=>{
+               week.timesheets.forEach((ts)=>{
+                 if (!ts.timeOut) this.whosClockedIn.push(ts);
+                 employee.totalRegular+=ts.regularHours;
+                 employee.totalOT+=ts.otHours;
+               });
+               week.timesheets.reverse();
              });
-             employee.reverse();
+             employee.weeks.reverse();
            });
         }
       });

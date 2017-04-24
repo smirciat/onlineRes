@@ -83,26 +83,47 @@
   </div> 
   <div print-only ng-show="nav.hasRole('superadmin')" >
     <div class="full-sheet" ng-repeat="employee in timeclock.employees">
-      <h2>{{employee[0].name}}</h2>
-      <h3>{{' Payroll Period: ' + timeclock.startDate.format("MMM DD, YYYY") + ' through ' + timeclock.lastDate.format("MMM DD, YYYY")}}</h3>
-      <table class="table">
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Time In</th>
-          <th>Time Out</th>
-          <th>Regular Hours</th>
-          <th>OT Hours</th>
-        </tr>
-        <tr ng-repeat="timesheet in employee">
-          <td ng-show="nav.hasRole('superadmin')">{{timesheet.uid}}</td>
-          <td>{{timesheet.name}}</td>
-          <td>{{timesheet.timeIn|date:'medium'}}</td>
-          <td>{{timesheet.timeOut|date:'medium'}}</td>
-          <td>{{timesheet.regularHours|number:1}}</td>
-          <td>{{timesheet.otHours|number:1}}</td>
-        </tr>
-      </table>
+      <div class="test-container">
+        <h2>{{employee.employee}}</h2>
+        <h3>{{' Payroll Period: ' + timeclock.startDate.format("MMM DD, YYYY") + ' through ' + timeclock.lastDate.format("MMM DD, YYYY")}}</h3>
+      </div>
+      </br>
+      <div> 
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Time In</th>
+              <th>Time Out</th>
+              <th>Regular Hours</th>
+              <th>OT Hours</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Total For Period:</td>
+              <td>{{employee.totalRegular|number:1}}</td>
+              <td>{{employee.totalOT|number:1}}</td>
+            </tr>
+          </tfoot>
+          <tbody ng-repeat="week in employee.weeks">
+            <tr><td></td><td></td><td>Week {{week.week}}</td></tr>
+            <tr ng-repeat="timesheet in week.timesheets">
+              <td ng-show="nav.hasRole('superadmin')">{{timesheet.uid}}</td>
+              <td>{{timesheet.name}}</td>
+              <td>{{timesheet.timeIn|date:'medium'}}</td>
+              <td>{{timesheet.timeOut|date:'medium'}}</td>
+              <td>{{timesheet.regularHours|number:1}}</td>
+              <td>{{timesheet.otHours|number:1}}</td>
+            </tr>
+          </tbody>  
+          <tr><td></td></tr>
+        </table>
+      </div>  
     </div>
   </div>
 </div>
