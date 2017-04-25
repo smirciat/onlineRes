@@ -4,8 +4,7 @@
       <div class="col-xs-1 col-md-1">
         <button ng-click="one.today()" class="btn btn-success">Today</button>
       </div>
-      <div class="col-sm-2 col-xs-2 col-md-1"><label class="form-control">Date:</label></div>
-      <div class="col-sm-2 col-xs-2 col-md-2">
+      <div class="col-sm-3 col-xs-3 col-md-3">
           <datepicker date-format="EEEE MMM d, yyyy" >
               <input class="form-control" ng-model="one.date" ng-change="one.upDate()" type="text"/>
           </datepicker>
@@ -22,17 +21,13 @@
               </ui-select-choices>
           </ui-select>
       </div>
-      <div class="col-xs-1 col-md-1">
-        <button  class="btn btn-success" ng-click="one.print()">Print</button>
-      </div>
-      <div class="col-xs-1 col-md-1">
-        <chat></chat>
-      </div>
-      <div class="col-xs-1 col-md-1">
-        <a href="/sms"><button ng-class="one.smsClass">SMS</button></a>
-      </div>
-      <div class="col-xs-1 col-md-1">
-        <button ng-click="one.addFlight()" class="btn btn-info">+Flight</button>
+      <div class="col-xs-4 col-md-4">
+        <div class="one-container">
+          <button class="btn btn-success" ng-click="one.print()">Print</button>
+          <chat></chat>
+          <a href="/sms" ><button ng-class="one.smsClass">SMS</button></a>
+          <button ng-click="one.addFlight()" class="btn btn-info space">+Flight</button>
+        </div>
       </div>
     </div>
 

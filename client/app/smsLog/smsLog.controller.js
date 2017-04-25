@@ -32,10 +32,12 @@ angular.module('tempApp')
     
     this.send = function(){
       this.sms.sent = moment().toDate();
-      $http.post('/api/sms',this.sms).then((res)=>{
-        this.refresh();
-        this.sms = {};
-      },(err)=>{console.log(err)});
+      if (this.sms.body&&this.sms.to&&this.sms.body!==""&&this.sms.to!=="") {
+        $http.post('/api/sms',this.sms).then((res)=>{
+          this.refresh();
+          this.sms = {};
+        },(err)=>{console.log(err)});
+      }
     };
     
     this.insertNames = function(){
@@ -51,14 +53,12 @@ angular.module('tempApp')
       });
     };
     
-    this.noName = function(name){
-      return name===undefined;
-    };
-    
     this.addName = function(name,phone){
-      $http.post('/api/smsNames',{name:name,phone:phone}).then((response)=>{
-        this.refresh();
-      });
+      if (phone&&name&&phone!==""&&name!=="") {
+        $http.post('/api/smsNames',{name:name,phone:phone}).then((response)=>{
+          this.refresh();
+        });
+      }
     };
     
     $scope.$on('$destroy', function () {

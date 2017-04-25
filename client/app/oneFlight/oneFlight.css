@@ -20,3 +20,9 @@ label.form-control{
   box-shadow:none;
   text-align:right;
 }
+.one-container{
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content: space-between;
+}

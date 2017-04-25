@@ -25,10 +25,10 @@
             <tr ng-repeat="message in sms.messages" ng-class="sms.class(message)">
                 <th scope="row">{{$index+1}}</th>
                 <td>{{message.to}}</td>
-                <td>{{message.toName}}<input type="text" ng-model="message.aName" ng-show="sms.noName(message.toName)"><button ng-show="sms.noName(message.toName)" ng-click="sms.addName(message.aName,message.to)">Add</button></td>
+                <td>{{message.toName}}<input type="text" ng-model="message.aName" ng-hide="message.toName"><button ng-hide="message.toName" ng-click="sms.addName(message.aName,message.to)">Add</button></td>
                 
                 <td>{{message.from}}</td>
-                <td>{{message.fromName}}<input type="text" ng-model="message.bName" ng-show="sms.noName(message.fromName)"><button ng-show="sms.noName(message.fromName)" ng-click="sms.addName(message.bName,message.from)">Add</button></td>
+                <td>{{message.fromName}}<input type="text" ng-model="message.bName" ng-hide="message.fromName"><button ng-hide="message.fromName" ng-click="sms.addName(message.bName,message.from)">Add</button></td>
                 
                 <td>{{message.body}}</td>
                 <td>{{message.sent|date:'medium'}}</td>
