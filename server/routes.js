@@ -17,6 +17,7 @@ export default function(app) {
   app.use('/api/mails/mobile', require('./api/mail/indexMobile'));
   app.use('/api/userAttributes/mobile', require('./api/userAttribute/indexMobile'));
   app.use('/api/scheduledFlights/mobile', require('./api/scheduledFlight/indexMobile'));
+  app.use('/api/sms', require('./api/sm'));
   
   app.use('/auth/mobile', require('./auth/indexMobile'));
   
@@ -39,7 +40,7 @@ export default function(app) {
   app.use('/api/things', require('./api/thing'));
   app.use('/api/users', require('./api/user'));
   app.use('/api/timesheets', require('./api/timesheet'));
-
+  
   app.use('/auth', require('./auth'));
 
   // All undefined asset or api routes should return a 404

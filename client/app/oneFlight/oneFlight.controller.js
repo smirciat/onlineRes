@@ -1,10 +1,11 @@
 'use strict';
 
 angular.module('tempApp')
-  .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, tcFactory,Modal,$window,$timeout,$location) {
+  .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, tcFactory,Modal,$window,$timeout,$location,socket) {
     var aircraftSch, pilotSch, tcs;
     this.schFlights=[];
     this.arr=[];
+    this.smsClass = "btn btn-default";
     tcFactory.getAircraft(function(ac){
       aircraftSch = ac;
     });
@@ -13,6 +14,14 @@ angular.module('tempApp')
     });
     tcFactory.getData(function(t){
       tcs=t;
+    });
+    $http.get('/api/sms').then((response)=>{
+      socket.syncUpdates('sm', response.data,(event, item, array)=>{
+         this.smsClass="button-flashing";
+      });
+    });
+    $scope.$on('$destroy', function () {
+        socket.unsyncUpdates('sm');
     });
     var d=new Date(Date.now());
     this.nameTrue=false;

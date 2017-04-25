@@ -1,0 +1,31 @@
+<navbar></navbar>
+</br>
+<div class="alt-container">
+    <label class="control-label" for"phone">Phone Number</label>
+    <input class="space" type=text placeholder="+1 xxx xxx-xxxx" tooltip-placement="bottom" uib-tooltip="Include '+1' before ten digit number" id="phone" ng-model="sms.sms.to">
+    <label class="control-label" for"body">Message</label>
+    <input class="space wide" type=text placeholder="Message Here" tooltip-placement="bottom" uib-tooltip="Message here" id="body" ng-model="sms.sms.body">
+    <button class="btn btn-success" ng-click="sms.send()">Send</button>
+</div>
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>To</th>
+                <th>From</th>
+                <th>Body</th>
+                <th>Sent</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="message in sms.messages" ng-class="sms.class(message)">
+                <th scope="row">{{$index+1}}</th>
+                <td>{{message.to}}</td>
+                <td>{{message.from}}</td>
+                <td>{{message.body}}</td>
+                <td>{{message.sent|date:'medium'}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

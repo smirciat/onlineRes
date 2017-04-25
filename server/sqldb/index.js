@@ -14,6 +14,7 @@ var db = {
 };
 
 // Insert models below
+db.Sm = db.sequelize.import('../api/sm/sm.model');
 db.Timesheet = db.sequelize.import('../api/timesheet/timesheet.model');
 db.Del = db.sequelize.import('../api/del/del.model');
 db.ScheduledFlight = db.sequelize.import('../api/scheduledFlight/scheduledFlight.model');
