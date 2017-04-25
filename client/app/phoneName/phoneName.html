@@ -1,0 +1,26 @@
+<navbar></navbar>
+<div>
+    <h1>Add a Contact</h1>
+    <div>
+        <label for="name">Name</label>
+        <input type"text" id="name" ng-model="name.newName.name">
+        <label for="phone">Phone</label>
+        <input type"text" id="phone" ng-model="name.newName.phone">
+        <button class="btn btn-success space" ng-click="name.addName()">Add Name</button>
+    </div>
+    </br>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tboddy>
+            <tr ng-repeat="name in name.names">
+                <td>{{name.name}}</td>
+                <td>{{name.phone}}</td>
+            </tr>
+        </tboddy>
+    </table>
+</div>
