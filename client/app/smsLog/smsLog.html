@@ -5,7 +5,8 @@
     <input class="space" type=text placeholder="+1 xxx xxx-xxxx" tooltip-placement="bottom" uib-tooltip="Include '+1' before ten digit number" id="phone" ng-model="sms.sms.to">
     <label class="control-label" for"body">Message</label>
     <input class="space wide" type=text placeholder="Message Here" tooltip-placement="bottom" uib-tooltip="Message here" id="body" ng-model="sms.sms.body">
-    <button class="btn btn-success" ng-click="sms.send()">Send</button>
+    <button class="btn btn-success space" ng-click="sms.send()">Send</button>
+    <a href="/phoneName" class="space"><button class="btn btn-default">Add Names</button></a>
 </div>
 <div>
     <table class="table">
@@ -13,6 +14,8 @@
             <tr>
                 <th>#</th>
                 <th>To</th>
+                <th>To</th>
+                <th>From</th>
                 <th>From</th>
                 <th>Body</th>
                 <th>Sent</th>
@@ -22,7 +25,11 @@
             <tr ng-repeat="message in sms.messages" ng-class="sms.class(message)">
                 <th scope="row">{{$index+1}}</th>
                 <td>{{message.to}}</td>
+                <td>{{message.toName}}<input type="text" ng-model="message.aName" ng-show="sms.noName(message.toName)"><button ng-show="sms.noName(message.toName)" ng-click="sms.addName(message.aName,message.to)">Add</button></td>
+                <td></td>
                 <td>{{message.from}}</td>
+                <td>{{message.fromName}}<input type="text" ng-model="message.bName" ng-show="sms.noName(message.fromName)"><button ng-show="sms.noName(message.fromName)" ng-click="sms.addName(message.bName,message.from)">Add</button></td>
+                <td></td>
                 <td>{{message.body}}</td>
                 <td>{{message.sent|date:'medium'}}</td>
             </tr>

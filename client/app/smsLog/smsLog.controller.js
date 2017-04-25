@@ -11,17 +11,23 @@ angular.module('tempApp')
     }
     this.newSms = "btn btn-default";//or "button-flashing"
     this.messages=[];
+    this.names=[];
+    this.name={};
     
     this.refresh = function(){
-      $http.get('/api/sms').then((response)=>{
-        this.messages=response.data;
-        socket.unsyncUpdates('sm');
-        socket.syncUpdates('sm', this.messages, function(event, item, array){
-           array.sort((a,b)=>{
-             return moment(b.sent).diff(moment(a.sent));
-           });
+      $http.get('/api/smsNames').then((response)=>{
+        this.names=response.data;
+        $http.get('/api/sms').then((response)=>{
+          this.messages=response.data;
+          this.insertNames();
+          socket.unsyncUpdates('sm');
+          socket.syncUpdates('sm', this.messages, function(event, item, array){
+             array.sort((a,b)=>{
+               return moment(b.sent).diff(moment(a.sent));
+             });
+             this.insertNames();
+          });
         });
-         
       });
     };
     
@@ -31,6 +37,30 @@ angular.module('tempApp')
         this.refresh();
         this.sms = {};
       },(err)=>{console.log(err)});
+    };
+    
+    this.insertNames = function(){
+      this.messages.forEach((message)=>{
+        var namesFrom = this.names.filter((name)=>{
+          return name.phone===message.from;
+        });
+        var namesTo = this.names.filter((name)=>{
+          return name.phone===message.to;
+        });
+        if (namesFrom.length>0) message.fromName = namesFrom[0].name;
+        if (namesTo.length>0) message.toName = namesTo[0].name;
+      });
+    };
+    
+    this.noName = function(name){
+      return name===undefined;
+    };
+    
+    this.addName = function(name,phone){
+      $http.post('/api/smsNames',{name:name,phone:phone}).then((response)=>{
+        this.name={};
+        this.refresh();
+      });
     };
     
     $scope.$on('$destroy', function () {
