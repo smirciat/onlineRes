@@ -12,7 +12,6 @@ angular.module('tempApp')
     this.newSms = "btn btn-default";//or "button-flashing"
     this.messages=[];
     this.names=[];
-    this.name={};
     
     this.refresh = function(){
       $http.get('/api/smsNames').then((response)=>{
@@ -58,7 +57,6 @@ angular.module('tempApp')
     
     this.addName = function(name,phone){
       $http.post('/api/smsNames',{name:name,phone:phone}).then((response)=>{
-        this.name={};
         this.refresh();
       });
     };

@@ -26,10 +26,10 @@
                 <th scope="row">{{$index+1}}</th>
                 <td>{{message.to}}</td>
                 <td>{{message.toName}}<input type="text" ng-model="message.aName" ng-show="sms.noName(message.toName)"><button ng-show="sms.noName(message.toName)" ng-click="sms.addName(message.aName,message.to)">Add</button></td>
-                <td></td>
+                
                 <td>{{message.from}}</td>
                 <td>{{message.fromName}}<input type="text" ng-model="message.bName" ng-show="sms.noName(message.fromName)"><button ng-show="sms.noName(message.fromName)" ng-click="sms.addName(message.bName,message.from)">Add</button></td>
-                <td></td>
+                
                 <td>{{message.body}}</td>
                 <td>{{message.sent|date:'medium'}}</td>
             </tr>
