@@ -1,5 +1,5 @@
 .grid {
-  height: 83vh;
+  height: 100vh;
   width:auto;
 }
 .outer{
@@ -25,4 +25,49 @@ label.form-control{
     flex-direction:row;
     align-items: center;
     justify-content: space-between;
+}
+.padding-top{
+  padding-top:60px;
+}
+.second-row{
+  z-index:9999;
+  position:fixed;
+  top:60px;
+  width:100%;
+}
+.third-row{
+  position:fixed;
+  top:105px;
+}
+.btn-autosize {
+  padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+.fa-autosize{
+  font-size: 1em;
+}
+@media screen and (min-width: 768px) {
+  .btn-autosize {
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+  }
+  .fa-autosize{
+    font-size: 1em;
+  }
+  
+}
+@media screen and (min-width: 992px) {
+  .btn-autosize {
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+  }
+  .fa-autosize{
+    font-size: 2em;
+  }
 }
