@@ -4,6 +4,17 @@ import {User} from '../../sqldb';
 import passport from 'passport';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
+var sqldb = require('../../sqldb');
+var Mail = sqldb.Mail;
+var nodemailer = require('nodemailer');
+
+// create reusable transporter object using the default SMTP transport
+var transporter = nodemailer.createTransport({ 
+    host: 'smtp.gmail.com', 
+    port: 465, 
+    auth: { user: 'smokeybayair@gmail.com', pass: process.env.GMAIL_PASS },
+    secure: true
+});
 
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
@@ -165,20 +176,34 @@ export function adminChangeRole(req, res, next) {
 }
 
 export function adminChangePassword(req, res, next) {
-  var userId = req.body.user;
-  var newPass = "password";
+  var userId = req.body.id;
+  var mailOptions = req.body.mailOptions;
+  var subjectUser = req.body.subjectUser;
+  var newPass=Math.random().toString(36).substr(2, 10);
+  if (userId&&userId<26) newPass = "password";
 
   User.find({
     where: {
-      _id: userId
+      email: subjectUser.email
     }
   })
     .then(user => {
-      if (true) {
+      if (user) {
         user.password = newPass;
         return user.save()
           .then(() => {
-            res.status(204).end();
+            mailOptions.from = '"Smokey Bay Air" <smokeybayair@gmail.com>';
+            mailOptions.text = "A password reset has been requested for: " + user.email + ".  Your new password is " + newPass ;// plaintext body
+            transporter.sendMail(mailOptions, function(error, info){
+              if(error){
+                  handleError(res);
+                  return console.log(error);
+              }
+              console.log('Message sent: ' + info.response);
+              res.status(204).end();
+              return info.response;
+            });
+            
           })
           .catch(validationError(res));
       } else {

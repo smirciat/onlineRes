@@ -30,7 +30,11 @@ class AdminController {
   }
   
   resetPassword(user){
-    this.Auth.adminChangePassword(user._id)
+    var mailOptions = {
+          to: user.email, // list of receivers
+          subject: 'Smokey Bay Air Password reset' // Subject line
+        };
+    this.Auth.adminChangePassword(user,mailOptions)
       .then(() => {
             this.quickModal('Password successfully reset for ' + user.name + ' id: ' + user._id);
           })

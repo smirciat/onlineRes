@@ -13,7 +13,7 @@ function UserResource($resource) {
       }
     },
     adminChangePassword: {
-      method: 'PUT',
+      method: 'POST',
       params: {
         controller:'resetpassword'
       }

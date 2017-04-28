@@ -1,14 +1,6 @@
 .grid {
-  height: 100vh;
+  flex:1;
   width:auto;
-}
-.outer{
-  position:absolute;
-  width:100vw;
-}
-.whole{
-  height:100vh;
-  position:absolute; 
 }
 
 .blue {
@@ -38,6 +30,8 @@ label.form-control{
 .third-row{
   position:fixed;
   top:105px;
+  display: flex;
+  flex-direction: column;
 }
 .btn-autosize {
   padding: 5px 10px;
