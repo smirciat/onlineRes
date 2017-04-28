@@ -1,6 +1,8 @@
-.grid {
-  flex:1;
-  width:auto;
+.grid{
+  height: calc(100vh - (105px));
+  height: -moz-calc(100vh - (105px));
+  height: -webkit-calc(100vh - (105px));
+  width:100vw;
 }
 
 .blue {

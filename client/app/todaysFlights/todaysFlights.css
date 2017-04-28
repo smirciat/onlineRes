@@ -1,16 +1,3 @@
-.grid {
-  height: 83vh;
-  width:auto;
-}
-.outer{
-  position:absolute;
-  width:100vw;
-}
-.whole{
-  height:100vh;
-  position:absolute; 
-}
-
 .blue {
   background-color: #1fe0f0;
   color: #153ff0;
