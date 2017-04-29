@@ -12,6 +12,8 @@ angular.module('tempApp')
       if (row.entity['FLIGHT#']&&row.entity['FLIGHT#'].substring(3).toUpperCase()==='A') cellClass += ' green';
       else if (row.entity['FLIGHT#']) cellClass += ' red';
       if (row.entity['WEIGHT']===0&&row.entity['FWeight']>0) cellClass += ' yellow';
+      if (row.entity['FLIGHT#'].substring(0,1)==="1") cellClass += ' one';
+      if (row.entity['FLIGHT#'].substring(0,1)==="2") cellClass += ' two';
       return cellClass;
     };
     var cellTemplateFirst = '<div class="typeaheadcontainer"><form><input id="active-first" type="text" ui-grid-editor ' +

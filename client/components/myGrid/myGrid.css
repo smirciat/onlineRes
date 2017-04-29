@@ -11,11 +11,11 @@
   border: .5px solid lightgray;
 }
 .grid .ui-grid-row .red.even {
-  background-color: #ffccff;
+  background-color: #ffd6cc;
   border: .5px solid lightgray;
 }
 .grid .ui-grid-row .red.odd {
-  background-color: #ffbeff;
+  background-color: #ffc2b3;
   border: .5px solid lightgray;
 }
 .grid .ui-grid-row .yellow.even {
@@ -26,6 +26,31 @@
   background-color: #ffff99;
   border: .5px solid lightgray;
 }
+.grid .ui-grid-row .green.even.two {
+  background-color: #ccffff;
+  border: .5px solid lightgray;
+}
+.grid .ui-grid-row .green.odd.two {
+  background-color: #b3ffff;
+  border: .5px solid lightgray;
+}
+.grid .ui-grid-row .red.even.two {
+  background-color: #eeccff;
+  border: .5px solid lightgray;
+}
+.grid .ui-grid-row .red.odd.two {
+  background-color: #e6b3ff;
+  border: .5px solid lightgray;
+}
+.grid .ui-grid-row .yellow.even.two {
+  background-color: #fff5cc;
+  border: .5px solid lightgray;
+}
+.grid .ui-grid-row .yellow.odd.two {
+  background-color: #fff0b3;
+  border: .5px solid lightgray;
+}
+
 .grid{
   font-weight:bold; 
 }

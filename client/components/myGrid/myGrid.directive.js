@@ -555,13 +555,12 @@ angular.module('tempApp')
         $http.post('/api/' + scope.myApi + ext, query).success(function(data){
           reload=false;
           data = gridSettings.getFun(scope.myApi,data);
-          scope.gridOptions.data=data;
+          scope.gridOptions.data=scope.sortData(data);
           if (data) scope.tempData=data.slice();
           scope.addData();
           if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') scope.setPlanePilot();
           if (scope.myApi==='reservations'&&($location.path()==='/oneName'||$location.path()==='/searchName')) scope.populateTimes();
           scope.shortApi = scope.myApi.substr(0,scope.myApi.length-1);
-          scope.sortData();
           socket.unsyncUpdates(scope.shortApi);
           socket.syncUpdates(scope.shortApi, scope.tempData, function(event, item, array){
             //this is similar to the implementation in the socket service, but is duplicated here since new records are only synced with socket service after they are saved.  Working on data array on this side allows those unsaved records to be preserved after socket update.
@@ -606,10 +605,10 @@ angular.module('tempApp')
               _.remove(scope.gridOptions.data, {_id: item._id}); 
             }
             if ($location.path()!=='/oneFlight') scope.gridOptions.data=scope.tempData.slice();
-            scope.gridOptions.data = gridSettings.getFun(scope.myApi,scope.gridOptions.data);
+            scope.gridOptions.data = scope.sortData(gridSettings.getFun(scope.myApi,scope.gridOptions.data));
             if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') scope.setPlanePilot();
             if (scope.myApi==='reservations'&&($location.path()==='/oneName'||$location.path()==='/searchName')) scope.populateTimes();
-            scope.sortData();
+            
           });
         });  
       };
@@ -637,8 +636,8 @@ angular.module('tempApp')
         scope.getData(query);
       };
       
-      scope.sortData= function() {
-        if ($location.path()==='/oneFlight'||$location.path()==='/todaysFlights') scope.gridOptions.data.sort(function(a,b){
+      scope.sortData= function(array) {
+        if ($location.path()==='/oneFlight'||$location.path()==='/todaysFlights') array.sort(function(a,b){
           if (!a['FLIGHT#']) return true;
           if (!b['FLIGHT#']) return false;
           if (a['FLIGHT#'].toUpperCase()===b['FLIGHT#'].toUpperCase()&&$location.path()==='/oneFlight') {
@@ -647,7 +646,7 @@ angular.module('tempApp')
           }
           return a['FLIGHT#'].localeCompare(b['FLIGHT#']);
         });
-        else scope.gridOptions.data.sort(function(a,b){
+        else array.sort(function(a,b){
           if (a['DATE TO FLY']) {
             if (new Date(a['DATE TO FLY'])===new Date(b['DATE TO FLY'])) return a._id>b._id;
             return new Date(b['DATE TO FLY']) - new Date(a['DATE TO FLY']);
@@ -658,6 +657,7 @@ angular.module('tempApp')
           }
           return true;
         });
+        return array;
       };
       
       scope.getName = function(row){
