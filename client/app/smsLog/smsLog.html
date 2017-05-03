@@ -27,7 +27,7 @@
                 <td>{{message.to}}</td>
                 <td>{{message.toName}}<input type="text" ng-model="message.aName" ng-hide="message.toName"><button ng-hide="message.toName" ng-click="sms.addName(message.aName,message.to)">Add</button></td>
                 
-                <td>{{message.from}}</td>
+                <td>{{message.from}}<button class="btn btn-success space" ng-hide="message.from==='+19073414906'" ng-click="sms.reply(message.from)">Reply</button></td>
                 <td>{{message.fromName}}<input type="text" ng-model="message.bName" ng-hide="message.fromName"><button ng-hide="message.fromName" ng-click="sms.addName(message.bName,message.from)">Add</button></td>
                 
                 <td>{{message.body}}</td>

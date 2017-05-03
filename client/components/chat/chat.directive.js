@@ -45,6 +45,9 @@ angular.module('tempApp')
   				}
   			}, 300));
         $http.get('/api/chats').then(function(response){
+          response.data.sort((a,b)=>{
+            return new Date(a.date) - new Date(b.date);
+          });
           if (!scope.username) {
             scope.username = Auth.getCurrentUser().name;
             scope.myUserId = Auth.getCurrentUser()._id;
@@ -53,6 +56,9 @@ angular.module('tempApp')
             return true;
           });
           socket.syncUpdates('chat', messages, function(event, item, array){
+            array.sort((a,b)=>{
+              return new Date(a.date) - new Date(b.date);
+            });
             if ((!scope.shown||document.hidden||!document.hasFocus())&&item.fromUserId!=scope.myUserId) {
               if (!scope.shown) scope.classes = "button-flashing";
               webNotification.showNotification('New Chat Message in Reservations', {

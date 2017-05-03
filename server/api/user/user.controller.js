@@ -180,7 +180,6 @@ export function adminChangePassword(req, res, next) {
   var mailOptions = req.body.mailOptions;
   var subjectUser = req.body.subjectUser;
   var newPass=Math.random().toString(36).substr(2, 10);
-  if (userId&&userId<26) newPass = "password";
 
   User.find({
     where: {

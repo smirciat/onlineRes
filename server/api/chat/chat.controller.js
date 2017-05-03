@@ -61,7 +61,10 @@ function removeEntity(res) {
 
 // Gets a list of Chats
 export function index(req, res) {
-  Chat.findAll()
+  Chat.findAll({
+    order:[['date','DESC']],
+    limit:100
+  })
     .then(responseWithResult(res))
     .catch(handleError(res));
 }

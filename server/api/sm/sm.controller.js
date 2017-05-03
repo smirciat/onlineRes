@@ -66,7 +66,8 @@ function removeEntity(res) {
 // Gets a list of Sms
 export function index(req, res) {
   Sm.findAll({
-    order:[['sent','DESC']]
+    order:[['sent','DESC']],
+    limit:100
   })
     .then(responseWithResult(res))
     .catch(handleError(res));

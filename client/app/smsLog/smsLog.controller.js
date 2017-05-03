@@ -61,6 +61,10 @@ angular.module('tempApp')
       }
     };
     
+    this.reply = function(from){
+      this.sms.to=from;
+    };
+    
     $scope.$on('$destroy', function () {
         socket.unsyncUpdates('sm');
     });
