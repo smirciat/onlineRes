@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .controller('TimeclockCtrl', function ($scope,Auth,User,$http,moment,$timeout,Modal,$window) {
+  .controller('TimeclockCtrl', function ($scope,Auth,User,$http,moment,$timeout,Modal,$window,$location) {
     this.timesheets=[];
     this.employees=[];
     this.whosClockedIn=[];
@@ -129,19 +129,30 @@ angular.module('tempApp')
     };
     
     this.clockIn = function(){
-      $http.post('/api/timesheets/',{name:user().name,timeIn:moment().toDate(),uid:user()._id}).then((response)=>{
-        this.getCurrent();
-        this.getRecords(uid);
+      $http.get('/api/timesheets/ip').then((response)=>{
+        if (response.data) {
+          $http.post('/api/timesheets/',{name:user().name,timeIn:moment().toDate(),uid:user()._id}).then((response)=>{
+            this.getCurrent();
+            this.getRecords(uid);
+          });
+        }
+        else this.quickMessage('You Must be at Smokey Bay to Clock in or Out');
       });
+      
+      
     };
     
     this.clockOut = function(){
-      if (current){
-        current.timeOut = moment();
-        current = this.update(current);
-      }  
-        
-      else this.in=false;
+      $http.get('/api/timesheets/ip').then((response)=>{
+        if (response.data) {
+          if (current){
+            current.timeOut = moment();
+            current = this.update(current);
+          }  
+          else this.in=false;
+        }
+        else this.quickMessage('You Must be at Smokey Bay to Clock in or Out');
+      });
     };
     
     this.update = function(timesheet){//decide how much of this timesheet record is regular and overtime

@@ -6,6 +6,7 @@ angular.module('tempApp')
       .when('/phoneName', {
         templateUrl: 'app/phoneName/phoneName.html',
         controller: 'PhoneNameCtrl',
-        controllerAs:'name'
+        controllerAs:'name',
+        authenticate: 'admin'
       });
   });

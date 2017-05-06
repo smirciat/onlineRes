@@ -105,7 +105,6 @@ export function create(req, res) {
 
 // Creates a new Sm in the DB
 export function incoming(req, res) {
-  console.log(req.body);
   var sms = {to:req.body.To,
             from:req.body.From,
             body:req.body.Body,
@@ -114,6 +113,24 @@ export function incoming(req, res) {
   Sm.create(sms)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
+}
+
+// Creates a new Sm in the DB
+export function nexmo(req, res) {
+  if (Object.keys(req.query).length === 0) {
+    res.status(200).end();
+  }
+  else {
+    var sms = {to:'+' + req.query.to,
+              from:'+' + req.query.msisdn,
+              body:req.query.text,
+              sent: new Date()
+    };
+    Sm.create(sms)
+      .then(responseWithResult(res, 201))
+      .catch(handleError(res));
+  }
+  
 }
 
 // Updates an existing Sm in the DB

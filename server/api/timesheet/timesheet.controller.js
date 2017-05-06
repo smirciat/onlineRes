@@ -12,6 +12,7 @@
 import _ from 'lodash';
 var sqldb = require('../../sqldb');
 var Timesheet = sqldb.Timesheet;
+var dns = require('dns');
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
@@ -136,6 +137,19 @@ export function update(req, res) {
     .then(saveUpdates(req.body))
     .then(responseWithResult(res))
     .catch(handleError(res));
+}
+
+export function sba(req,res) {
+  dns.resolve4('smokeybayair.ddns.net', function (err, addresses) {
+    if (err) throw err;
+    var sba=addresses[0];
+    dns.resolve4('seldovia.ddns.net', function (err, addresses) {
+      if (err) throw err;
+      var ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+      var match = ip===sba||ip===addresses[0];
+      res.json(match);
+    });
+  });
 }
 
 // Deletes a Timesheet from the DB

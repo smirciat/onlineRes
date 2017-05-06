@@ -6,7 +6,7 @@ angular.module('tempApp')
     this.sms.to='+1';
     this.sms.body="Message from Smokey Bay Air, Reply to this number. "
     this.class=function(message){
-      if (message.to==='+19073414906') return 'danger';
+      if (message.to==='+19073414906'||message.to==='+19073022700') return 'danger';
       else return "success";
     }
     this.newSms = "btn btn-default";//or "button-flashing"
@@ -16,11 +16,11 @@ angular.module('tempApp')
     this.refresh = function(){
       $http.get('/api/smsNames').then((response)=>{
         this.names=response.data;
-        $http.get('/api/sms').then((response)=>{
+        $http.post('/api/sms/all').then((response)=>{
           this.messages=response.data;
           this.insertNames();
           socket.unsyncUpdates('sm');
-          socket.syncUpdates('sm', this.messages, function(event, item, array){
+          socket.syncUpdates('sm', this.messages, (event, item, array)=>{
              array.sort((a,b)=>{
                return moment(b.sent).diff(moment(a.sent));
              });
@@ -33,7 +33,7 @@ angular.module('tempApp')
     this.send = function(){
       this.sms.sent = moment().toDate();
       if (this.sms.body&&this.sms.to&&this.sms.body!==""&&this.sms.to!=="") {
-        $http.post('/api/sms',this.sms).then((res)=>{
+        $http.post('/api/sms/twilio',this.sms).then((res)=>{
           this.refresh();
           this.sms = {};
         },(err)=>{console.log(err)});

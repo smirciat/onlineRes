@@ -15,7 +15,7 @@ angular.module('tempApp')
     tcFactory.getData(function(t){
       tcs=t;
     });
-    $http.get('/api/sms').then((response)=>{
+    $http.post('/api/sms/all').then((response)=>{
       socket.syncUpdates('sm', response.data,(event, item, array)=>{
          this.smsClass="button-flashing";
       });
