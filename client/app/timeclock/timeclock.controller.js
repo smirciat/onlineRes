@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .controller('TimeclockCtrl', function ($scope,Auth,User,$http,moment,$timeout,Modal,$window,$location) {
+  .controller('TimeclockCtrl', function ($scope,Auth,User,$http,moment,$timeout,Modal,$window) {
     this.timesheets=[];
     this.employees=[];
     this.whosClockedIn=[];
@@ -123,7 +123,7 @@ angular.module('tempApp')
              employee.weeks.reverse();
            });
            this.payrollList = this.employees.slice(0);
-           this.payrollList.splice(0,0,{employee:"All",uid:0})
+           this.payrollList.splice(0,0,{employee:"All",uid:0});
         }
       });
     };
@@ -136,7 +136,7 @@ angular.module('tempApp')
             this.getRecords(uid);
           });
         }
-        else this.quickMessage('You Must be at Smokey Bay to Clock in or Out');
+        else this.quickMessage('You must be at Smokey Bay to clock in or out.');
       });
       
       
@@ -151,7 +151,7 @@ angular.module('tempApp')
           }  
           else this.in=false;
         }
-        else this.quickMessage('You Must be at Smokey Bay to Clock in or Out');
+        else this.quickMessage('You must be at Smokey Bay to clock in or out.');
       });
     };
     

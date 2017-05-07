@@ -1,0 +1,26 @@
+.md-button{
+  margin-left:2em;
+  margin-right:2em;
+  font-weight:bold;
+  font-size:120%;
+}
+.md-green{
+  background-color:#80ff80 !important;
+}
+.md-blue{
+  background-color:#80bfff !important;
+}
+.md-yellow{
+  background-color:#ffff00 !important;
+}
+.md-red{
+  background-color:#ff3333 !important;
+  color:white;
+}
+.md-orange{
+  background-color:#ffa500 !important;
+}
+.md-locked-open {
+    width: 200px;
+    min-width: 200px;
+}

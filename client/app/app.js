@@ -7,6 +7,7 @@ angular.module('tempApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
+  'ngMaterial',
   'ngRoute',
   'btford.socket-io',
   'ui.bootstrap',
