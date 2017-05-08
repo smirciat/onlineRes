@@ -378,12 +378,12 @@ angular.module('tempApp')
           }
           if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="Last Name"&&rowEntity.WEIGHT===0&&rowEntity.FIRST&&rowEntity.LAST) {
             //look up body weight
-            $http.post('/api/reservations/name',{first:rowEntity.FIRST,last:rowEntity.LAST}).success(function(data){
-              for (var i=0;i<data.length;i++){
-                if (data[i].WEIGHT>0) {
-                  rowEntity.WEIGHT = data[i].WEIGHT;
-                  if (!rowEntity.Phone) rowEntity.Phone=data[i].Phone;
-                  i=data.length;
+            $http.post('/api/reservations/name',{first:rowEntity.FIRST,last:rowEntity.LAST}).then((response)=>{
+              for (var i=0;i<response.data.length;i++){
+                if (response.data[i].WEIGHT>0) {
+                  rowEntity.WEIGHT = response.data[i].WEIGHT;
+                  if (!rowEntity.Phone) rowEntity.Phone=response.data[i].Phone;
+                  i=response.data.length;
                 }
               }
             });
@@ -552,9 +552,9 @@ angular.module('tempApp')
         if (scope.nameTrue==="true") {
           ext = '/name';
         }
-        $http.post('/api/' + scope.myApi + ext, query).success(function(data){
+        $http.post('/api/' + scope.myApi + ext, query).then((response)=>{
           reload=false;
-          data = gridSettings.getFun(scope.myApi,data);
+          var data = gridSettings.getFun(scope.myApi,response.data);
           scope.gridOptions.data=scope.sortData(data);
           if (data) scope.tempData=data.slice();
           scope.addData();

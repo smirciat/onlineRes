@@ -18,7 +18,6 @@ function onConnect(socket) {
 
   // Insert sockets below
   require('../api/sm/sm.socket').register(socket);
-  require('../api/project/project.socket').register(socket);
   require('../api/chat/chat.socket').register(socket);
   require('../api/flight/flight.socket').register(socket);
   require('../api/reservation/reservation.socket').register(socket);

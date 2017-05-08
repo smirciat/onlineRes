@@ -40,9 +40,9 @@ angular.module('tempApp')
             if(travelCodes) {
                 return callback(travelCodes);
             } else {
-                $http.get('/api/travelCodes').success(function(d) {
-                    travelCodes = d;
-                    return callback(d);
+                $http.get('/api/travelCodes').then((d)=> {
+                    travelCodes = d.data;
+                    return callback(d.data);
                 });
             }
         },
@@ -57,9 +57,9 @@ angular.module('tempApp')
                             return callback(flights);
                          }
             else {
-                $http.post('/api/flights/o',{date:body.date}).success(function(d) {
+                $http.post('/api/flights/o',{date:body.date}).then(function(d) {
                   oldBody=body;
-                  flights=d;
+                  flights=d.data;
                   sync();
                   return callback(flights);
                 });
@@ -74,9 +74,9 @@ angular.module('tempApp')
             if (body.smfltnum) body.smfltnum = body.smfltnum.toUpperCase();
             if (reservations&&oldBody1.date===body.date&&oldBody1.smfltnum===body.smfltnum) return callback(reservations);
             else {
-                $http.post('/api/reservations/o',body).success(function(d) {
+                $http.post('/api/reservations/o',body).then(function(d) {
                   oldBody1=body;
-                  return callback(reservations=d);
+                  return callback(reservations=d.data);
                 });
             }
         },
@@ -84,8 +84,8 @@ angular.module('tempApp')
             if(pilots) {
                 return callback(pilots);
             } else {
-                $http.get('/api/pilotSchs').success(function(d) {
-                    return callback(pilots = d);
+                $http.get('/api/pilotSchs').then(function(d) {
+                    return callback(pilots = d.data);
                 });
             }
         },
@@ -93,8 +93,8 @@ angular.module('tempApp')
             if(aircraft) {
                 return callback(aircraft);
             } else {
-                $http.get('/api/aircraftSchs').success(function(d) {
-                    return callback(aircraft = d);
+                $http.get('/api/aircraftSchs').then(function(d) {
+                    return callback(aircraft = d.data);
                 });
             }
         },
@@ -105,9 +105,9 @@ angular.module('tempApp')
                          oldBody2.date.getFullYear()===body.date.getFullYear()&&
                          oldBody2.date.getDate()===body.date.getDate()&&scheduledFlights) return callback(scheduledFlights);
             else {
-                $http.post('/api/scheduledFlights',body).success(function(d) {
+                $http.post('/api/scheduledFlights',body).then(function(d) {
                     oldBody2.date=body.date;
-                    return callback(scheduledFlights = d);
+                    return callback(scheduledFlights = d.data);
                 });
             }
         },
@@ -149,8 +149,8 @@ angular.module('tempApp')
         },
         setRow: function(api,row,callback){
             console.log(row);
-            $http.patch('/api/' + api + '/', row).success(function(d){
-               return callback(d); 
+            $http.patch('/api/' + api + '/', row).then(function(d){
+               return callback(d.data); 
             });
 
         },

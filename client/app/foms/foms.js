@@ -5,6 +5,8 @@ angular.module('tempApp')
     $routeProvider
       .when('/foms', {
         templateUrl: 'app/foms/foms.html',
-        controller: 'FomsCtrl'
+        controller: 'FomsCtrl',
+        controllerAs: 'foms',
+        authenticate: 'admin'
       });
   });

@@ -41,6 +41,7 @@ export default function(app) {
   app.use('/api/users', require('./api/user'));
   app.use('/api/timesheets', require('./api/timesheet'));
   app.use('/api/smsNames', require('./api/smsName'));
+  app.use('/api/runwayChecklists', require('./api/REF_RunwayChecklist'));
   
   app.use('/auth', require('./auth'));
 
