@@ -23,7 +23,12 @@ class NavbarController {
     this.scope=$scope;
     this.pdfMenu = appConfig.pdfFiles;
     this.testMenu = appConfig.tests.sort((a,b)=>{
-      return a.name.localeCompare(b.name);
+      return a.cat.localeCompare(b.cat);
+    });
+    this.testMenu.forEach((c)=>{
+      c.list.sort((a,b)=>{
+        return a.name.localeCompare(b.name);
+      });
     });
     this.http=$http;
     this.sce=$sce;

@@ -4,11 +4,16 @@
   <h1>Smokey Bay Air Company Tests</h1></br>
   <h3>Please choose a test to take</h3></br>
   <ul class="nav navbar-nav">    
-    <li ng-show="nav.hasRole('applicant')" class="dropdown">
+    <li class="dropdown">
         <a href="#" data-toggle="dropdown" class="dropdown-toggle">Choose Test <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-            <li ng-repeat="test in nav.testMenu">
-              <a ng-click="nav.setTest(test)" href="#">{{test.name}}</a>
+        <ul class="dropdown-menu" role="menu">
+            <li ng-repeat="folder in nav.testMenu" class="dropdown-submenu">
+                <a tabindex="-1" href="#">{{folder.cat}}</a>
+                <ul class="dropdown-menu">
+                    <li ng-repeat="test in folder.list">
+                      <a ng-click="nav.setTest(test)" href="#">{{test.name}}</a>
+                    </li>
+                </ul>
             </li>
         </ul>
     </li>

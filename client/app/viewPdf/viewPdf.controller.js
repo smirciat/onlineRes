@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .controller('ViewPdfCtrl', function () {
+  .controller('ViewPdfCtrl', function ($sce) {
     this.loading=false;
     this.new=true;
   })
