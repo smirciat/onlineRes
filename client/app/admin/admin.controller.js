@@ -3,13 +3,15 @@
 (function() {
 
 class AdminController {
-  constructor($scope,User,Modal,Auth,appConfig) {
+  constructor($scope,User,Modal,Auth,appConfig,$timeout) {
     // Use the User $resource to fetch all users
     this.users = User.query();
     this.quickModal = Modal.confirm.quickMessage();
     this.Auth=Auth;
     this.roles = appConfig.userRoles.slice(0);
-    if (!Auth.hasRole('superadmin')) this.roles.pop();
+    Auth.getCurrentUser(()=>{
+      if (!Auth.hasRole('superadmin')) this.roles.pop();
+    });
     this.role={};
     this.role.selected = "user";
     this.sort={};

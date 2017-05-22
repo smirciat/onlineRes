@@ -16,6 +16,8 @@
   background: #ffe6e6;
 }
 .maintenance{
+  padding: 60px 20px 0px 20px;
+  width:100vw;
+  height: 100vh;
   background: #ccffee;
-  padding:20px;
 }

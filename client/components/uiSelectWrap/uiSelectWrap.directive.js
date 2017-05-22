@@ -8,7 +8,7 @@ angular.module('tempApp')
         $document.on('click', docClick);
         function docClick(evt) {
           if ($(evt.target).closest('.ui-select-container').size() === 0) {
-            scope.$emit(uiGridEditConstants.events.END_CELL_EDIT);
+            scope.$broadcast(uiGridEditConstants.events.END_CELL_EDIT);
             $document.off('click', docClick);
           }
         }
@@ -26,7 +26,7 @@ angular.module('tempApp')
             var dereg = uiGridCtrl.grid.api.cellNav.on.navigate(scope, function (newRowCol, oldRowCol) {
               if (scope.col.colDef.enableCellEditOnFocus) {
                 if (newRowCol.row !== scope.row || newRowCol.col !== scope.col) {
-                  scope.$emit(uiGridEditConstants.events.END_CELL_EDIT);
+                  scope.$broadcast(uiGridEditConstants.events.END_CELL_EDIT);
                  dereg();
                }
               }

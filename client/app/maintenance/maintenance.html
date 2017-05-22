@@ -1,5 +1,5 @@
 <navbar></navbar>
-<div class="maintenance padding-top">
+<div class="maintenance">
     <div class="row">
         <div class="col-md-1"><i class="fa fa-angle-double-left fa-3x" aria-hidden="true" ng-click="maintenance.weekBack(-6)"></i></div>
         <div class="col-md-1"><i class="fa fa-angle-left fa-3x" aria-hidden="true" ng-click="maintenance.weekBack(-1)"></i></div>
@@ -10,11 +10,8 @@
     <div class="row">
         <div class="col-md-2" ng-repeat="bin in [0,1, 2, 3,4,5]" >
             <h3 class="h3-title text-center">{{maintenance.days[bin]}}</h3>
-            <div class="dayCell" droppable drop="maintenance.handleDrop" bin="bin" id="day{{ bin }}">
-                
-            </div>
+            <div class="dayCell" droppable drop="maintenance.handleDrop" bin="bin" id="day{{ bin }}"></div>
         </div>
-        
     </div>
     <br/><br/>
     <div class="row">
@@ -37,4 +34,3 @@
     
     <br/><br/>
 </div>
-<footer></footer>

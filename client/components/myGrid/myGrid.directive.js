@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .directive('myGrid', function ($http, uiGridConstants, gridSettings, socket, $q, tcFactory, $location, $timeout, Modal,email,User,Auth,$interval) {
+  .directive('myGrid', function ($http, uiGridConstants, gridSettings, socket, $q, tcFactory, $location, $timeout, Modal,email,User,Auth,$interval,uiGridEditConstants) {
   return {
     templateUrl: 'components/myGrid/myGrid.html',
     restrict: 'E',
@@ -692,6 +692,10 @@ angular.module('tempApp')
             }
           });
         }
+      };
+      
+      scope.updateSelect = function(){
+        scope.$broadcast(uiGridEditConstants.events.END_CELL_EDIT);
       };
       
       scope.$on('$destroy', function () {

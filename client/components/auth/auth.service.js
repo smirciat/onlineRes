@@ -194,7 +194,7 @@ function AuthService($location, $http, $cookies, $q, appConfig, Util, User) {
       return Auth.hasRole
         .apply(Auth, [].concat.apply(['admin'], arguments));
     },
-
+    
     /**
      * Get auth token
      *

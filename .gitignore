@@ -11,3 +11,4 @@ npm-debug.log
 .c9
 /server/config/environment/development.js
 test.sqlite
+private.key

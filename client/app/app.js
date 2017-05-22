@@ -13,7 +13,6 @@ angular.module('tempApp', [
   'ui.bootstrap',
   'validation.match',
   'ui.select',
-  'ngTouch',
   '720kb.datepicker',
   'ui.grid',
   'ui.grid.cellNav',

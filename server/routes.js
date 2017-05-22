@@ -18,6 +18,7 @@ export default function(app) {
   app.use('/api/userAttributes/mobile', require('./api/userAttribute/indexMobile'));
   app.use('/api/scheduledFlights/mobile', require('./api/scheduledFlight/indexMobile'));
   app.use('/api/sms', require('./api/sm'));
+  app.use('/api/answer', require('./api/answer'));
   
   app.use('/auth/mobile', require('./auth/indexMobile'));
   

@@ -56,7 +56,7 @@
                 </form>
               </td>
               <td>
-                <ui-select class="mainselectize" ng-model="main.code.selected" theme="selectize" ng-disabled="disabled" ng-change="main.makeList()">
+                <ui-select ng-model="main.code.selected" theme="selectize" ng-disabled="disabled" ng-change="main.makeList()">
                   <ui-select-match placeholder="Choose...">{{$select.selected.name}}</ui-select-match>
                   <ui-select-choices repeat="tc in main.travelCodes" >
                     <div ng-bind-html="tc.name | highlight: $select.search"></div>
@@ -82,7 +82,7 @@
                 </datepicker>
               </td>
               <td>
-                <ui-select class="mainselectize" ng-model="main.smfltnum.selected" theme="selectize" ng-disabled="disabled" >
+                <ui-select ng-model="main.smfltnum.selected" theme="selectize" ng-disabled="disabled" >
                   <ui-select-match placeholder="Choose...">{{$select.selected.time}}</ui-select-match>
                   <ui-select-choices repeat="tm in main.timeList" >
                     <div ng-bind-html="tm.time | highlight: $select.search"></div>

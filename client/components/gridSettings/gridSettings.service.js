@@ -27,7 +27,7 @@ angular.module('tempApp')
     'typeahead-on-select="grid.appScope.typeaheadSelected(row.entity, $item,\'LAST\')" ' +
     '/></form></div>'; 
     var selectTemplate='<ui-select-wrap>'+
-                         '<ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" append-to-body="true">'+
+                         '<ui-select ng-model="MODEL_COL_FIELD" theme="selectize" ng-disabled="disabled" on-select="grid.appScope.updateSelect()" append-to-body="true">'+
                            '<ui-select-match placeholder="Choose...">{{ COL_FIELD }}</ui-select-match>'+
                            '<ui-select-choices repeat="item in col.colDef.editDropdownOptionsArray | filter: $select.search" refresh="grid.appScope.refreshOptions()">' +
                              '<span>{{ item.value }}</span>'+
@@ -93,12 +93,12 @@ angular.module('tempApp')
           { name: 'Time', field: 'time',  width:80,cellClass: cellColor, enableCellEdit:false, minWidth:100},   
           { name: 'Body', field: 'WEIGHT', width:60,cellClass: cellColor,minWidth:100},
           { name: 'Frt', field:'FWeight', width:45,cellClass: cellColor,minWidth:100},
-          { name: 'Date', field:'DATE TO FLY' , type: 'date', cellFilter: 'date:"MM/dd/yyyy"',cellClass: cellColor,minWidth:100},
+          { name: 'Date', field:'DATE TO FLY', type: 'date', cellFilter: 'date:"MM/dd/yyyy"',cellClass: cellColor,minWidth:100},
           { name: 'Invoice',field:'INVOICE#',cellClass: cellColor,minWidth:100},
           { name: 'Phone',cellClass: cellColor,minWidth:100},
-          { name: 'Pilot', field: 'pilot.value',  editModelField: 'pilot',cellClass: cellColor,minWidth:100, 
+          { name: 'Pilot', field: 'pilot.value', editModelField: 'pilot',cellClass: cellColor,minWidth:100, 
              editDropdownOptionsArray: [], editableCellTemplate: selectTemplate},
-          { name: 'Aircraft', field: 'aircraft.value',  editModelField: 'aircraft',cellClass: cellColor,minWidth:90, 
+          { name: 'Aircraft', field: 'aircraft.value', editModelField: 'aircraft',cellClass: cellColor,minWidth:90, 
              editDropdownOptionsArray: [], editableCellTemplate: selectTemplate},
           { name: 'In?', field: 'checkedIn', width:50, cellClass: cellColor,type: 'boolean',
              cellTemplate: '<input type="checkbox" ng-model="row.entity.checkedIn" ng-change="grid.appScope.setDirty(row.entity)">'}, 

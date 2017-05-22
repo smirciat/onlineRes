@@ -54,18 +54,15 @@
 .grid{
   font-weight:bold; 
 }
-@media screen and (min-width: 900px) { 
+@media screen and (min-width: 1400px) { 
   .selectize-dropdown-content {
     max-height:340px;
   }
 }
-@media screen and (max-width: 900px) { 
+@media screen and (max-width: 1400px) { 
   .selectize-dropdown-content {
     max-height:150px;
   }
-}
-.mainselectize .selectize-dropdown-content {
-  max-height:150px;
 }
 .ngCell .typeaheadcontainer {
   display: table; margin-right: auto; margin-left: auto;width:95%  

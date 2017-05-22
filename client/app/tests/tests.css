@@ -4,3 +4,9 @@
     align-items: center;
     justify-content: center;
 }
+.test-frame{
+    width:100vw;
+    height: calc(100vh - (60px));
+    height: -moz-calc(100vh - (60px));
+    height: -webkit-calc(100vh - (60px));
+}
