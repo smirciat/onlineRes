@@ -32,6 +32,15 @@ angular.module('tempApp')
     
     this.send = function(){
       this.sms.sent = moment().toDate();
+      switch (this.sms.to.length){
+        case 7: this.sms.to = '+1907' + this.sms.to;
+            break;
+        case 10: this.sms.to = '+1' + this.sms.to;
+            break;
+        case 11: this.sms.to = '+' + this.sms.to;
+            break;
+        default: break;
+      }
       if (this.sms.body&&this.sms.to&&this.sms.body!==""&&this.sms.to!=="") {
         $http.post('/api/sms/twilio',this.sms).then((res)=>{
           this.refresh();

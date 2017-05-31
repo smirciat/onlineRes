@@ -14,6 +14,7 @@ var db = {
 };
 
 // Insert models below
+db.AllScheduledFlight = db.sequelize.import('../api/allScheduledFlight/allScheduledFlight.model');
 db.REFRunwayChecklist = db.sequelize.import('../api/REF_RunwayChecklist/REF_RunwayChecklist.model');
 db.SmsName = db.sequelize.import('../api/smsName/smsName.model');
 db.Sm = db.sequelize.import('../api/sm/sm.model');

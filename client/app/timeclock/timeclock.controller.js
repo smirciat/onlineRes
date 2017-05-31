@@ -75,18 +75,17 @@ angular.module('tempApp')
     };
     
     this.getRecords = function(uid){
-      $http.post(this.api,{uid:user()._id,date:this.startDate.toDate(),endDate:this.endDate.toDate()}).then(response=>{
+      $http.post('/api/timesheets/all',{uid:user()._id,date:this.startDate.toDate(),endDate:this.endDate.toDate()}).then(response=>{
         this.timesheets=response.data;
         if (uid>0) this.timesheets = this.timesheets.filter((ts)=>{
           return ts.uid===uid;
         });
-        var employeeIndex,weekIndex,timesheetIndex;
+        var employeeIndex,weekIndex;
         if (Auth.hasRole('admin')){
            this.employees=[];
            this.timesheets.forEach((timesheet)=>{
              employeeIndex=-1;
              weekIndex=-1;
-             timesheetIndex=-1;
              for (var i=0;i<this.employees.length;i++) {
                for (var j=0;j<this.employees[i].weeks.length;j++) {
                  for (var k=0;k<this.employees[i].weeks[j].timesheets.length;k++) {
@@ -122,6 +121,11 @@ angular.module('tempApp')
              });
              employee.weeks.reverse();
            });
+           if (user().role!=="superadmin") {
+             this.timesheets = this.timesheets.filter((ts)=>{
+               return ts.uid===user()._id;
+             });
+           }
            this.payrollList = this.employees.slice(0);
            this.payrollList.splice(0,0,{employee:"All",uid:0});
         }
