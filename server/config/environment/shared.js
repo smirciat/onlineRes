@@ -1,13 +1,13 @@
 'use strict';
 const fs = require('fs');
-var files =fs.readdirSync('./server/pdfs');
+var files = fs.readdirSync('./server/pdfs');
 if (files&&files.length>0) files.splice(0,1);
 
 exports = module.exports = {
-  // List of user roles
-  userRoles: ['guest', 'user','applicant', 'admin','superadmin'],
+  userRoles: ['guest', 'user', 'applicant', 'admin', 'superadmin'],
   angularMomentConfig: {timezone: 'America/Anchorage'},
   pdfFiles: files,
+  eightHourEmployees: [29,567],
   tests: [{cat:"Pilots",list:[
             {id:'b3y58e5273a2fc98',name:'Secured Aircraft Check'},
             {id:'vcg58e52936a8a93',name:'Fuel Verification'},

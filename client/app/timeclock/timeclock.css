@@ -8,8 +8,14 @@
     margin-left:15px;
     margin-right:15px;
 }
+.small-table{
+    font-size:x-small;
+}
+.big-table{
+    font-size:medium;
+}
 @media print{
     .full-sheet{
-      height:10.0in;
+      height:10.21in;
     }
 }

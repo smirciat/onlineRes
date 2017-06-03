@@ -101,7 +101,7 @@
       </div>
       </br>
       <div> 
-        <table class="table">
+        <table class="table small-table table-bordered">
           <thead>
             <tr>
               <th>ID</th>
@@ -110,33 +110,34 @@
               <th>Time Out</th>
               <th>Regular Hours</th>
               <th>OT Hours</th>
+              <th>Total Hours</th>
             </tr>
           </thead>
           <tfoot>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
+            <tr class="big-table">
+              <td colspan="3"></td>
               <td>Total For Period:</td>
               <td>{{employee.totalRegular|number:1}}</td>
               <td>{{employee.totalOT|number:1}}</td>
+              <td>{{(employee.totalOT+employee.totalRegular)|number:1}}</td>
             </tr>
           </tfoot>
           <tbody ng-repeat="week in employee.weeks">
             <tr ng-repeat="timesheet in week.timesheets">
               <td>{{timesheet.uid}}</td>
-              <td>{{timesheet.name}}</td>
-              <td>{{timesheet.timeIn|date:'medium'}}</td>
-              <td>{{timesheet.timeOut|date:'medium'}}</td>
+              <td class="small-table">{{timesheet.name}}</td>
+              <td class="small-table">{{timesheet.timeIn|date:'medium'}}</td>
+              <td class="small-table">{{timesheet.timeOut|date:'medium'}}</td>
               <td>{{timesheet.regularHours|number:1}}</td>
               <td>{{timesheet.otHours|number:1}}</td>
+              <td>{{(timesheet.regularHours+timesheet.otHours)|number:1}}</td>
             </tr>
             <tr>
-              <td></td><td></td>
-              <td>Week Ending {{week.weekEnd|date:'MMM d, yyyy'}}</td>
-              <td></td>
+              <td colspan="2"></td>
+              <td colspan="2">Week Ending {{week.weekEnd|date:'MMM d, yyyy'}}</td>
               <td style="text-align:right">{{week.totalRegular|number:1}}</td>
               <td style="text-align:right">{{week.totalOT|number:1}}</td>
+              <td style="text-align:right">{{(week.totalRegular+week.totalOT)|number:1}}</td>
             </tr>
           </tbody>  
           <tr><td></td></tr>

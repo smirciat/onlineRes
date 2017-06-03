@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tempApp')
-  .controller('TimeclockCtrl', function ($scope,Auth,User,$http,moment,$timeout,Modal,$window) {
+  .controller('TimeclockCtrl', function ($scope,Auth,User,$http,moment,$timeout,Modal,$window,appConfig) {
     this.timesheets=[];
     this.employees=[];
     this.whosClockedIn=[];
@@ -162,7 +162,7 @@ angular.module('tempApp')
     this.update = function(timesheet){//decide how much of this timesheet record is regular and overtime
       var timeOut;
       var dayLength = 10;
-      //if (!timesheet.fourTens) dayLength=8;
+      if (appConfig.eightHourEmployees.indexOf(timesheet.uid) > -1) dayLength=8;
       if (timesheet.timeOut) {
         timeOut = moment(timesheet.timeOut);
         timesheet.regularHours =  moment.duration(timeOut.diff(moment(timesheet.timeIn))).asHours();
