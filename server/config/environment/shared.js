@@ -7,7 +7,7 @@ exports = module.exports = {
   userRoles: ['guest', 'user', 'applicant', 'admin', 'superadmin'],
   angularMomentConfig: {timezone: 'America/Anchorage'},
   pdfFiles: files,
-  eightHourEmployees: [29,567],
+  eightHourEmployees: [29],
   tests: [{cat:"Pilots",list:[
             {id:'b3y58e5273a2fc98',name:'Secured Aircraft Check'},
             {id:'vcg58e52936a8a93',name:'Fuel Verification'},

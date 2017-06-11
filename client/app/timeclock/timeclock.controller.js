@@ -187,7 +187,7 @@ angular.module('tempApp')
           timesheets.forEach(function(ts){
             totalHours += ts.regularHours;
             if (moment(ts.timeIn).day()===moment(timesheet.timeIn).day()){
-              todaysHours +- ts.regularHours;
+              todaysHours += ts.regularHours;
             }
           });
           if ((todaysHours + timesheet.regularHours)>dayLength){

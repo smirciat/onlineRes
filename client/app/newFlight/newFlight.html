@@ -1,0 +1,36 @@
+<navbar></navbar>
+<!--<div class="padding-top">-->
+<div class="row second-row">
+  <div class="col-xs-1 col-md-1">
+    <button ng-click="new.today()" class="btn btn-success">Today</button>
+  </div>
+  <div class="col-sm-3 col-xs-3 col-md-3">
+      <datepicker date-format="EEEE MMM d, yyyy" >
+          <input class="form-control" ng-model="new.date" ng-change="new.upDate()" type="text"/>
+      </datepicker>
+  </div>
+  <div class="col-sm-2 col-xs-2 col-md-2"><label class="form-control">
+    <a href='#' ng-click="new.minus()"><i class="fa fa-minus-circle fa-fw fa-autosize" aria-hidden="true"></i></a>
+    <a href='#' ng-click="new.plus()"><i class="fa fa-plus-circle fa-fw fa-autosize" aria-hidden="true"></i></a>
+  </label></div>
+  <div class="col-sm-2 col-xs-2 col-md-2">
+      <ui-select ng-model="new.time.selected" theme="selectize" ng-disabled="disabled" ng-change="new.makeSm()">
+          <ui-select-match placeholder="Choose...">{{$select.selected.time}}</ui-select-match>
+          <ui-select-choices repeat="tm in new.times" >
+            <div ng-bind-html="tm.time | highlight: $select.search"></div>
+          </ui-select-choices>
+      </ui-select>
+  </div>
+  <div class="col-xs-4 col-md-4">
+    <div class="one-container">
+      <button class="btn btn-success btn-autosize" ng-click="new.print()">Print</button>
+      <chat></chat>
+      <a href="/sms" ><button class="btn-autosize" ng-class="new.smsClass">SMS</button></a>
+      <button ng-click="new.addFlight()" class="btn btn-info btn-autosize">+Flight</button>
+    </div>
+  </div>
+</div>
+<div class="third-row">
+  <new-grid name-true="false" my-api="reservations" date="new.date" smfltnum={{new.smfltnum}} print="new.print()"></new-grid>
+</div>
+

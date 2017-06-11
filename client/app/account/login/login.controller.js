@@ -24,7 +24,7 @@ class LoginController {
 
   login(form) {
     this.submitted = true;
-
+    this.Auth.login({});//hack to make up for lusca bug that fails first CSRF token check after page load
     if (form.$valid) {
       this.Auth.login({
         email: this.user.email,

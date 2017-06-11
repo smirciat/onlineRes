@@ -3,7 +3,7 @@
 angular.module('tempApp')
   .directive('newGrid', function ($http, uiGridConstants, gridSettings, socket, $q, tcFactory, $location, $timeout, Modal,email,User,Auth,$interval,uiGridEditConstants) {
   return {
-    templateUrl: 'components/myGrid/myGrid.html',
+    templateUrl: 'components/newGrid/newGrid.html',
     restrict: 'E',
     replace: true,
     scope: {
