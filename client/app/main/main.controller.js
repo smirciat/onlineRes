@@ -325,7 +325,9 @@ class MainController {
     //month starts with 0 for Jan var tempDate="2/18/16";
     var query = "date=" + this.newRes['DATE TO FLY'];
     this.$http.get('/api/reservations?' + query).then(response => {
-      var data=response.data;
+      var data=response.data.filter((res)=>{
+        return res['Ref#']<13;
+      });
       var sm="";
       var sma="B";
       var letter="A";
@@ -363,7 +365,10 @@ class MainController {
             //keep them from being first pax on 8:00 flight
             var enough = (scheduledFlights[i].smfltnum-hour);
             if (enough<0) enough+=24;
+            //8 am flight limitations
+            if (scheduledFlights[i].smfltnum===8) maxPax=4;
             if (date>=today && date<=tomorrow && enough<13 && scheduledFlights[i].smfltnum===8 && resList.length===0 && resListAlt.length===0) maxPax=0;
+            
             if (resList.length<maxPax){
               if (date<today) {}
               else {

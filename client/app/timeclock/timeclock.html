@@ -8,10 +8,10 @@
         </h1>
         <div>
             <a href='#' ng-click="timeclock.minus()"><i class="fa fa-minus-circle fa-fw fa-2x" aria-hidden="true"></i></a>
-            <a href='#' ng-click="timeclock.plus()"><i class="fa fa-plus-circle fa-fw fa-2x space" aria-hidden="true"></i></a>
-            <button print-btn ng-show="nav.hasRole('superadmin')" class="btn btn-primary space">Print Timesheets</button>
-            <button class="btn btn-link space">
-              <ul ng-show="nav.hasRole('superadmin')" class="nav navbar-nav">    
+            <a href='#' ng-click="timeclock.plus()"><i class="fa fa-plus-circle fa-fw fa-2x" aria-hidden="true"></i></a>
+            <button print-btn ng-if="nav.hasRole('superadmin')" class="btn btn-primary space">Print Timesheets</button>
+            <button ng-if="nav.hasRole('superadmin')" class="btn btn-link space">
+              <ul class="nav navbar-nav">    
                 <li class="dropdown">
                     <a href="#" data-toggle="dropdown" class="dropdown-toggle">Filter by Employee <b class="caret"></b></a>
                     <ul class="dropdown-menu">
