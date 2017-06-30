@@ -67,7 +67,7 @@ function removeEntity(res) {
 export function index(req, res) {
   Sm.findAll({
     order:[['sent','DESC']],
-    limit:100
+    limit:200
   })
     .then(responseWithResult(res))
     .catch(handleError(res));

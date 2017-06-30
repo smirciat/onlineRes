@@ -24,7 +24,8 @@ angular.module('tempApp', [
   'luegg.directives',
   'angular-web-notification',
   'emoji',
-  'angularMoment'
+  'angularMoment',
+  'contenteditable'
 ])
   .config(function($routeProvider, $locationProvider) {
     $routeProvider

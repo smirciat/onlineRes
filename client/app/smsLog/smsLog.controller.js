@@ -13,11 +13,23 @@ angular.module('tempApp')
     this.messages=[];
     this.names=[];
     
-    this.refresh = function(){
+    this.setNumber = function(phone){
+      this.refresh(phone);
+    };
+    
+    this.refresh = function(number){
       $http.get('/api/smsNames').then((response)=>{
-        this.names=response.data;
+        this.names=response.data.sort((a,b)=>{
+          return a.name.localeCompare(b.name);
+        });
+        this.names.unshift({name:'All',phone:''});
         $http.post('/api/sms/all').then((response)=>{
-          this.messages=response.data;
+          if (number==="") this.messages=response.data;
+          else {
+            this.messages=response.data.filter(sm=>{
+              return sm.to===number||sm.from===number;
+            });
+          }
           this.insertNames();
           socket.unsyncUpdates('sm');
           socket.syncUpdates('sm', this.messages, (event, item, array)=>{
@@ -41,10 +53,12 @@ angular.module('tempApp')
             break;
         default: break;
       }
-      if (this.sms.body&&this.sms.to&&this.sms.body!==""&&this.sms.to!=="") {
+      if (this.sms.body&&this.sms.to&&this.sms.to.length>6&&this.sms.body.length>3) {
         $http.post('/api/sms/twilio',this.sms).then((res)=>{
-          this.refresh();
+          this.refresh("");
           this.sms = {};
+          this.sms.to='+1';
+          this.sms.body="Message from Smokey Bay Air, Reply to this number. ";
         },(err)=>{console.log(err)});
       }
     };
@@ -65,7 +79,7 @@ angular.module('tempApp')
     this.addName = function(name,phone){
       if (phone&&name&&phone!==""&&name!=="") {
         $http.post('/api/smsNames',{name:name,phone:phone}).then((response)=>{
-          this.refresh();
+          this.refresh("");
         });
       }
     };
@@ -78,5 +92,5 @@ angular.module('tempApp')
         socket.unsyncUpdates('sm');
     });
     
-    this.refresh();
+    this.refresh("");
   });

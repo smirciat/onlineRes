@@ -4,9 +4,21 @@
     <label class="control-label" for"phone">Phone Number</label>
     <input class="space" type=text placeholder="+1 xxx xxx-xxxx" tooltip-placement="bottom" uib-tooltip="Include '+1' before ten digit number" id="phone" ng-model="sms.sms.to">
     <label class="control-label" for"body">Message</label>
-    <input class="space wide" type=text placeholder="Message Here" tooltip-placement="bottom" uib-tooltip="Message here" id="body" ng-model="sms.sms.body">
+    <span contenteditable="true" class="border space" tooltip-placement="bottom" uib-tooltip="Message here" id="body" ng-model="sms.sms.body"></span>
     <button class="btn btn-success space" ng-click="sms.send()">Send</button>
     <a href="/phoneName" class="space"><button class="btn btn-default">Add Names</button></a>
+    <button class="btn btn-link space">
+      <ul class="nav navbar-nav">    
+        <li class="dropdown">
+            <a href="#" data-toggle="dropdown" class="dropdown-toggle">Filter by Number <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li ng-repeat="listing in sms.names">
+                  <a ng-click="sms.setNumber(listing.phone)" href="#">{{listing.name + ': ' + listing.phone}}</a>
+                </li>
+            </ul>
+        </li>
+      </ul>
+    </button>
 </div>
 <div>
     <table class="table">

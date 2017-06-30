@@ -4,3 +4,8 @@
 .padding-top-sms{
     padding-top:95px;
 }
+.border{
+    border: solid 1px black;
+    max-width: 600px;
+    min-width: 400px;
+}
