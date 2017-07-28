@@ -88,7 +88,7 @@ angular.module('tempApp')
           { name: 'Last Name', field:'LAST',editableCellTemplate: cellTemplateLast,cellClass: cellColor,minWidth:90}, 
           { name: 'SF#', field:'smfltnum', width:50,cellClass: cellColor,minWidth:80},
           { name: 'FLT#', field:'FLIGHT#', width:60,cellClass: cellColor,minWidth:90},
-          { name: 'Travel Code', field: 'travelCode.value',  editModelField: 'travelCode', cellClass: cellColor,minWidth:90,
+          { name: 'Travel Code', field: 'travelCode.value',  editModelField: 'travelCode', cellClass: cellColor,minWidth:140,
              editDropdownOptionsArray: [], editableCellTemplate: selectTemplate},
           { name: 'Time', field: 'time',  width:80,cellClass: cellColor, enableCellEdit:false, minWidth:100},   
           { name: 'Body', field: 'WEIGHT', width:60,cellClass: cellColor,minWidth:100},

@@ -399,6 +399,11 @@ angular.module('tempApp')
               rowEntity.FIRST = newValue.split(" ")[0];
             }
           }
+          if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="Body") {
+            if (rowEntity.WEIGHT==199) {
+              scope.quickModal("I'm sorry, I cannot reserve a seat for this passenger without an accurate body weight.  I need to know how much space I am reserving.");
+            }
+          }
           if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&(colDef.name==="SF#"||colDef.name==="Date"||colDef.name==="Travel Code")) {
             //for sake of determining if sending an email is appropriate
             rowEntity.dirty=true;
