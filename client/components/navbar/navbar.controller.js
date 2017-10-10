@@ -78,6 +78,7 @@ class NavbarController {
       this.scope.pdf.loading=false;
     });
   }
+  
 }
 
 angular.module('tempApp')

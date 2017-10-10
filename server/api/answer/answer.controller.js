@@ -14,7 +14,7 @@ export function answer(req, res) {
       "endpoint": [
         {
           "type": "sip",
-          "uri": "sip:19073022700@smokeybayair.ddns.net:55511"
+          "uri": "sip:19073022700@smokeybay.dynu.net:55511"
         }
       ]
     }

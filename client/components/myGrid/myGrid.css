@@ -2,53 +2,62 @@
   background-color: #1fe0f0;
   color: #153ff0;
 } 
-.grid .ui-grid-row .green.even {
+.grid .ui-grid-row .even.green.one {
   background-color: #ccffcc;
   border: .5px solid lightgray;
 }
-.grid .ui-grid-row .green.odd {
+.grid .ui-grid-row .odd.green.one {
   background-color: #b3ffb3;
   border: .5px solid lightgray;
 }
-.grid .ui-grid-row .red.even {
+.grid .ui-grid-row .even.red.one {
   background-color: #ffd6cc;
   border: .5px solid lightgray;
 }
-.grid .ui-grid-row .red.odd {
+.grid .ui-grid-row .odd.red.one {
   background-color: #ffc2b3;
   border: .5px solid lightgray;
 }
-.grid .ui-grid-row .yellow.even {
+.grid .ui-grid-row .even.yellow.one {
   background-color: #ffff66;
   border: .5px solid lightgray;
 }
-.grid .ui-grid-row .yellow.odd {
+.grid .ui-grid-row .odd.yellow.one {
   background-color: #ffff99;
   border: .5px solid lightgray;
 }
-.grid .ui-grid-row .green.even.two {
+.grid .ui-grid-row .even.green.two {
   background-color: #ccffff;
   border: .5px solid lightgray;
 }
-.grid .ui-grid-row .green.odd.two {
+.grid .ui-grid-row .odd.green.two {
   background-color: #b3ffff;
   border: .5px solid lightgray;
 }
-.grid .ui-grid-row .red.even.two {
+.grid .ui-grid-row .even.red.two {
   background-color: #eeccff;
   border: .5px solid lightgray;
 }
-.grid .ui-grid-row .red.odd.two {
+.grid .ui-grid-row .odd.red.two {
   background-color: #e6b3ff;
   border: .5px solid lightgray;
 }
-.grid .ui-grid-row .yellow.even.two {
+.grid .ui-grid-row .even.yellow.two {
   background-color: #fff5cc;
   border: .5px solid lightgray;
 }
-.grid .ui-grid-row .yellow.odd.two {
+.grid .ui-grid-row .odd.yellow.two {
   background-color: #fff0b3;
   border: .5px solid lightgray;
+}
+.grid .ui-grid-row .frontInterVillage {
+  color: red;
+}
+.grid .ui-grid-row .midInterVillage {
+  color: red;
+}
+.grid .ui-grid-row .backInterVillage {
+  color: red
 }
 
 .grid{

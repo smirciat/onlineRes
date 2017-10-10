@@ -95,7 +95,7 @@ export function daily(req, res) {
   var endDate = new Date(date.getFullYear(),date.getMonth(),date.getDate(),23,59,59); 
   options['DATE TO FLY'] = {$gte:date,$lt:endDate};
   //Reservation.findAll({where: {"DATE TO FLY":{$gte:date,$lt:endDate},'$or':[{smfltnum:smfltnum},{smfltnum:smfltnum2}] } } )
-  Reservation.findAll({where: options} )
+  Reservation.findAll({where: options,order:[['WEIGHT','DESC']]} )
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
@@ -104,7 +104,7 @@ export function daily(req, res) {
 export function oneF(req, res) {
   var options = {};
   if (req.body.smfltnum&&!req.body.hourOfDay) req.body.hourOfDay = req.body.smfltnum.substring(0,2);
-  var order = [['FLIGHT#','ASC'],['Ref#','ASC']];
+  var order = [['FLIGHT#','ASC'],['Ref#','ASC'],['WEIGHT','DESC']];
   if (req.body.date) {
     
     var date = new Date(req.body.date); 

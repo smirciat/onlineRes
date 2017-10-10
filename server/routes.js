@@ -19,8 +19,11 @@ export default function(app) {
   app.use('/api/scheduledFlights/mobile', require('./api/scheduledFlight/indexMobile'));
   app.use('/api/sms', require('./api/sm'));
   app.use('/api/answer', require('./api/answer'));
+  app.use('/api/customers', require('./api/customer'));
+  app.use('/api/workorders', require('./api/workorder'));
   
   app.use('/auth/mobile', require('./auth/indexMobile'));
+  app.use('/auth', require('./auth'));
   
   app.use(lusca.csrf({angular:true}));
     //routes below this require CSRF tokens, all browser routes 
@@ -45,7 +48,6 @@ export default function(app) {
   app.use('/api/runwayChecklists', require('./api/REF_RunwayChecklist'));
   app.use('/api/allScheduledFlights', require('./api/allScheduledFlight'));
   
-  app.use('/auth', require('./auth'));
 
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth|components|app|bower_components|assets)/*')

@@ -231,7 +231,7 @@ angular.module('tempApp')
                 res = reservations.filter(function(reservation){
                   return flights[i]['FLIGHT#'].toUpperCase()===reservation['FLIGHT#'].toUpperCase();
                 });
-                if (res.length<4) {
+                if (res.length<5) {
                   flight = flights[i]['FLIGHT#'];
                   i=flights.length;
                 }
@@ -569,6 +569,10 @@ angular.module('tempApp')
           socket.unsyncUpdates(scope.shortApi);
           socket.syncUpdates(scope.shortApi, scope.tempData, function(event, item, array){
             //this is similar to the implementation in the socket service, but is duplicated here since new records are only synced with socket service after they are saved.  Working on data array on this side allows those unsaved records to be preserved after socket update.
+            if (scope.$parent.one) {
+              scope.$parent.one.socket='vis';
+              $timeout(function(){scope.$parent.one.socket='invis';},500);
+            }
             if (event==='updated'){
               var oldItem = _.find(scope.gridOptions.data, {_id: item._id});
               if (oldItem) {
@@ -610,10 +614,12 @@ angular.module('tempApp')
               _.remove(scope.gridOptions.data, {_id: item._id}); 
             }
             if ($location.path()!=='/oneFlight') scope.gridOptions.data=scope.tempData.slice();
-            scope.gridOptions.data = scope.sortData(gridSettings.getFun(scope.myApi,scope.gridOptions.data));
+            
             if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') scope.setPlanePilot();
             if (scope.myApi==='reservations'&&($location.path()==='/oneName'||$location.path()==='/searchName')) scope.populateTimes();
-            
+            $timeout(function(){
+              scope.gridOptions.data = scope.sortData(gridSettings.getFun(scope.myApi,scope.gridOptions.data));
+            },100);
           });
         });  
       };
@@ -623,6 +629,11 @@ angular.module('tempApp')
       };
       
       scope.cancel = $q.when(scope.nothing);
+      
+      scope.manualSort = function(){
+        console.log('sorting');
+        scope.gridOptions.data = scope.sortData(gridSettings.getFun(scope.myApi,scope.gridOptions.data));
+      };
       
       scope.makeQuery = function(){
         var date = new Date(scope.date);
@@ -646,7 +657,7 @@ angular.module('tempApp')
           if (!a['FLIGHT#']) return true;
           if (!b['FLIGHT#']) return false;
           if (a['FLIGHT#'].toUpperCase()===b['FLIGHT#'].toUpperCase()&&$location.path()==='/oneFlight') {
-            if (a['Ref#']===b['Ref#']) return a._id>b._id;
+            if (a['Ref#']===b['Ref#']) return a['WEIGHT']<b['WEIGHT'];
             return a['Ref#']>b['Ref#'];
           }
           return a['FLIGHT#'].localeCompare(b['FLIGHT#']);

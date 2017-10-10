@@ -32,7 +32,7 @@
           <div class="col-xs-1 col-md-1 lg">Time</div>
         </div>
         <div ng-repeat="res in tc.reservations"> 
-         <div class="row">
+         <div class="row" ng-class="print.setClass(res['Ref#'])">
             <div class="col-xs-6 col-md-6 lg">{{res.FIRST + ' ' + res.LAST}}</div>
             <div class="col-xs-1 col-md-1 lg">{{res.WEIGHT}}</div>
             <div class="col-xs-1 col-md-1 lg">{{res.FWeight}}</div>

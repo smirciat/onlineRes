@@ -1,0 +1,6 @@
+@media print {
+    .grayBack{
+       background-color:black; 
+       -webkit-print-color-adjust: exact !important;
+    }
+}

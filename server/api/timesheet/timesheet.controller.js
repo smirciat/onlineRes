@@ -140,10 +140,10 @@ export function update(req, res) {
 }
 
 export function sba(req,res) {
-  dns.resolve4('smokeybayair.ddns.net', function (err, addresses) {
+  dns.resolve4('smokeybay.dynu.net', function (err, addresses) {
     if (err) throw err;
     var sba=addresses[0];
-    dns.resolve4('seldovia.ddns.net', function (err, addresses) {
+    dns.resolve4('seldovia.dynu.net', function (err, addresses) {
       if (err) throw err;
       var ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
       var match = ip===sba||ip===addresses[0];

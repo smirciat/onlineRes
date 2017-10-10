@@ -4,7 +4,12 @@
   height: -webkit-calc(100vh - (105px));
   width:100vw;
 }
-
+.vis{
+  display: inherit;
+}
+.invis{
+  display:none;
+}
 .blue {
   background-color: #1fe0f0;
   color: #153ff0;

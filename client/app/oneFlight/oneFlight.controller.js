@@ -5,6 +5,7 @@ angular.module('tempApp')
     var aircraftSch, pilotSch, tcs;
     this.schFlights=[];
     this.arr=[];
+    this.socket="invis";
     this.smsClass = "btn btn-default";
     tcFactory.getAircraft(function(ac){
       aircraftSch = ac;
@@ -28,33 +29,40 @@ angular.module('tempApp')
     this.res = [];
     this.date = tcFactory.getDate();
     this.smfltnum=".";
-    this.times = [];
     var date; 
     var smfltnum;
     var ac;
     var p;
     this.time={};
     this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
-    for (var i=7;i<=19;i++){
-      if (i!==15) this.times.push({ref:i, time: i + ':00'});
-    }
-    tcFactory.getScheduledFlights({date:tcFactory.getDate()},function(scheduledFlights){
-      $timeout(function(){
-        if ($scope.one) {
-          $scope.one.schFlights=scheduledFlights;
-          $scope.one.times.forEach(function(d){
-            var flts=scheduledFlights.filter(function(flight){
-              return parseInt(d.ref,10)===flight.smfltnum;
-            }); 
-            if (flts.length>0){
-              var field = "begin";
-              d.time=flts[0][field];
-            }
-          });
-          $scope.one.reset();
-        }    
-      },0);  
-    });
+    this.initialTimes = function(){
+      this.times = [];
+      for (var i=7;i<=19;i++){
+        if (i!==15) this.times.push({ref:i, time: i + ':00'});
+      }
+    };
+    this.initialTimes();
+    this.setTimes = function(){
+      tcFactory.getScheduledFlights({date:tcFactory.getDate()},function(scheduledFlights){
+        $timeout(function(){
+          if ($scope.one) {
+            $scope.one.initialTimes();
+            $scope.one.schFlights=scheduledFlights;
+            $scope.one.times.forEach(function(d){
+              var flts=scheduledFlights.filter(function(flight){
+                return parseInt(d.ref,10)===flight.smfltnum;
+              }); 
+              if (flts.length>0){
+                var field = "begin";
+                d.time=flts[0][field];
+              }
+            });
+            $scope.one.reset();
+          } 
+        },0);  
+      });
+    };
+    this.setTimes();
 
     var sections, section, flight, tc, sectionIndex, flightIndex, tcIndex;
     var body;
@@ -63,6 +71,7 @@ angular.module('tempApp')
     this.today= function(){
       d=new Date(Date.now());
       tcFactory.setDate(d);
+      this.setTimes();
       var e = new Date();
       e.setTime(d.getTime()+(60*60*1000));
       var smfltnum=9;
@@ -130,6 +139,7 @@ angular.module('tempApp')
     
     this.upDate =function(){
       tcFactory.setDate(new Date(this.date));
+      this.setTimes();
     };
     
     this.makeSm = function(){

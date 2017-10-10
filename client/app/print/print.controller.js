@@ -8,4 +8,8 @@ angular.module('tempApp')
     $timeout(function(){
       $location.path('/oneFlight');
     },2);
+    this.setClass = function(ref){
+      if (ref>3&&ref<10) return "grayBack";
+      return;
+    };
   });
