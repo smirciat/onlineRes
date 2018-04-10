@@ -51,13 +51,16 @@
   border: .5px solid lightgray;
 }
 .grid .ui-grid-row .frontInterVillage {
-  color: red;
+  color: #0000cc;
 }
 .grid .ui-grid-row .midInterVillage {
-  color: red;
+  color: #0000cc;
 }
 .grid .ui-grid-row .backInterVillage {
-  color: red
+  color: #0000cc;
+}
+.grid .ui-grid-row .custColor {
+  color:#ffcc00;
 }
 
 .grid{

@@ -52,7 +52,8 @@ export default function(sequelize, DataTypes) {
     "Advanced Booking":	DataTypes.CHAR(1),
     RandomRank:	DataTypes.DECIMAL,	
     UPDATED:	DataTypes.DATE,
-    uid: DataTypes.STRING(255)
+    uid: DataTypes.STRING(255),
+    baggageWeightEnteredByCustomer: DataTypes.BOOLEAN
     
     
   });

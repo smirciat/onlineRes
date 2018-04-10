@@ -11,14 +11,14 @@
        <div ng-repeat="section in hour.sections">
         <div class="row">
           <div class="col-xs-1 col-md-1 "></div>
-          <div class="col-xs-1 col-xs-11 col-md-11 bottom">{{section.code + ' ' + section.time}}</div>
+          <div class="col-xs-1 col-xs-11 col-md-11 bottom-line">{{section.code + ' ' + section.time}}</div>
         </div>
         <div ng-repeat="flight in section.flights">
           <div class="row" >
             <div class="col-xs-2 col-md-2 "></div>
-            <div class="col-xs-2 col-md-2 bottom">{{flight.flight}}</div>
-            <div class="col-xs-2 col-md-2 bottom">{{flight.date | date : 'MM/dd/yyyy'}}</div>
-            <div class="col-xs-6 col-md-6 bottom">{{flight.aircraft + ' ' + flight.pilot}}</div>
+            <div class="col-xs-2 col-md-2 bottom-line">{{flight.flight}}</div>
+            <div class="col-xs-2 col-md-2 bottom-line">{{flight.date | date : 'MM/dd/yyyy'}}</div>
+            <div class="col-xs-6 col-md-6 bottom-line">{{flight.aircraft + ' ' + flight.pilot}}</div>
           </div>
             <div ng-repeat="res in flight.reservations"> 
              <div class="row">

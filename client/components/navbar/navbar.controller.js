@@ -56,6 +56,9 @@ class NavbarController {
       + "&cm_ln=" + user().name.split(" ")[1]
       + "&cm_e=" + user().email
       + "&cm_user_id=" + user()._id;
+    if (test.vendor==="elearning") {
+      url="https://elearning.easygenerator.com/" + test.id + '/';
+    }
     var dummyUrl = "https://www.classmarker.com/online-test/start/?quiz=asdfasdf";
     this.scope.test.iframeSrc=this.sce.trustAsResourceUrl(dummyUrl);
     this.timeout(()=>{this.scope.test.iframeSrc=this.sce.trustAsResourceUrl(url)},350);

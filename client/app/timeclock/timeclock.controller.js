@@ -69,7 +69,8 @@ angular.module('tempApp')
     };
     
     this.minus = function(){
-      now.subtract(15,'days');
+      if (moment(now).month()===2&&moment(now).date()<4) now.subtract(10,'days');
+      else now.subtract(15,'days');
       this.setPayrollPeriod();
       this.getRecords(uid);
     };

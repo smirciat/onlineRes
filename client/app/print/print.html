@@ -24,7 +24,7 @@
         <div class="col-xs-3 col-md-3 lg">Fuel________</div>
       </div>
       <div ng-repeat="tc in flight.tcs"> 
-        <div class="row bottom top">
+        <div class="row bottom-line top-line">
           <div class="col-xs-6 col-md-6 lg">{{tc.code}}</div>
           <div class="col-xs-1 col-md-1 lg">Wt</div>
           <div class="col-xs-1 col-md-1 lg">FtWt</div>
@@ -50,7 +50,7 @@
       <div class="col-xs-3 col-md-3 lg">{{section.endTime}}</div>
     </div>
     <div ng-repeat="one in print.four">
-     <div class="row bottom">
+     <div class="row bottom-line">
       <div ng-if="one>1" class="col-xs-4 col-md-4 lg">Seats changed to</div>
       <div ng-if="one===1" class="col-xs-4 col-md-4 lg">Seats began at</div>
       <div class="col-xs-3 col-md-3 lg"></div>

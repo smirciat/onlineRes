@@ -6,6 +6,8 @@ class MainController {
 
   constructor($http, $scope, Auth, Modal, $timeout, $location,email,tcFactory) {
     this.$http = $http;
+    this.object = {};
+    this.object.checked="NO";
     this.email=email;
     this.Auth = Auth;
     this.$location = $location;
@@ -46,6 +48,7 @@ class MainController {
       });
     });
     this.add = Modal.confirm.check(reservation => {
+      if (reservation.FWeight>0) reservation.baggageWeightEnteredByCustomer=true; 
       this.$http.post('/api/reservations', reservation).then(response => {
             this.sendEmail(this.resObj);
             this.cancelRes();
@@ -255,6 +258,7 @@ class MainController {
         var today = new Date(year,month,day-5);
         return today<=date;
       });
+      if (this.object.checked==="YES") this.resList=response.data;
       this.resList.forEach(res=>{
         this.timeConvert(res.smfltnum,res['Ref#'],res['DATE TO FLY']).then(response=>{
           res.time = response;
@@ -360,14 +364,14 @@ class MainController {
             //no more than 8 passengers on any smfltnum to avoid overbooking
             maxPax=8;
             if (scheduledFlights[i].smfltnum===9&&date.getDay()>0&&date.getDay()<6) {
-              maxPax=12;
+              maxPax=8;
             }
             //keep them from being first pax on 8:00 flight
             var enough = (scheduledFlights[i].smfltnum-hour);
             if (enough<0) enough+=24;
             //8 am flight limitations
             if (scheduledFlights[i].smfltnum===8) maxPax=4;
-            if (date>=today && date<=tomorrow && enough<13 && scheduledFlights[i].smfltnum===8 && resList.length===0 && resListAlt.length===0) maxPax=0;
+            if (date>=today && date<=tomorrow && enough<13 && scheduledFlights[i].smfltnum===8) maxPax=0;
             
             if (resList.length<maxPax){
               if (date<today) {}

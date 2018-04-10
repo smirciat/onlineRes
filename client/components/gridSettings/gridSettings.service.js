@@ -12,6 +12,7 @@ angular.module('tempApp')
       if (row.entity['Ref#']===4||row.entity['Ref#']===5) cellClass += ' frontInterVillage';
       else if (row.entity['Ref#']===6||row.entity['Ref#']===7) cellClass += ' midInterVillage';
            else if (row.entity['Ref#']===8||row.entity['Ref#']===9) cellClass += ' backInterVillage';
+      if (col.field==="FWeight"&&row.entity['baggageWeightEnteredByCustomer']) cellClass= 'custColor';
       if (row.entity['FLIGHT#']&&row.entity['FLIGHT#'].substring(3).toUpperCase()==='A') cellClass += ' green';
       else if (row.entity['FLIGHT#']) cellClass += ' red';
       if (row.entity['WEIGHT']===0&&row.entity['FWeight']>0) cellClass += ' yellow';
@@ -108,8 +109,9 @@ angular.module('tempApp')
           { name: 'Rtn?', field: 'checkedIn', width:60, cellClass: cellColor,type: 'boolean',
              cellTemplate: '<input type="checkbox" ng-model="row.entity.checkedReturn" ng-change="grid.appScope.setDirty(row.entity)">'}, 
           { name: 'Email', field:'email', visible:false,cellClass: cellColor,minWidth:100},
-          { name: 'RESERVED', enableCellEdit:false, field:'DATE RESERVED', type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:100, visible:false,cellClass: cellColor},
-          { name: 'UPDATED', enableCellEdit:false, type: 'date', cellFilter: 'date:"MM/dd/yyyy"', width:100, visible:false,cellClass: cellColor},
+          { name: 'RESERVED', enableCellEdit:false, field:'DATE RESERVED', type: 'date', cellFilter: 'date:"MM/dd/yyyy h:mm a"', width:200, visible:false,cellClass: cellColor},
+          { name: 'UPDATED', enableCellEdit:false, type: 'date', cellFilter: 'date:"MM/dd/yyyy h:mm a"', width:200, visible:false,cellClass: cellColor},
+          { name: 'uid', width:100, visible:false,cellClass: cellColor},
           { name: '`', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-info" type="button" ng-click="grid.appScope.getName(row)"><i class="fa fa-male"></i></button></div>', width:35 },
           { name: '\'', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-primary" type="button" ng-click="grid.appScope.getInvoice(row)"><i class="fa fa-info"></i></button></div>', width:32 },
           { name: ',', enableCellEdit:false, cellTemplate: '<div><button class="btn btn-success" type="button" ng-click="grid.appScope.flushRows()"><i class="fa fa-hdd-o"></i></button></div>', width:36 },
