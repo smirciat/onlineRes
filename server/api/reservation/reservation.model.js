@@ -53,6 +53,7 @@ export default function(sequelize, DataTypes) {
     RandomRank:	DataTypes.DECIMAL,	
     UPDATED:	DataTypes.DATE,
     uid: DataTypes.STRING(255),
+    agent: DataTypes.STRING(255),
     baggageWeightEnteredByCustomer: DataTypes.BOOLEAN
     
     

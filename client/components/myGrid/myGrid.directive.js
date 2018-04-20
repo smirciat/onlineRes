@@ -15,6 +15,7 @@ angular.module('tempApp')
     },
     link: function (scope, element, attrs ) {
       scope.users = User.query();
+      scope.agent=User.get();
       scope.gridOptions = gridSettings.get(scope.myApi).gridOptions;
       scope.tempData = [];
       scope.quick=Modal.confirm.quickMessage();
@@ -152,6 +153,7 @@ angular.module('tempApp')
         var body = {date:rowEntity['DATE TO FLY']||rowEntity['DATE'], smfltnum:rowEntity.smfltnum||rowEntity.SmFltNum};
         //reservations only
         if (scope.myApi==='reservations'){
+          if (!rowEntity._id) rowEntity.agent=scope.agent.name;
           if (rowEntity['FLIGHT#']&&rowEntity['FLIGHT#'].substring(1)!==rowEntity.smfltnum) rowEntity['FLIGHT#']=undefined;
           pilots=[];
           aircrafts=[];
@@ -206,6 +208,7 @@ angular.module('tempApp')
                 }
                 if (done>=4) i = response.data.length;
               }
+              scope.populateTimes();
               if ((rowEntity.dirty||rowEntity.changedEmail)&&rowEntity.email) sendEmail(rowEntity);
               //send SMS if number starts with +1 and dirty is true
               if ((rowEntity.dirty||rowEntity.changedPhone)&&rowEntity.Phone&&rowEntity.Phone.substring(0,2)==="+1"){
