@@ -18,7 +18,7 @@ angular.module('tempApp')
     });
     $http.post('/api/sms/all').then((response)=>{
       socket.syncUpdates('sm', response.data,(event, item, array)=>{
-         this.smsClass="button-flashing";
+         if (!item.autoSMS) this.smsClass="button-flashing";
       });
     });
     $scope.$on('$destroy', function () {

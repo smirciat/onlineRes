@@ -24,6 +24,9 @@ angular.module('tempApp')
         });
         this.names.unshift({name:'All',phone:''});
         $http.post('/api/sms/all').then((response)=>{
+          response.data=response.data.filter(sm=>{
+            return !sm.autoSMS;
+          });
           if (number==="") this.messages=response.data;
           else {
             this.messages=response.data.filter(sm=>{

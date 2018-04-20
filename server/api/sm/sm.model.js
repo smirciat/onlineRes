@@ -11,6 +11,9 @@ export default function(sequelize, DataTypes) {
     to: DataTypes.STRING,
     from: DataTypes.STRING,
     body: DataTypes.STRING,
-    sent: DataTypes.DATE
+    sent: DataTypes.DATE,
+    autoSMS: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false}
   });
 }

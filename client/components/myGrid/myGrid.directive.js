@@ -206,7 +206,22 @@ angular.module('tempApp')
                 }
                 if (done>=4) i = response.data.length;
               }
-              if (rowEntity.dirty&&rowEntity.email) sendEmail(rowEntity);
+              if ((rowEntity.dirty||rowEntity.changedEmail)&&rowEntity.email) sendEmail(rowEntity);
+              //send SMS if number starts with +1 and dirty is true
+              if ((rowEntity.dirty||rowEntity.changedPhone)&&rowEntity.Phone&&rowEntity.Phone.substring(0,2)==="+1"){
+                var phone=rowEntity.Phone.substring(1);
+                phone=phone.replace(/[^0-9]/g, '');
+                if (phone.length>=11){
+                  phone='+'+phone.substring(0,11);
+                  var sms={};
+                  sms.autoSMS=true;
+                  sms.sent=new Date();
+                  sms.to=phone;
+                  sms.body="Reservation from Smokey Bay: " + resMessage(rowEntity);
+                  $http.post('/api/sms/twilio',sms);
+                }
+              }
+              
             }
             return $http.post('/api/flights/o',body);
           })
@@ -407,6 +422,8 @@ angular.module('tempApp')
           if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="Frt") {
             rowEntity.baggageWeightEnteredByCustomer=false;  
           }
+          if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="Email") rowEntity.changedEmail=true;
+          //if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="Phone") rowEntity.changedPhone=true;
           if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&(colDef.name==="SF#"||colDef.name==="Date"||colDef.name==="Travel Code")) {
             //for sake of determining if sending an email is appropriate
             rowEntity.dirty=true;
@@ -570,7 +587,7 @@ angular.module('tempApp')
           if (scope.myApi==='reservations'&&($location.path()==='/oneName'||$location.path()==='/searchName')) scope.populateTimes();
           scope.shortApi = scope.myApi.substr(0,scope.myApi.length-1);
           socket.unsyncUpdates(scope.shortApi);
-          socket.syncUpdates(scope.shortApi, scope.tempData, function(event, item, array){
+          if ($location.path()==='/oneFlight') socket.syncUpdates(scope.shortApi, scope.tempData, function(event, item, array){
             //this is similar to the implementation in the socket service, but is duplicated here since new records are only synced with socket service after they are saved.  Working on data array on this side allows those unsaved records to be preserved after socket update.
             if (scope.$parent.one) {
               scope.$parent.one.socket='vis';
@@ -741,6 +758,10 @@ angular.module('tempApp')
         });
       }
       var sendEmail = function(res){
+          var resEntry=resMessage(res);
+          if (resEntry!=="") email.sendEmail(res,resEntry,res);
+      };
+      var resMessage = function(res){
         if (res['Ref#']<=12) {
           var code = email.travelCodes.filter(function ( tc ) {
             return tc.ref === res['Ref#'];
@@ -749,9 +770,9 @@ angular.module('tempApp')
           res.TIME=res.time;     
           var d = new Date(res["DATE TO FLY"]);
           res.DATE = (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getFullYear();
-          var resEntry = res.FIRST + ' ' + res.LAST + ' has a reservation at ' +  res.TIME + ' on ' + res.DATE + ' from ' + res.FROM + '.';
-          email.sendEmail(res,resEntry,res);
+          return res.FIRST + ' ' + res.LAST + ' has a reservation at ' +  res.TIME + ' on ' + res.DATE + ' from ' + res.FROM + '.';
         }
+        else return "";
       };
     }
   };
