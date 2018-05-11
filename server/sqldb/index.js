@@ -14,8 +14,11 @@ var db = {
 };
 
 // Insert models below
+db.Order = db.sequelize.import('../api/order/order.model');
 db.Customer = db.sequelize.import('../api/customer/customer.model');
 db.Workorder = db.sequelize.import('../api/workorder/workorder.model');
+db.Inventory = db.sequelize.import('../api/inventory/inventory.model');
+db.Order = db.sequelize.import('../api/order/order.model');
 db.AllScheduledFlight = db.sequelize.import('../api/allScheduledFlight/allScheduledFlight.model');
 db.REFRunwayChecklist = db.sequelize.import('../api/REF_RunwayChecklist/REF_RunwayChecklist.model');
 db.SmsName = db.sequelize.import('../api/smsName/smsName.model');

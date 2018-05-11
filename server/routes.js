@@ -34,6 +34,8 @@ export default function(app) {
   app.use('/api/scheduledFlights', require('./api/scheduledFlight'));
   app.use('/api/projects', require('./api/project'));
   app.use('/api/chats', require('./api/chat'));
+  app.use('/api/inventory', require('./api/inventory'));
+  app.use('/api/orders', require('./api/order'));
   app.use('/api/aircraftSchs', require('./api/aircraftSch'));
   app.use('/api/pilotSchs', require('./api/pilotSch'));
   app.use('/api/travelCodes', require('./api/travelCode'));

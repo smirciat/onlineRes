@@ -1,17 +1,17 @@
 /**
  * Using Rails-like standard naming convention for endpoints.
- * GET     /api/inventorys              ->  index
- * POST    /api/inventorys              ->  create
- * GET     /api/inventorys/:id          ->  show
- * PUT     /api/inventorys/:id          ->  update
- * DELETE  /api/inventorys/:id          ->  destroy
+ * GET     /api/orders              ->  index
+ * POST    /api/orders              ->  create
+ * GET     /api/orders/:id          ->  show
+ * PUT     /api/orders/:id          ->  update
+ * DELETE  /api/orders/:id          ->  destroy
  */
 
 'use strict';
 
 import _ from 'lodash';
 var sqldb = require('../../sqldb');
-var Inventory = sqldb.Inventory;
+var Order = sqldb.Order;
 
 function handleError(res, statusCode) {
   statusCode = statusCode || 500;
@@ -59,16 +59,25 @@ function removeEntity(res) {
   };
 }
 
-// Gets a list of Inventorys
+// Gets a list of Orders
 export function index(req, res) {
-  Inventory.findAll()
+  Order.findAll()
     .then(responseWithResult(res))
     .catch(handleError(res));
 }
 
-// Gets a single Inventory from the DB
+// Gets a list of Orders
+export function incomplete(req, res) {
+  var options={};
+  options['$or']= [{complete:null},{complete:false}];
+  Order.findAll({where:options})
+    .then(responseWithResult(res))
+    .catch(handleError(res));
+}
+
+// Gets a single Order from the DB
 export function show(req, res) {
-  Inventory.find({
+  Order.find({
     where: {
       _id: req.params.id
     }
@@ -78,31 +87,19 @@ export function show(req, res) {
     .catch(handleError(res));
 }
 
-// Gets a single Inventory from the DB
-export function check(req, res) {
-  Inventory.find({
-    where: {
-      upc: req.body.upc
-    }
-  })
-    .then(handleEntityNotFound(res))
-    .then(responseWithResult(res))
-    .catch(handleError(res));
-}
-
-// Creates a new Inventory in the DB
+// Creates a new Order in the DB
 export function create(req, res) {
-  Inventory.create(req.body)
+  Order.create(req.body)
     .then(responseWithResult(res, 201))
     .catch(handleError(res));
 }
 
-// Updates an existing Inventory in the DB
+// Updates an existing Order in the DB
 export function update(req, res) {
   if (req.body._id) {
     delete req.body._id;
   }
-  Inventory.find({
+  Order.find({
     where: {
       _id: req.params.id
     }
@@ -113,9 +110,9 @@ export function update(req, res) {
     .catch(handleError(res));
 }
 
-// Deletes a Inventory from the DB
+// Deletes a Order from the DB
 export function destroy(req, res) {
-  Inventory.find({
+  Order.find({
     where: {
       _id: req.params.id
     }

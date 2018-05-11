@@ -25,7 +25,8 @@ angular.module('tempApp', [
   'angular-web-notification',
   'emoji',
   'angularMoment',
-  'contenteditable'
+  'contenteditable',
+  'barcode'
 ])
   .config(function($routeProvider, $locationProvider) {
     $routeProvider

@@ -12,7 +12,7 @@ describe('Inventory API:', function() {
 
     beforeEach(function(done) {
       request(app)
-        .get('/api/inventorys')
+        .get('/api/inventory')
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {

@@ -1,0 +1,40 @@
+<div class="navbar navbar-default navbar-static-top-padding" ng-controller="NavbarController">
+  <div class="container">
+    <div class="nav navbar-nav navbar-right">
+      <a href="/metar" class="navbar-brand"><i class="fa fa-home fa-fw fa-3x" aria-hidden="true"></i></a>
+      <a href="/set" class="navbar-brand"><i class="fa fa-cog fa-fw fa-3x" aria-hidden="true"></i></a>
+    </div>
+  </div>
+</div>
+ <div class="row">
+    <div class="col-xs-12 col-md-6 col-lg-4 top-padding">
+      <form class="addAir">
+        <input type="text" id="newAirport" ng-model="set.newAirport" /><label for="newAirport">New Airport Name</label></br>
+        <input type="text" id="newICAO" ng-model="set.newICAO" /><label for="newICAO">Four Letter Code</label></br>
+        <button class="btn btn-success" ng-click="set.add()">Add New Airport</button>
+      </form>
+    </div>
+    <div class="col-xs-12 col-md-6 col-lg-4 top-padding">
+      <form class="addAir">
+        <input type="text" id="yellowWind" ng-model="set.yellows.wind" /><label for="yellowWind">Yellow Wind Limit</label></br>
+        <input type="text" id="yellowCeiling" ng-model="set.yellows.ceiling" /><label for="yellowCeiling">Yellow Ceiling Limit</label></br>
+        <input type="text" id="yellowVisibility" ng-model="set.yellows.visibility" /><label for="yellowVisibility">Yellow Visibility Limit</label></br>
+        <button class="btn btn-success" ng-click="set.changeYellow()">Update Yellow Limits</button>
+      </form>
+    </div>
+    <div class="col-xs-12 col-md-6 col-lg-4 top-padding">
+      <form class="addAir">
+        <input type="text" id="redWind" ng-model="set.limits.wind" /><label for="redWind">Red Wind Limit</label></br>
+        <input type="text" id="redCeiling" ng-model="set.limits.ceiling" /><label for="redCeiling">Red Ceiling Limit</label></br>
+        <input type="text" id="redVisibility" ng-model="set.limits.visibility" /><label for="redVisibility">Red Visibility Limit</label></br>
+        <button class="btn btn-success" ng-click="set.changeRed()">Update Red Limits</button>
+      </form>
+    </div>
+    <div class="col-xs-12 col-md-6 col-lg-4 top-padding">
+      <form class="addAir">
+        </br>
+        <input type="checkbox" id="notify" ng-model="set.notifications" ng-change="set.changeNotify()"  ng-true-value="'YES'" ng-false-value="'NO'" />
+        <label for="notify">Enable Notifications</label></br>
+      </form>
+    </div>
+  </div>

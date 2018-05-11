@@ -41,6 +41,7 @@ module.exports = function(config) {
       'client/bower_components/moment/moment.js',
       'client/bower_components/angular-moment/angular-moment.js',
       'client/bower_components/angular-contenteditable/angular-contenteditable.js',
+      'client/bower_components/angular-barcode/dist/angular-barcode.min.js',
       'client/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'node_modules/socket.io-client/socket.io.js',

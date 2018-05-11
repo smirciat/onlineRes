@@ -1,0 +1,37 @@
+<div class="navbar navbar-default navbar-static-top" ng-controller="NavbarController">
+  <div class="container">
+    <div class="nav navbar-nav navbar-right">
+      <a href="/metar" class="navbar-brand"><i class="fa fa-home fa-fw fa-3x" aria-hidden="true"></i></a>
+      <a href="/set" class="navbar-brand"><i class="fa fa-cog fa-fw fa-3x" aria-hidden="true"></i></a>
+      <a href="#" tooltip-placement="bottom" uib-tooltip="Refresh Metars Now" ng-click="metar.update()" class="navbar-brand">
+        <i class="fa fa-refresh fa-fw fa-3x" aria-hidden="true"></i>
+      </a>
+    </div>
+  </div>
+</div>
+<img class="mySpinner" src="assets/images/spiffygif_30x30.gif" ng-show="metar.loading" />
+<div class="indent">
+  <div class="row">
+    <div ng-repeat="airport in metar.airports track by $index">
+      <div class="col-xs-12 col-md-6 col-lg-4">
+        <a href="#" ng-click="metar.delete(airport)"><i class="fa fa-window-close redX" aria-hidden="true"></i></a>
+        <a href="#" class="name">{{airport.icao + ': ' + airport.name}}</a>
+        <div class="tableRow" tooltip-placement="bottom" uib-tooltip="{{airport.raw + '&#013;&#010; &#013;&#010;' + airport.taf}}" ng-click="metar.toggle($index)">
+          <div class="cell" ng-class="airport.visibilityColor">
+            <h4>Vis</h4>
+            <h4>{{(airport.visibility)}}</h4>
+          </div>
+          <div class="cell a" ng-class="airport.ceilingColor">
+            <h4>Ceiling</h4>
+            <h4>{{airport.ceiling}}</h4>
+          </div>
+          <div class="cell a" ng-class="airport.windColor">
+            <h4>Wind</h4>
+            <h4>{{airport.wind}}</h4>
+          </div>
+        </div>
+        </br>
+      </div>
+    </div>
+  </div>    
+</div>

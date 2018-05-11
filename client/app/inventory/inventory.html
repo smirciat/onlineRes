@@ -1,0 +1,93 @@
+<div print-section>
+  <div print-remove id="mainFocus" tabindex="0" ng-keypress="inventory.keyPressed($event)">
+    <navbar></navbar>
+    <div class="test-container padding-top">
+        <h1>Parts Inventory
+        </h1>
+        <div>
+            <div style="float:left;margin-right:50px;">
+                <button print-btn class="btn btn-primary space">Print Barcodes</button>
+            </div>
+            <div style="float:left;">
+                <input class="inventory form-control" id="filter" ng-model="inventory.filter" ng-change="inventory.applyFilter()" type="text">
+                <label class="inventory" for="filter">Filter by Part Number or Keyword</label>
+            </div>
+        </div>
+    </div>
+    </br>
+    <div>
+        <!--Editable table row-->
+        <table class="table table-striped table-responsive table-hover">
+          <thead>    
+            <tr>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Part#</th>
+                <th># On Hand</th>
+                <th># On Order</th>
+                <th>Reorder Count</th>
+                <th>Vendor</th>
+                <th>UPC</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+                <td><input class="form-control" ng-model="inventory.newItem.description" type="text"></td>
+                <td><input class="form-control" ng-model="inventory.newItem.category" type="text"></td>
+                <td><input class="form-control" ng-model="inventory.newItem.part" type="text"></td>
+                <td><input class="form-control" ng-model="inventory.newItem.countOnHand" type="number"></td>
+                <td><input class="form-control" ng-model="inventory.newItem.countOnOrder" type="number"></td>
+                <td><input class="form-control" ng-model="inventory.newItem.minimumCount" type="number"></td>
+                <td><input class="form-control" ng-model="inventory.newItem.vendor" type="text"></td>
+                <td><input class="form-control" ng-model="inventory.newItem.upc" type="text"></td>
+                <td><a href="#" ng-click="inventory.orderModal('Enter number to order.')"><button class="btn btn-success">Order</button></a></td>
+                <td><a href="#" ng-click="inventory.useModal('Enter number you used.')"><button class="btn btn-primary">Use</button></a></td>
+                <td><a href="#" ng-click="inventory.correct()"><button class="btn btn-warning">Save</button></button></a></td>
+                <td><a href="#" ng-click="inventory.clear()"><button class="btn btn-danger">Clear</button></button></a></td>
+            </tr>
+          </tbody>
+    </div>
+    </br>
+    <div>
+        <table class="table table-striped table-responsive table-hover">
+          <thead>    
+            <tr>
+                <th>#</th>
+                <th></th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Part#</th>
+                <th># On Hand</th>
+                <th># On Order</th>
+                <th>Vendor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="part in inventory.parts">
+                <th scope="row">{{$index+1}}</th>
+                <td><a href="#" ng-click="inventory.edit(part)"><button class="btn btn-warning">Edit</button></a></td>
+                <td>{{part.description}}</td>
+                <td>{{part.category}}</td>
+                <td>{{part.part}}</td>
+                <td>{{part.countOnHand}}</td>
+                <td>{{part.countOnOrder}}</td>
+                <td>{{part.vendor}}</td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div> 
+  <div print-only>
+    <div class="full-sheet">
+      <div style="float:left;margin-right:50px;" ng-repeat="part in inventory.parts"> 
+        <barcode type="code128b" string="{{part.upc}}" options="inventory.bcOptions"></barcode>
+        <h5 style="text-align:center;">{{part.part}}</h5>
+        <h5 style="text-align:center;">{{part.description}}</h5>
+      </div>  
+    </div>
+  </div>
+</div>

@@ -1,0 +1,107 @@
+<div print-section>
+  <div print-remove>
+    <navbar></navbar>
+    <div class="test-container padding-top">
+        <h1>Parts Orders
+        </h1>
+        <div>
+            <div style="float:left;" class="space">
+                <input class="inventory form-control" id="filter" ng-model="order.filter" ng-change="order.applyFilter()" type="text">
+                <label class="inventory" for="filter">Filter by Part Number or Keyword</label>
+            </div>
+            <div style="float:left;margin-right:50px;" class="space">
+                <button class="btn btn-success space" ng-click="order.createPO()">Create PO</button>
+            </div>
+            <div style="float:left;margin-right:50px;" class="space">
+                <button class="btn btn-default space">Add to Existing PO</button>
+            </div>
+            <div style="float:left;margin-right:50px;" class="space">
+                <button print-btn class="btn btn-primary space">Print PO</button>
+            </div>
+            <div style="float:left;" class="space dropdown">
+                <a class="btn btn-warning dropdown-toggle" href="#" role="button" data-toggle="dropdown">Choose PO# <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">All</a></li>
+                    <li><a href="#">Items with no PO Attached</a></li>
+                    <a class="dropdown-item" ng-repeat="po in order.pos" href="#" ng-click="order.applyPOFilter(po)">{{po.number + ' ' + po.date|date:'medium'}}</a>
+                </ul>
+            </div>
+            <div style="float:left;margin-right:50px;" class="space">
+                <button class="btn btn-danger space">Complete and Stock PO</button>
+            </div>
+        </div>
+    </div>
+    </br>
+    <div>
+        <!--Editable table row-->
+        <table class="table table-striped table-responsive table-hover">
+          <thead>    
+            <tr>
+                <th>PO#</th>
+                <th>PO Date</th>
+                <th># of Order</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Part#</th>
+                <th>Vendor</th>
+                <th></th>
+                <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+                <td><input class="form-control" ng-model="order.newItem.po" type="text"></td>
+                <td><input class="form-control" ng-model="order.newItem.poDate" type="text"></td>
+                <td><input class="form-control" ng-model="order.newItem.countOnOrder" type="number"></td>
+                <td><input class="form-control" ng-model="order.newItem.description" type="text"></td>
+                <td><input class="form-control" ng-model="order.newItem.category" type="text"></td>
+                <td><input class="form-control" ng-model="order.newItem.part" type="text"></td>
+                <td><input class="form-control" ng-model="order.newItem.vendor" type="text"></td>
+                <td><a href="#" ng-click="order.save()"><button class="btn btn-warning">Save</button></button></a></td>
+                <td><a href="#" ng-click="order.clear()"><button class="btn btn-danger">Clear</button></button></a></td>
+            </tr>
+          </tbody>
+    </div>
+    </br>
+    <div>
+        <table class="table table-striped table-responsive table-hover">
+          <thead>    
+            <tr>
+                <th>#</th>
+                <th></th>
+                <th>PO#</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Part#</th>
+                <th>Vendor</th>
+                <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="part in order.parts">
+                <th scope="row">{{$index+1}}</th>
+                <td>
+                    <label><input type="checkbox" ng-model="part.selected" ng-true-value="'YES'" ng-false-value="'NO'">Select for PO</label>
+                </td>
+                <td>{{part.po}}</td>
+                <td>{{part.description}}</td>
+                <td>{{part.category}}</td>
+                <td>{{part.part}}</td>
+                <td>{{part.vendor}}</td>
+                <td><button class="btn btn-warning" ng-click="order.edit(part)">Edit</button></td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+  </div> 
+  <div print-only>
+    <div class="full-sheet">
+      <div style="float:left;margin-right:50px;" ng-repeat="part in inventory.parts"> 
+        <barcode type="code128b" string="{{part.upc}}" options="inventory.bcOptions"></barcode>
+        <h5 style="text-align:center;">{{part.part}}</h5>
+        <h5 style="text-align:center;">{{part.description}}</h5>
+      </div>  
+    </div>
+  </div>
+</div>
+
