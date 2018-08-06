@@ -59,7 +59,6 @@ label.form-control{
   .fa-autosize{
     font-size: 1em;
   }
-  
 }
 @media screen and (min-width: 992px) {
   .btn-autosize {
@@ -78,7 +77,9 @@ label.form-control{
     padding-right:6px;
   }
 }
-.hidden-here{
-  display:none;
-  visibility:hidden;
+@media screen and (min-width: 1920px) {
+  .space-if{
+    padding-left:10px;
+    padding-right:10px;
+  }
 }
