@@ -1,13 +1,26 @@
 <navbar></navbar>
 <!--<div class="padding-top">-->
-<div class="row second-row">
+<div style="padding-left:10px" class="row second-row">
   <div class="col-xs-1 col-md-1">
-    <button ng-click="one.today()" class="btn btn-success space">Now</button>
+    <a href='#' ng-click="one.minusDate()"><i class="fa fa-angle-left fa-autosize space-if" aria-hidden="true"></i></a>
+    <button ng-click="one.today()" class="btn btn-success">Now</button>
+    <a href='#' ng-click="one.plusDate()"><i class="fa fa-angle-right fa-autosize space-if" aria-hidden="true"></i></a>
   </div>
   <div class="col-sm-3 col-xs-3 col-md-3">
-      <datepicker date-format="EEEE MMM d, yyyy" >
+      <!--<datepicker date-format="EEEE MMM d, yyyy" >
           <input class="form-control" ng-model="one.date" ng-change="one.upDate()" type="text"/>
-      </datepicker>
+      </datepicker>-->
+      <div class="input-group" style="width:400px">
+        <input class="form-control" type="text" ng-model="one.date" ng-change="one.upDate()">
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="one.isDatepickerOpen = !one.isDatepickerOpen">
+            <i class="glyphicon glyphicon-calendar"></i>
+          </button>
+        </span>
+        <input type="text" class="form-control hidden-here" uib-datepicker-popup="MMM dd, yyyy" ng-model="one.date" ng-change="one.upDate()" 
+           is-open="one.isDatepickerOpen" datepicker-options="one.datepickerOptions" ng-required="true" close-text="Close" 
+           alt-input-formats="altInputFormats"/>
+      </div>
       <h5 ng-class="one.socket">S</h5>
   </div>
   <div class="col-sm-2 col-xs-2 col-md-2"><label class="form-control">

@@ -72,3 +72,13 @@ label.form-control{
     font-size: 2em;
   }
 }
+@media screen and (min-width: 1500px) {
+  .space-if{
+    padding-left:6px;
+    padding-right:6px;
+  }
+}
+.hidden-here{
+  display:none;
+  visibility:hidden;
+}

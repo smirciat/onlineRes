@@ -1,12 +1,15 @@
 'use strict';
 
 angular.module('tempApp')
-  .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, tcFactory,Modal,$window,$timeout,$location,socket) {
+  .controller('OneFlightCtrl', function ($scope, $http, $interval, $q, tcFactory,Modal,$window,$timeout,$location,socket,moment) {
     var aircraftSch, pilotSch, tcs;
     this.schFlights=[];
     this.arr=[];
     this.socket="invis";
     this.smsClass = "btn btn-default";
+    this.moment=moment;
+    this.isDatepickerOpen=false;
+    this.datePickerOptions={};
     tcFactory.getAircraft(function(ac){
       aircraftSch = ac;
     });
@@ -135,6 +138,18 @@ angular.module('tempApp')
       if (flts.length>0) this.time.selected = {ref:parseInt(this.smfltnum,10),time:flts[0]["begin"]};
       else this.time.selected={ref:parseInt(this.smfltnum,10),time:this.smfltnum + ":00"};
       this.makeSm();
+    };
+    
+    this.plusDate = function (){
+      var tempDate=this.moment(this.date).add(1,'days');
+      this.date=tempDate.toDate();
+      this.upDate();
+    };
+    
+    this.minusDate = function (){
+      var tempDate=this.moment(this.date).add(-1,'days');
+      this.date=tempDate.toDate();
+      this.upDate();
     };
     
     this.upDate =function(){
