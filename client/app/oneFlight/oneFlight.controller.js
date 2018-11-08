@@ -266,7 +266,7 @@ angular.module('tempApp')
           if (tcIndex===-1) {
             sections[sectionIndex].flights[flightIndex].tcs.push({tc:tc,reservations:[]});
             sections[sectionIndex].flights[flightIndex].tcs.sort(function(a,b){
-              return a.tc>b.tc;
+              return a.tc-b.tc;
             });
             for (var i=0;i<sections[sectionIndex].flights[flightIndex].tcs.length;i++){
               if (sections[sectionIndex].flights[flightIndex].tcs[i].tc===tc) tcIndex = i;

@@ -299,7 +299,12 @@ angular.module('tempApp')
               else {
                 scope.gridOptions.data.splice(scope.index,1);
                 //if return res (reverse copy) don't addData
-                if (!rowEntity.hasOwnProperty('uid')) scope.addData();
+                if (!rowEntity.hasOwnProperty('uid')) {
+                  $timeout(()=>{
+                    scope.addData();
+                    
+                  },1000);
+                }
                 return $http.patch('/api/' + scope.myApi + '/', rowEntity).then(function(response){});
               }
           });
@@ -583,7 +588,7 @@ angular.module('tempApp')
         $http.post('/api/' + scope.myApi + ext, query).then((response)=>{
           reload=false;
           var data = gridSettings.getFun(scope.myApi,response.data);
-          scope.gridOptions.data=scope.sortData(data);
+          scope.gridOptions.data=angular.copy(scope.sortData(data));
           if (data) scope.tempData=data.slice();
           scope.addData();
           if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') scope.setPlanePilot();
@@ -640,8 +645,9 @@ angular.module('tempApp')
             
             if (scope.myApi==='reservations'&&$location.path()==='/oneFlight') scope.setPlanePilot();
             if (scope.myApi==='reservations'&&($location.path()==='/oneName'||$location.path()==='/searchName')) scope.populateTimes();
+            //scope.gridOptions.data = angular.copy(scope.sortData(gridSettings.getFun(scope.myApi,scope.gridOptions.data)));
             $timeout(function(){
-              scope.gridOptions.data = scope.sortData(gridSettings.getFun(scope.myApi,scope.gridOptions.data));
+              scope.gridOptions.data = angular.copy(scope.sortData(gridSettings.getFun(scope.myApi,scope.gridOptions.data)));
             },100);
           });
         });  
@@ -655,7 +661,7 @@ angular.module('tempApp')
       
       scope.manualSort = function(){
         console.log('sorting');
-        scope.gridOptions.data = scope.sortData(gridSettings.getFun(scope.myApi,scope.gridOptions.data));
+        scope.gridOptions.data = angular.copy(scope.sortData(gridSettings.getFun(scope.myApi,scope.gridOptions.data)));
       };
       
       scope.makeQuery = function(){
@@ -677,8 +683,13 @@ angular.module('tempApp')
       
       scope.sortData= function(array) {
         if ($location.path()==='/oneFlight'||$location.path()==='/todaysFlights') array.sort(function(a,b){
-          if (!a['FLIGHT#']) return true;
-          if (!b['FLIGHT#']) return false;
+          if (!a['FLIGHT#']||a['FLIGHT#']==="") {
+            return true;
+          }
+          if (!b['FLIGHT#']||b['FLIGHT#']==="") {
+            
+            return false;
+          }
           if (a['FLIGHT#'].toUpperCase()===b['FLIGHT#'].toUpperCase()&&$location.path()==='/oneFlight') {
             if (a['Ref#']===b['Ref#']) return a['WEIGHT']<b['WEIGHT'];
             return a['Ref#']>b['Ref#'];
