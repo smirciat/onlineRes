@@ -41,7 +41,9 @@ angular.module('tempApp')
                 return callback(travelCodes);
             } else {
                 $http.get('/api/travelCodes').then((d)=> {
-                    travelCodes = d.data;
+                    travelCodes = d.data.sort((a,b)=>{
+                        return a['Ref#']-b['Ref#'];
+                    });
                     return callback(d.data);
                 });
             }
