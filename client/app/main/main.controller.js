@@ -4,12 +4,13 @@
 
 class MainController {
 
-  constructor($http, $scope, Auth, Modal, $timeout, $location,email,tcFactory) {
+  constructor($http, $scope, Auth, Modal, $timeout, $location,email,tcFactory,moment) {
     this.$http = $http;
     this.object = {};
     this.object.checked="NO";
     this.email=email;
     this.Auth = Auth;
+    this.moment=moment;
     this.$location = $location;
     this.awesomeThings = [];
     this.isloggedIn=false;
@@ -319,6 +320,9 @@ class MainController {
   }
 
   makeList(sfn){
+    //disaple client online booking, remove to reinstate
+    return;
+    //remove to reinstate
     //don't do this if one of the fields is blank
     if (!(this.newRes['DATE TO FLY']&&this.code.selected)) return;
     var endDate=new Date(this.endDate);
@@ -349,6 +353,10 @@ class MainController {
       this.$http.post('/api/scheduledFlights',{date:this.newRes['DATE TO FLY']}).then(response => {
         var scheduledFlights=response.data;
         this.timeList=[];
+        if (this.moment(this.newRes['DATE TO FLY']).day()<1||this.moment(this.newRes['DATE TO FLY']).day()>5) {
+          this.quickModal("Please call for weekend reservations.  Sorry for the inconvenience.");
+          return;
+        }
         //iterate through list of available flights to see if full or still available
         for (var i=0;i<scheduledFlights.length;i++){
             //initiate the current smfltnum as sm
