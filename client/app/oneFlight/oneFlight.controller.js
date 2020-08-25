@@ -356,8 +356,8 @@ angular.module('tempApp')
                    if (r===6||r===9||r===10) {
                      keb += sections[i].flights[j].tcs[k].reservations[l]['WEIGHT'] + sections[i].flights[j].tcs[k].reservations[l]['FWeight'];
                    }
-                   if (r===61) extra = 120;
-                   if (r===25||r===132) extra = 180;
+                   if (r===61||r===27) extra = 240;
+                   if (r===25||r===132) extra = 240;
                  }
                }
                sections[i].flights[j].total += extra;
