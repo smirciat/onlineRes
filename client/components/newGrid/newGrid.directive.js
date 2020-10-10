@@ -361,19 +361,26 @@ angular.module('tempApp')
             
           }
           if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&(colDef.name==="Pilot"||colDef.name==="Aircraft")) {
+            
             $http.post('/api/flights/o',body)
               .then(function(response){
-                response.data[0][colDef.name.toUpperCase()]=newValue;
-                $http.patch('/api/flights/' + response.data[0]._id,response.data[0]);
+                if (response.data.length>0) {
+                  response.data[0][colDef.name.toUpperCase()]=newValue;
+                  $http.patch('/api/flights/' + response.data[0]._id,response.data[0]);
+                }
+                else scope.quick("You need to add a flight first.  Its the green button in the upper right.");
               });
             $http.post('/api/flights/o',body1)
               .then(function(response){
-                response.data[0][colDef.name.toUpperCase()]=newValue;
-                $http.patch('/api/flights/' + response.data[0]._id,response.data[0])
-                  .then(function(res){
-                    //tcFactory.refreshFlights();
-                    scope.setPlanePilot();
-                  });
+                if (response.data.length>0) {
+                  response.data[0][colDef.name.toUpperCase()]=newValue;
+                  $http.patch('/api/flights/' + response.data[0]._id,response.data[0])
+                    .then(function(res){
+                      //tcFactory.refreshFlights();
+                      scope.setPlanePilot();
+                    });
+                }
+                else scope.quick("You need to add a flight first.  It's the green button in the upper right."); 
               });
           }
           if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="Last Name"&&rowEntity.WEIGHT===0&&rowEntity.FIRST&&rowEntity.LAST) {
