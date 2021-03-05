@@ -364,7 +364,7 @@ angular.module('tempApp')
             
             $http.post('/api/flights/o',body)
               .then(function(response){
-                if (response.data.length>0) {
+                if (response.data&&response.data.length>0) {
                   response.data[0][colDef.name.toUpperCase()]=newValue;
                   $http.patch('/api/flights/' + response.data[0]._id,response.data[0]);
                 }
@@ -372,7 +372,7 @@ angular.module('tempApp')
               });
             $http.post('/api/flights/o',body1)
               .then(function(response){
-                if (response.data.length>0) {
+                if (response.data&&response.data.length>0) {
                   response.data[0][colDef.name.toUpperCase()]=newValue;
                   $http.patch('/api/flights/' + response.data[0]._id,response.data[0])
                     .then(function(res){

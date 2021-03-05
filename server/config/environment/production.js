@@ -17,6 +17,7 @@ module.exports = {
     uri:  process.env.DATABASE_URL || process.env.SEQUELIZE_URI ||
           'sqlite://',
     options: {
+      ssl: true,
       logging: false,
       storage: 'dist.sqlite',
       define: {

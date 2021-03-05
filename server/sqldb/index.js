@@ -8,9 +8,13 @@ import path from 'path';
 import config from '../config/environment';
 import Sequelize from 'sequelize';
 
+var options = config.sequelize.options;
+options.dialect='postgres';
+options.dialectOptions={ssl:true};
+
 var db = {
   Sequelize,
-  sequelize: new Sequelize(config.sequelize.uri, config.sequelize.options)
+  sequelize: new Sequelize(config.sequelize.uri, options)
 };
 
 // Insert models below
