@@ -239,7 +239,7 @@ export function changeEmail(req, res, next) {
  */
 export function me(req, res, next) {
   var userId = req.user._id;
-
+  console.log('/api/me fired, user id is ' + req.user._id);
   User.find({
     where: {
       _id: userId
