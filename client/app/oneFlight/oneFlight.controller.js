@@ -182,17 +182,17 @@ angular.module('tempApp')
       body = {date:date, smfltnum:smfltnum+'A'};
       tcFactory.getFlights(body,function(flights){
         flights=flights.filter(function(flight){
-          if (flight.SmFltNum) return body.smfltnum.toUpperCase()===flight.SmFltNum.toUpperCase();
+          if (flight.SmFltNum&&body.smfltnum) return body.smfltnum.toUpperCase()===flight.SmFltNum.toUpperCase();
           else return false;
         });
         flights.forEach(function(flight){
           sections.push(flight['FLIGHT#'].substring(0,1));
           pilots = pilots.filter(function(p){
-            if (flight.PILOT) return p.toUpperCase()!==flight.PILOT.toUpperCase();
+            if (p&&flight.PILOT) return p.toUpperCase()!==flight.PILOT.toUpperCase();
             else return true;
           });
           aircrafts = aircrafts.filter(function(a){
-            if (flight.AIRCRAFT) return a.toUpperCase()!==flight.AIRCRAFT.toUpperCase();
+            if (a&&flight.AIRCRAFT) return a.toUpperCase()!==flight.AIRCRAFT.toUpperCase();
             else return true;
           });
         });
@@ -248,15 +248,16 @@ angular.module('tempApp')
             }
           }
           for (var i=0;i<sections[sectionIndex].flights.length;i++){
-            if (sections[sectionIndex].flights[i].flight.toUpperCase()===flight.toUpperCase()) flightIndex = i;
+            if (sections[sectionIndex].flights[i].flight&&flight&&(sections[sectionIndex].flights[i].flight.toUpperCase()===flight.toUpperCase())) flightIndex = i;
           }
           if (flightIndex===-1) {
             sections[sectionIndex].flights.push({flight:flight,tcs:[]});
             sections[sectionIndex].flights.sort(function(a,b){
-              return a.flight.toUpperCase().localeCompare(b.flight.toUpperCase());
+              if (a.flight&&b.flight) return a.flight.toUpperCase().localeCompare(b.flight.toUpperCase());
+              else return false;
             });
             for (var i=0;i<sections[sectionIndex].flights.length;i++){
-              if (sections[sectionIndex].flights[i].flight.toUpperCase()===flight.toUpperCase()) flightIndex = i;
+              if (sections[sectionIndex].flights[i].flight&&flight&&(sections[sectionIndex].flights[i].flight.toUpperCase()===flight.toUpperCase())) flightIndex = i;
             }
             
           }
@@ -320,7 +321,8 @@ angular.module('tempApp')
             for (var j=0;j<sections[i].flights.length;j++){
                //aircraft and pilot and total load HOM for sections[i].flights[j]
                var flight = flights.filter(function(flt){
-                 return (flt['FLIGHT#'].toUpperCase()===sections[i].flights[j].flight.toUpperCase());
+                 if (flt['FLIGHT#']&&sections[i].flights[j].flight) return (flt['FLIGHT#'].toUpperCase()===sections[i].flights[j].flight.toUpperCase());
+                 else return false;
                })[0];
                if (flight) {
                  sections[i].flights[j].aircraft = flight.AIRCRAFT;
@@ -369,7 +371,9 @@ angular.module('tempApp')
             for (var i=0;i<sections.length;i++){
               var p = pilotSch.filter(function(pilot){
                 if (!sections[i].pilot) return false;
-                return pilot.Pilot.toUpperCase()===sections[i].pilot.toUpperCase();
+                if (!pilot.Pilot||!sections[i].pilot) return false;
+                if (pilot.Pilot&&sections[i].pilot) return pilot.Pilot.toUpperCase()===sections[i].pilot.toUpperCase();
+                else return false;
               });
               if (p.length>0) sections[i].pilotCert = p[0].lic;
             }  
@@ -408,7 +412,7 @@ angular.module('tempApp')
         //ignore duplicates
         sections=[];
         for (var i=0;i<allFlights.length;i++) {
-          if (sections.indexOf(allFlights[i]['FLIGHT#'].toUpperCase())<0) {
+          if ((sections.indexOf(allFlights[i]['FLIGHT#'].toUpperCase())<0)) {
             sections.push(allFlights[i]['FLIGHT#'].toUpperCase());
           }
           else {
@@ -422,7 +426,8 @@ angular.module('tempApp')
           }
         }
         var flights=allFlights.filter(function(flight){
-          return flight.SmFltNum.toUpperCase()===tcFactory.getSmfltnum().substring(0,2)+'A';
+          if (flight.SmFltNum.toUpperCase()) return flight.SmFltNum.toUpperCase()===tcFactory.getSmfltnum().substring(0,2)+'A';
+          else return false;
         });
         //each section (just the 'A' sides for now)
         flights.forEach(function(flight){
@@ -454,7 +459,8 @@ angular.module('tempApp')
               //we have found our routing for this section!
               //write appropriate flight times for the found possibility  
               otherFlight = allFlights.filter(function(f){
-                return f['FLIGHT#'].toUpperCase()===flight['FLIGHT#'].substring(0,3) + 'B';
+                if (f['FLIGHT#']) return f['FLIGHT#'].toUpperCase()===flight['FLIGHT#'].substring(0,3) + 'B';
+                else return false;
               });
               if (otherFlight.length>0) otherFlight=otherFlight[0];
               else otherFlight=undefined;
@@ -497,7 +503,8 @@ angular.module('tempApp')
           }
           if (empty){
             otherFlight = allFlights.filter(function(f){
-              return f['FLIGHT#'].toUpperCase()===flight['FLIGHT#'].substring(0,3) + 'B';
+              if (f['FLIGHT#']) return f['FLIGHT#'].toUpperCase()===flight['FLIGHT#'].substring(0,3) + 'B';
+              else return false;
             });
             if (otherFlight.length>0) otherFlight=otherFlight[0];
             else otherFlight=undefined;

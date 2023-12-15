@@ -79,7 +79,7 @@ angular.module('tempApp')
             if (scope.myApi==='flights') {
               //tcFactory.refreshFlights();
               var newFlight = row.entity['FLIGHT#'].substring(0,3) + 'B';
-              if (row.entity['FLIGHT#'].substring(3).toUpperCase()==='B') newFlight=row.entity['FLIGHT#'].substring(0,3) + 'A';
+              if (row.entity['FLIGHT#']&&row.entity['FLIGHT#'].substring(3).toUpperCase()==='B') newFlight=row.entity['FLIGHT#'].substring(0,3) + 'A';
               row.entity['FLIGHT#']=newFlight;
               var body = {date:row.entity['DATE'], smfltnum:row.entity.SmFltNum};
               tcFactory.getFlights(body,function(flts){
@@ -115,7 +115,7 @@ angular.module('tempApp')
         newRow.entity['Ref#'] = 13-newRow.entity['Ref#'];
         newRow.entity['FLIGHT#'] = undefined;
         newRow.entity['INVOICE#'] = undefined;
-        if (newRow.entity.smfltnum.substring(2).toUpperCase()==='A') newRow.entity.smfltnum = newRow.entity.smfltnum.substring(0,2) + 'B';
+        if (newRow.entity.smfltnum&&newRow.entity.smfltnum.substring(2).toUpperCase()==='A') newRow.entity.smfltnum = newRow.entity.smfltnum.substring(0,2) + 'B';
         else newRow.entity.smfltnum = newRow.entity.smfltnum.substring(0,2) + 'A';
         newRow.entity['DATE RESERVED'] = new Date(Date.now());
         var index = scope.gridOptions.data.indexOf(row);
@@ -136,7 +136,7 @@ angular.module('tempApp')
         //test for cancelable conditions
         if (scope.myApi==='reservations'&&!rowEntity['WEIGHT']) rowEntity['WEIGHT']=0;
         if (scope.myApi==='reservations'&&!rowEntity['FWeight']) rowEntity['FWeight']=0;
-        if ((!rowEntity['FIRST']||rowEntity['WEIGHT']+rowEntity['FWeight']===0||!rowEntity.travelCode.value||!rowEntity.smfltnum)&&!rowEntity['SmFltNum']) {
+        if ((!rowEntity['FIRST']||rowEntity['WEIGHT']+rowEntity['FWeight']===0|!rowEntity.travelCode||!rowEntity.travelCode.value||!rowEntity.smfltnum)&&!rowEntity['SmFltNum']) {
           console.log('cancel')
           scope.gridApi.rowEdit.setSavePromise( rowEntity, scope.cancel);
           $timeout(function(){
@@ -199,7 +199,7 @@ angular.module('tempApp')
                     var users = scope.users.filter(function(user){
                       return user._id===response.data[i].uid;
                     });
-                    if (users.length>0&&users[0].name&&
+                    if (users.length>0&&users[0].name&&users[0].name&&
                           users[0].name.toUpperCase()===response.data[i].FIRST.toUpperCase() + ' ' + response.data[i].LAST.toUpperCase()) {
                       rowEntity.uid=response.data[i].uid;
                       done++;
@@ -233,7 +233,8 @@ angular.module('tempApp')
             flights=response.data;
             flight = undefined;
             flights = flights.filter(function(flight){
-              return flight.SmFltNum.toUpperCase()===rowEntity.smfltnum.toUpperCase();
+              if (flight.SmFltNum&&rowEntity.smfltnum) return flight.SmFltNum.toUpperCase()===rowEntity.smfltnum.toUpperCase();
+              else return false;
             });
             flights.sort(function(a,b){
               return a['FLIGHT#'].localeCompare(b['FLIGHT#']);
@@ -247,7 +248,8 @@ angular.module('tempApp')
               });
               for (var i=0;i<flights.length;i++){
                 res = reservations.filter(function(reservation){
-                  return flights[i]['FLIGHT#'].toUpperCase()===reservation['FLIGHT#'].toUpperCase();
+                  if (flights[i]['FLIGHT#']&&reservation['FLIGHT#']) return flights[i]['FLIGHT#'].toUpperCase()===reservation['FLIGHT#'].toUpperCase();
+                  else return false;
                 });
                 if (res.length<5) {
                   flight = flights[i]['FLIGHT#'];
@@ -255,11 +257,11 @@ angular.module('tempApp')
                 }
                 else {
                   pilots = pilots.filter(function(p){
-                    if (flights[i].PILOT) return p.toUpperCase()!==flights[i].PILOT.toUpperCase();
+                    if (flights[i].PILOT&&p) return p.toUpperCase()!==flights[i].PILOT.toUpperCase();
                     else return true;
                   });
                   aircrafts = aircrafts.filter(function(a){
-                    if (flights[i].AIRCRAFT) return a.toUpperCase()!==flights[i].AIRCRAFT.toUpperCase();
+                    if (flights[i].AIRCRAFT&&a) return a.toUpperCase()!==flights[i].AIRCRAFT.toUpperCase();
                     else return true;
                   });
                   if (flights[i]['FLIGHT#']) sections.push(flights[i]['FLIGHT#'].substring(0,1));
@@ -322,7 +324,7 @@ angular.module('tempApp')
             $http.post('/api/flights/o',body).then(function(response){
               var flights = response.data.filter(function(flt){
                 var end = 'B';
-                if (rowEntity['FLIGHT#'].substring(3).toUpperCase()==='B') end = 'A';
+                if (rowEntity['FLIGHT#']&&rowEntity['FLIGHT#'].substring(3).toUpperCase()==='B') end = 'A';
                 return flt['FLIGHT#'].toUpperCase()===(rowEntity['FLIGHT#'].substring(0,3) + end).toUpperCase();
               });
               if (flights.length>0) {
@@ -368,9 +370,16 @@ angular.module('tempApp')
             if (newRowcol.row.entity.return) newRowcol.row.entity.return=false;
         });
         scope.gridApi.edit.on.afterCellEdit(scope,function(rowEntity, colDef, newValue, oldValue){
-          var body = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].toUpperCase()};
-          var body1 = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].substring(0,3) +'B'};
-          if (rowEntity['FLIGHT#'].substring(3).toUpperCase()==='B') body1 = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].substring(0,3) +'A'};
+          var body, body1;
+          if (rowEntity['FLIGHT#']) {
+            body = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].toUpperCase()};
+            body1 = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].substring(0,3) +'B'};
+          }
+          else {
+            body = {date:rowEntity['DATE TO FLY']};
+            body1 = {date:rowEntity['DATE TO FLY']};
+          }
+          if (rowEntity['FLIGHT#']&&rowEntity['FLIGHT#'].substring(3).toUpperCase()==='B') body1 = {date:rowEntity['DATE TO FLY'], flight:rowEntity['FLIGHT#'].substring(0,3) +'A'};
           if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="Travel Code"&&rowEntity.smfltnum){
             tcFactory.getData(function(tcs){
               var t = tcs.filter(function(element){
@@ -418,6 +427,7 @@ angular.module('tempApp')
             });
           }
           if (scope.myApi==='reservations'&&$location.path()==='/oneFlight'&&colDef.name==="First Name"&&rowEntity.FIRST) {
+           
             if (newValue&&newValue.split(" ").length>1) {
               rowEntity.LAST = newValue.split(" ")[1];
               if (newValue.split(" ").length>2) {
@@ -535,7 +545,8 @@ angular.module('tempApp')
               return tcFactory.getPilots(function(pilots){
                 scope.gridOptions.data.forEach(function(d){
                   flts = flights.filter(function(flight){
-                    return flight['FLIGHT#'].toUpperCase()===d['FLIGHT#'].toUpperCase();
+                    if (flight['FLIGHT#']&&d['FLIGHT#']) return flight['FLIGHT#'].toUpperCase()===d['FLIGHT#'].toUpperCase();
+                    else return false;
                   });
                   d.pilot={};
                   if (flts.length>0){ 
@@ -548,7 +559,8 @@ angular.module('tempApp')
                 return tcFactory.getAircraft(function(aircraft){
                   scope.gridOptions.data.forEach(function(d){
                     flts = flights.filter(function(flight){
-                      return flight['FLIGHT#'].toUpperCase()===d['FLIGHT#'].toUpperCase();
+                      if (flight['FLIGHT#']&&d['FLIGHT#']) return flight['FLIGHT#'].toUpperCase()===d['FLIGHT#'].toUpperCase();
+                      else return false;
                     });
                     d.aircraft={};
                     if (flts.length>0){
@@ -696,7 +708,7 @@ angular.module('tempApp')
             
             return false;
           }
-          if (a['FLIGHT#'].toUpperCase()===b['FLIGHT#'].toUpperCase()&&$location.path()==='/oneFlight') {
+          if (a['FLIGHT#']&&b['FLIGHT#']&&a['FLIGHT#'].toUpperCase()===b['FLIGHT#'].toUpperCase()&&$location.path()==='/oneFlight') {
             if (a['Ref#']===b['Ref#']) return a['WEIGHT']<b['WEIGHT'];
             return a['Ref#']>b['Ref#'];
           }
